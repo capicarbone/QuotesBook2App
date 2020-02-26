@@ -8,6 +8,8 @@ class Quotes with ChangeNotifier {
 
   final List<Quote> _quotes = [];
 
+  static const SERVER_HOST = "https://quotesbook.herokuapp.com/";
+
   get quotes {
     return _quotes;
   }
@@ -18,10 +20,12 @@ class Quotes with ChangeNotifier {
 
   Future<void> fetchQuotes() async  {
     
-    var response = await http.get("https://quotesbook.herokuapp.com/api/v1/quotes/sample", headers: _authenticatedHeader );    
+    final url = "${SERVER_HOST}api/v1/quotes/sample";    
+
+    var response = await http.get(url, headers: _authenticatedHeader );    
 
     List<dynamic> quotesMap = json.decode(response.body);
-
+    
     //print(quotesMap);
 
     _quotes.addAll( quotesMap.map( (map) => Quote.fromMap(map) ) );
