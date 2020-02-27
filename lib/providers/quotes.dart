@@ -29,6 +29,7 @@ class Quotes with ChangeNotifier {
     //print(quotesMap);
 
     _quotes.addAll( quotesMap.map( (map) => Quote.fromMap(map) ) );
-    
+
+    notifyListeners(); 
   }
 }
