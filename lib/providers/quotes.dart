@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:quotesbook/helpers/db_helper.dart';
 import 'package:quotesbook/models/Quote.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,6 +36,8 @@ class Quotes with ChangeNotifier {
 
   Future<void> saveQuote(Quote quote) async {
     quote.isFavorite = true;
+
+    DBHelper.insertQuote(quote);
 
     notifyListeners();
   }
