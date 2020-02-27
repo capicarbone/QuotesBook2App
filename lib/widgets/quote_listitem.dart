@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../models/Quote.dart';
+import '../providers/quotes.dart';
 
 class QuoteListItem extends StatelessWidget {
   Quote quote;
@@ -8,6 +11,9 @@ class QuoteListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var quotesProvider = Provider.of<Quotes>(context, listen: false);
+
     return Container(
       width: double.infinity,
       child: Card(
@@ -34,8 +40,31 @@ class QuoteListItem extends StatelessWidget {
                       '- ${quote.author.firstName} ${quote.author.lastName}',
                       textAlign: TextAlign.right,
                     ),
-                    Text(quote.author.shortDescription,
-                        style: TextStyle(color: Colors.grey))
+                    Text(
+                      quote.author.shortDescription,
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(
+                              Icons.star,
+                              color:
+                                  quote.isFavorite ? Colors.amber : Colors.grey,
+                            ),
+                            onPressed: () {
+                              if (quote.isFavorite){
+                                quotesProvider.removeQuote(quote);
+                              }else {
+                                quotesProvider.saveQuote(quote);
+                              }
+                              
+                            })
+                      ],
+                    )
                   ],
                 ),
               )

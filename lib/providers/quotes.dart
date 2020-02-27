@@ -32,4 +32,17 @@ class Quotes with ChangeNotifier {
 
     notifyListeners(); 
   }
+
+  Future<void> saveQuote(Quote quote) async {
+    quote.isFavorite = true;
+
+    notifyListeners();
+  }
+
+  Future<void> removeQuote(Quote quote) async {
+
+    quote.isFavorite = false;
+
+    notifyListeners();
+  }
 }

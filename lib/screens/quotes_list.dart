@@ -27,10 +27,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     });
   }
 
-  Widget _buildQuote(Quote quote) {
-    return QuoteListItem(quote);
-  }
-
   Widget _buildList(context, quotes) {
     return ListView.builder(
       controller: _listController,
@@ -43,7 +39,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
             height: 80,
           );
         } else {
-          return _buildQuote(quotes[position]);
+          return QuoteListItem(quotes[position]);
         }
       },
       itemCount: quotes.length + 1,
