@@ -14,6 +14,10 @@ class Quotes with ChangeNotifier {
     return _quotes;
   }
 
+  get savedQuotes {
+    return _savedQuotes;
+  }
+
   final _authenticatedHeader = {
     'Authorization': 'Token 9598020bb81bf271c7105c9b057823b62463eae2'
   };
@@ -53,12 +57,17 @@ class Quotes with ChangeNotifier {
     quote.isFavorite = true;
 
     DBHelper.insertQuote(quote);
+    _savedQuotes.add(quote);
 
     notifyListeners();
   }
 
   Future<void> removeQuote(Quote quote) async {
     quote.isFavorite = false;
+
+    DBHelper.deleteQuote(quote);
+
+    _savedQuotes.remove(quote);
 
     notifyListeners();
   }

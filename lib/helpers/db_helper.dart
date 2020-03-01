@@ -55,7 +55,7 @@ class DBHelper {
 
     List<Quote> quotes = data.map<Quote>( (map) {
       var author = Author(firstName: map['author_first_name'], lastName: map['author_last_name'], shortDescription: map['author_short_description'], pictureUrl: map['author_picture_url'] );
-      var quote = Quote(author: author, body: map['body'], id: map['id']);
+      var quote = Quote(author: author, body: map['body'], id: map['id'], isFavorite: true);
       return quote;
     }).toList();
 
