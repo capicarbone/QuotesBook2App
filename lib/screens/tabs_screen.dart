@@ -14,15 +14,20 @@ class _TabsScreenState extends State<TabsScreen>
   final _pages = [
     {
       'title': 'Quotes',
-      'page': QuotesListScreen(),
+      'page': QuotesListScreen(
+        key: PageStorageKey('Quotes'),
+      ),
     },
     {
       'title': 'Favorites',
-      'page': FavoritesScreen()
+      'page': FavoritesScreen(
+        key: PageStorageKey('Favorites'),
+      )
     }
   ];
 
   AnimationController _controller;
+  final bucket = PageStorageBucket();
 
   @override
   void initState() {
@@ -44,13 +49,15 @@ class _TabsScreenState extends State<TabsScreen>
 
   @override
   Widget build(BuildContext context) {
-
     final selectedPage = _pages[_selectedPageIndex];
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedPage['title']),
       ),
-      body: selectedPage['page'],
+      body: PageStorage(
+        bucket: bucket,
+        child: selectedPage['page'],
+      ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,
           backgroundColor: Theme.of(context).primaryColor,

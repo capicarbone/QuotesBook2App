@@ -15,10 +15,12 @@ class QuoteListItem extends StatelessWidget {
     var quotesProvider = Provider.of<Quotes>(context, listen: false);
 
     return Container(
+      padding: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 0),
       width: double.infinity,
       child: Card(
+        elevation: 4,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: <Widget>[
               Container(
