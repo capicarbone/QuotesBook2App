@@ -38,6 +38,13 @@ class DBHelper {
     await insert(_QUOTES_TABLE, quoteMap);
   }
 
+  static Future<void> deleteQuote(Quote quote) async {
+    final db = await DBHelper.getDatabase();
+
+    await db.delete(_QUOTES_TABLE, where: 'id = ?', whereArgs: [quote.id]);
+
+  }
+
   static Future<List<Map<String, dynamic>>> getdata(String table) async {
     final db = await getDatabase();
     return await db.query(table);
