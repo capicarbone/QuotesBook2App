@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/providers/quotes.dart';
 
@@ -14,6 +15,15 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: Quotes(),
       child: MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('en'),
+          const Locale('es')
+        ],
         title: 'Quotesbook',
         theme: ThemeData(primarySwatch: Colors.blue, accentColor: Colors.amber),
         home: TabsScreen(),

@@ -22,8 +22,12 @@ class Quotes with ChangeNotifier {
     'Authorization': 'Token 9598020bb81bf271c7105c9b057823b62463eae2'
   };
 
-  Future<void> fetchQuotes() async {
-    final url = "${SERVER_HOST}api/v1/quotes/sample";
+  Future<void> fetchQuotes({String lang = 'en'}) async {
+
+    lang = lang == 'es' ? lang : 'en';
+    final url = "${SERVER_HOST}api/v1/quotes/sample?lang=$lang";
+
+    print(url);
 
     var response = await http.get(url, headers: _authenticatedHeader);
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quotesbook/models/Quote.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/quotes.dart';
@@ -14,17 +13,18 @@ class QuotesListScreen extends StatefulWidget {
 
 class _QuotesListScreenState extends State<QuotesListScreen> {
   var _listController = ScrollController();
-  var _loadingQuotes = false;
+  var _loadingQuotes = false;  
 
   @override
   void initState() {
-    super.initState();
+    super.initState();    
+
     _listController.addListener(() {
       if (_listController.position.pixels ==
               _listController.position.maxScrollExtent &&
           !_loadingQuotes) {
         _loadingQuotes = true;
-        Provider.of<Quotes>(context, listen: false).fetchQuotes();
+        _fetchQuotes();
       }
     });
   }
@@ -50,6 +50,11 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     );
   }
 
+  Future<void> _fetchQuotes(){
+    var lang = Localizations.localeOf(context).languageCode;
+    return Provider.of<Quotes>(context, listen: false).fetchQuotes(lang: lang );
+  }
+
   @override
   Widget build(BuildContext context) {
     var quotesProvider = Provider.of<Quotes>(context, listen: false);
@@ -57,7 +62,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     return (quotesProvider.quotes.length > 0)
         ? _buildList(context)
         : FutureBuilder(
-            future: Provider.of<Quotes>(context, listen: false).fetchQuotes(),
+            future: _fetchQuotes() ,
             builder: (context, snapshot) =>
                 snapshot.connectionState == ConnectionState.waiting
                     ? Center(child: CircularProgressIndicator())
