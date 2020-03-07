@@ -24,6 +24,8 @@ class Quotes with ChangeNotifier {
 
   Future<void> fetchQuotes({String lang = 'en'}) async {
 
+    await loadSavedQuotes();
+
     lang = lang == 'es' ? lang : 'en';
     final url = "${SERVER_HOST}api/v1/quotes/sample?lang=$lang";
 
@@ -33,7 +35,7 @@ class Quotes with ChangeNotifier {
 
     List<dynamic> quotesMap = json.decode(response.body);
 
-    await loadSavedQuotes();
+    
 
     //print(quotesMap);
 

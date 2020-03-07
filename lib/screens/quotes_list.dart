@@ -13,20 +13,11 @@ class QuotesListScreen extends StatefulWidget {
 
 class _QuotesListScreenState extends State<QuotesListScreen> {
   var _listController = ScrollController();
-  var _loadingQuotes = false;  
+  var _loadingQuotes = false;
 
   @override
   void initState() {
-    super.initState();    
-
-    _listController.addListener(() {
-      if (_listController.position.pixels ==
-              _listController.position.maxScrollExtent &&
-          !_loadingQuotes) {
-        _loadingQuotes = true;
-        _fetchQuotes();
-      }
-    });
+    super.initState();
   }
 
   Widget _buildList(context) {
@@ -50,9 +41,9 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     );
   }
 
-  Future<void> _fetchQuotes(){
+  Future<void> _fetchQuotes() {
     var lang = Localizations.localeOf(context).languageCode;
-    return Provider.of<Quotes>(context, listen: false).fetchQuotes(lang: lang );
+    return Provider.of<Quotes>(context, listen: false).fetchQuotes(lang: lang);
   }
 
   @override
@@ -62,11 +53,30 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     return (quotesProvider.quotes.length > 0)
         ? _buildList(context)
         : FutureBuilder(
-            future: _fetchQuotes() ,
-            builder: (context, snapshot) =>
-                snapshot.connectionState == ConnectionState.waiting
-                    ? Center(child: CircularProgressIndicator())
-                    : _buildList(context),
-          );
+            future: _fetchQuotes(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text('Some error has ocurred')));
+                });
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                
+                _listController.addListener(() {
+                  if (_listController.position.pixels ==
+                          _listController.position.maxScrollExtent &&
+                      !_loadingQuotes) {
+                    _loadingQuotes = true;
+                    _fetchQuotes();
+                  }
+                });
+
+                return _buildList(context);
+              }
+            });
   }
 }
