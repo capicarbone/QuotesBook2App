@@ -50,7 +50,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   Widget build(BuildContext context) {
     var quotesProvider = Provider.of<Quotes>(context, listen: false);
 
-    return (quotesProvider.quotes.length > 0)
+    return (quotesProvider != null && quotesProvider.quotes.length > 0)
         ? _buildList(context)
         : FutureBuilder(
             future: _fetchQuotes(),

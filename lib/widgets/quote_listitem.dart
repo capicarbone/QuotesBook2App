@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/Quote.dart';
-import '../providers/quotes.dart';
+import '../providers/saved_quotes.dart';
 
 class QuoteListItem extends StatelessWidget {
   Quote quote;
@@ -12,7 +12,7 @@ class QuoteListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var quotesProvider = Provider.of<Quotes>(context, listen: false);
+    var quotesProvider = Provider.of<SavedQuotes>(context, listen: false);
 
     return Container(
       padding: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 0),

@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:quotesbook/helpers/db_helper.dart';
 import 'package:quotesbook/models/Quote.dart';
 import 'package:http/http.dart' as http;
 
 class Quotes with ChangeNotifier {
   final List<Quote> _quotes = [];
-  List<Quote> _savedQuotes;
+  List<Quote> _savedQuotes = [];
 
   static const SERVER_HOST = "https://quotesbook.herokuapp.com/";
 
@@ -14,32 +13,8 @@ class Quotes with ChangeNotifier {
     return _quotes;
   }
 
-  get savedQuotes {
-    return _savedQuotes;
-  }
-
-  final _authenticatedHeader = {
-    'Authorization': 'Token 9598020bb81bf271c7105c9b057823b62463eae2'
-  };
-
-  Future<void> fetchQuotes({String lang = 'en'}) async {
-
-    await loadSavedQuotes();
-
-    lang = lang == 'es' ? lang : 'en';
-    final url = "${SERVER_HOST}api/v1/quotes/sample?lang=$lang";
-
-    print(url);
-
-    var response = await http.get(url, headers: _authenticatedHeader);
-
-    List<dynamic> quotesMap = json.decode(response.body);
-
-    
-
-    //print(quotesMap);
-
-    _quotes.addAll(quotesMap.map((map) => Quote.fromMap(map)));
+  set savedQuotes(List<Quote> savedQuotes) {
+    _savedQuotes = savedQuotes;
 
     _quotes.forEach((quote) {
       quote.isFavorite = _savedQuotes.firstWhere(
@@ -51,29 +26,28 @@ class Quotes with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadSavedQuotes() async {
-    if (_savedQuotes == null) {
-      _savedQuotes = await DBHelper.getQuotes();
-    }
+  final _authenticatedHeader = {
+    'Authorization': 'Token 9598020bb81bf271c7105c9b057823b62463eae2'
+  };
 
-    notifyListeners();
-  }
+  Future<void> fetchQuotes({String lang = 'en'}) async {
+    lang = lang == 'es' ? lang : 'en';
+    final url = "${SERVER_HOST}api/v1/quotes/sample?lang=$lang";
 
-  Future<void> saveQuote(Quote quote) async {
-    quote.isFavorite = true;
+    print(url);
 
-    DBHelper.insertQuote(quote);
-    _savedQuotes.add(quote);
+    var response = await http.get(url, headers: _authenticatedHeader);
 
-    notifyListeners();
-  }
+    List<dynamic> quotesMap = json.decode(response.body);
 
-  Future<void> removeQuote(Quote quote) async {
-    quote.isFavorite = false;
+    //print(quotesMap);
 
-    DBHelper.deleteQuote(quote);
+    _quotes.addAll(quotesMap.map((map) => Quote.fromMap(map)));
 
-    _savedQuotes.remove(quote);
+    /*
+
+
+    */
 
     notifyListeners();
   }

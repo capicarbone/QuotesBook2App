@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quotesbook/providers/quotes.dart';
+import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/widgets/quote_listitem.dart';
 
 class FavoritesScreen extends StatelessWidget {
   FavoritesScreen({Key key}) : super(key: key);
 
+  
   @override
   Widget build(BuildContext context) {
-    return Consumer<Quotes>(
+
+    Provider.of<SavedQuotes>(context, listen: false).loadSavedQuotes();
+
+    return Consumer<SavedQuotes>(
       builder: (ctx, provider, _) => provider.savedQuotes == null ||
               provider.savedQuotes.length == 0
           ? Center(
