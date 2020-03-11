@@ -3,6 +3,10 @@ import 'package:quotesbook/screens/favorites_list.dart';
 import 'package:quotesbook/screens/quotes_list.dart';
 
 class TabsScreen extends StatefulWidget {
+  var lang = 'en';
+
+  TabsScreen({this.lang});
+
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
@@ -11,20 +15,27 @@ class _TabsScreenState extends State<TabsScreen>
     with SingleTickerProviderStateMixin {
   var _selectedPageIndex = 0;
 
-  final _pages = [
-    {
-      'title': 'Quotes',
-      'page': QuotesListScreen(
-        key: PageStorageKey('Quotes'),
-      ),
-    },
-    {
-      'title': 'Favorites',
-      'page': FavoritesScreen(
-        key: PageStorageKey('Favorites'),
-      )
+  final _pages = [];
+
+  void _initPages() {
+    if (_pages.isEmpty) {
+      _pages.addAll([
+        {
+          'title': 'Quotes',
+          'page': QuotesListScreen(
+            lang: widget.lang,
+            key: PageStorageKey('Quotes'),
+          ),
+        },
+        {
+          'title': 'Favorites',
+          'page': FavoritesScreen(
+            key: PageStorageKey('Favorites'),
+          )
+        }
+      ]);
     }
-  ];
+  }
 
   AnimationController _controller;
   final bucket = PageStorageBucket();
@@ -33,6 +44,7 @@ class _TabsScreenState extends State<TabsScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
+    _initPages();
   }
 
   @override

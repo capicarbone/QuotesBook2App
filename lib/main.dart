@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:quotesbook/providers/quotes.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
 
-import './screens/quotes_list.dart';
 import './screens/tabs_screen.dart';
+import './widgets/localize_lang_widget.dart';
 
 void main() => runApp(MyApp());
 
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         ],
         title: 'Quotesbook',
         theme: ThemeData(primarySwatch: Colors.blue, accentColor: Colors.amber),
-        home: TabsScreen(),
+        home: LocalizeLang(builder: (lang) => TabsScreen(lang: lang,)  ) ,
       ),
     );
   }
