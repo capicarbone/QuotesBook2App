@@ -16,13 +16,15 @@ class Quotes with ChangeNotifier {
   set savedQuotes(List<Quote> savedQuotes) {
     _savedQuotes = savedQuotes;
 
-    _quotes.forEach((quote) {
-      quote.isFavorite = _savedQuotes.firstWhere(
-              (savedQuote) => savedQuote.id == quote.id,
-              orElse: () => null) !=
-          null;
-    });
-
+    if (savedQuotes != null) {
+      _quotes.forEach((quote) {
+        quote.isFavorite = _savedQuotes.firstWhere(
+                (savedQuote) => savedQuote.id == quote.id,
+                orElse: () => null) !=
+            null;
+      });
+    }
+    
     notifyListeners();
   }
 
@@ -43,11 +45,6 @@ class Quotes with ChangeNotifier {
     //print(quotesMap);
 
     _quotes.addAll(quotesMap.map((map) => Quote.fromMap(map)));
-
-    /*
-
-
-    */
 
     notifyListeners();
   }

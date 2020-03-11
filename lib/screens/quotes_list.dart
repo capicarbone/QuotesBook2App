@@ -6,7 +6,6 @@ import '../providers/quotes.dart';
 import '../widgets/quote_listitem.dart';
 
 class QuotesListScreen extends StatefulWidget {
-
   var lang;
   QuotesListScreen({Key key, @required this.lang}) : super(key: key);
 
@@ -20,13 +19,10 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   Future<void> _initialLoad;
 
   @override
-  void initState() {    
+  void initState() {
     super.initState();
-    if (_initialLoad == null)
-    _initialLoad = Provider.of<Quotes>(context, listen: false).fetchQuotes(lang: widget.lang);
+    if (_initialLoad == null) _initialLoad = _fetchQuotes();
   }
-
-  
 
   @override
   dispose() {
@@ -35,7 +31,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   }
 
   Widget _buildList(context) {
-
     if (!_listController.hasListeners) {
       _listController.addListener(() {
         if (_listController.position.pixels ==
@@ -68,8 +63,8 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   }
 
   Future<void> _fetchQuotes() {
-    var lang = Localizations.localeOf(context).languageCode;
-    return Provider.of<Quotes>(context, listen: false).fetchQuotes(lang: lang);
+    return Provider.of<Quotes>(context, listen: false)
+        .fetchQuotes(lang: widget.lang);
   }
 
   @override
@@ -79,13 +74,12 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     return (quotesProvider.quotes.length > 0)
         ? _buildList(context)
         : FutureBuilder(
-            future: _fetchQuotes(),
+            future: _initialLoad,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   Scaffold.of(context).showSnackBar(
                       SnackBar(content: Text('Some error has ocurred')));
-
                 });
               }
 
