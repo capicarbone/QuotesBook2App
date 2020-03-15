@@ -66,9 +66,9 @@ class _TabsScreenState extends State<TabsScreen>
       appBar: AppBar(
         title: Text(selectedPage['title']),
       ),
-      body: PageStorage(
-        bucket: bucket,
-        child: selectedPage['page'],
+      body: IndexedStack(
+        index: _selectedPageIndex,
+        children: _pages.map<Widget>((i) => i['page']).toList(),
       ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,

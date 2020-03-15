@@ -21,7 +21,9 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   @override
   void initState() {
     super.initState();
-    if (_initialLoad == null) _initialLoad = _fetchQuotes();
+    if (_initialLoad == null) {
+      _initialLoad = _fetchQuotes();      
+    }
   }
 
   @override
