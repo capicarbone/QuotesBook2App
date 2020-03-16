@@ -16,6 +16,8 @@ class QuotesListScreen extends StatefulWidget {
 class _QuotesListScreenState extends State<QuotesListScreen> {
   var _listController = ScrollController();
   var _loadingQuotes = false;
+  var _automaticReloadEnabled = false;
+  var _elapsedErrors = 0;
   Future<void> _initialLoad;
 
   @override
@@ -35,10 +37,9 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   Widget _buildList(context) {
     if (!_listController.hasListeners) {
       _listController.addListener(() {
-        if (_listController.position.pixels ==
-                _listController.position.maxScrollExtent &&
-            !_loadingQuotes) {
-          _loadingQuotes = true;
+        if (_listController.position.pixels >=
+                _listController.position.maxScrollExtent - 200 &&
+            !_loadingQuotes) {          
           _fetchQuotes();
         }
       });
@@ -48,8 +49,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       builder: (context, provider, _) => ListView.builder(
         controller: _listController,
         itemBuilder: (ctx, position) {
-          _loadingQuotes = false;
-
           if (position == provider.quotes.length) {
             return Container(
               child: Center(child: CircularProgressIndicator()),
@@ -65,8 +64,38 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   }
 
   Future<void> _fetchQuotes() {
-    return Provider.of<Quotes>(context, listen: false)
+    var promise = Provider.of<Quotes>(context, listen: false)
         .fetchQuotes(lang: widget.lang);
+
+    _loadingQuotes = true;
+
+    promise.catchError((err) {
+      if (_elapsedErrors == 0) {
+        Scaffold.of(context).hideCurrentSnackBar();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Scaffold.of(context)
+              .showSnackBar( _automaticReloadEnabled ? SnackBar(content: Text('Some error has ocurred. Trying again.'), duration: Duration(seconds: 20),) :  SnackBar(content: Text('Some error has ocurred.')));
+        });
+      }
+
+      if (_automaticReloadEnabled) {
+        Timer(Duration(seconds: 3), _fetchQuotes);
+      }
+
+      _elapsedErrors++;
+    });
+
+
+    promise.then((res) {
+      Scaffold.of(context).hideCurrentSnackBar();
+      _elapsedErrors = 0;
+    });
+
+    promise.whenComplete(() {
+      _loadingQuotes = false;
+    });
+
+    return promise;
   }
 
   @override
@@ -80,11 +109,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasError &&
                   snapshot.connectionState == ConnectionState.done) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Some error has ocurred.')));
-                });
-
                 return Center(
                     child: Ink(
                   decoration: ShapeDecoration(
@@ -95,7 +119,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
                     icon: Icon(Icons.replay),
                     onPressed: () {
                       setState(() {
-                        Scaffold.of(context).hideCurrentSnackBar();
                         _initialLoad = _fetchQuotes();
                       });
                     },
@@ -106,6 +129,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else {
+                _automaticReloadEnabled = true;
                 return _buildList(context);
               }
             },
