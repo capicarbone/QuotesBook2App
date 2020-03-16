@@ -22,7 +22,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   void initState() {
     super.initState();
     if (_initialLoad == null) {
-      _initialLoad = _fetchQuotes();      
+      _initialLoad = _fetchQuotes();
     }
   }
 
@@ -78,19 +78,37 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         : FutureBuilder(
             future: _initialLoad,
             builder: (context, snapshot) {
-              if (snapshot.hasError) {
+              if (snapshot.hasError &&
+                  snapshot.connectionState == ConnectionState.done) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Some error has ocurred')));
+                      SnackBar(content: Text('Some error has ocurred.')));
                 });
+
+                return Center(
+                    child: Ink(
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(),
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.replay),
+                    onPressed: () {
+                      setState(() {
+                        Scaffold.of(context).hideCurrentSnackBar();
+                        _initialLoad = _fetchQuotes();
+                      });
+                    },
+                  ),
+                ));
               }
 
-              if (snapshot.hasError ||
-                  snapshot.connectionState == ConnectionState.waiting) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else {
                 return _buildList(context);
               }
-            });
+            },
+          );
   }
 }
