@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quotesbook/helpers/demo_localizations.dart';
+import 'package:quotesbook/helpers/app_localizations.dart';
 import 'package:quotesbook/screens/favorites_list.dart';
 import 'package:quotesbook/screens/quotes_list.dart';
 
@@ -61,7 +61,7 @@ class _TabsScreenState extends State<TabsScreen>
   @override
   Widget build(BuildContext context) {
     final selectedPage = _pages[_selectedPageIndex];
-    var localizations = DemoLocalizations.of(context);
+    var localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(_selectedPageIndex == 0 ? localizations.someQuotesTitle : localizations.savedQuotesTitle),
@@ -78,11 +78,11 @@ class _TabsScreenState extends State<TabsScreen>
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.message),
-              title: Text(DemoLocalizations.of(context).quotesTab),
+              title: Text(AppLocalizations.of(context).quotesTab),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.star),
-              title: Text(DemoLocalizations.of(context).favoritesTab),
+              title: Text(AppLocalizations.of(context).favoritesTab),
             )
           ]),
     );

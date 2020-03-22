@@ -6,16 +6,16 @@ import 'package:quotesbook/providers/saved_quotes.dart';
 
 import './screens/tabs_screen.dart';
 import './widgets/localize_lang_widget.dart';
-import './helpers/demo_localizations.dart';
+import './helpers/app_localizations.dart';
 
-class DemoLocalizationsDelegate extends LocalizationsDelegate<DemoLocalizations> {
+class DemoLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const DemoLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) => ['en', 'es'].contains(locale.languageCode);
 
   @override
-  Future<DemoLocalizations> load(Locale locale) => DemoLocalizations.load(locale);
+  Future<AppLocalizations> load(Locale locale) => AppLocalizations.load(locale);
 
   @override
   bool shouldReload(DemoLocalizationsDelegate old) => false;

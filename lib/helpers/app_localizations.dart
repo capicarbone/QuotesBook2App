@@ -2,21 +2,21 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:quotesbook/l10n/messages_all.dart';
 
-class DemoLocalizations {
-  DemoLocalizations(this.localeName);
+class AppLocalizations {
+  AppLocalizations(this.localeName);
 
-  static Future<DemoLocalizations> load(Locale locale) {
+  static Future<AppLocalizations> load(Locale locale) {
     final String name =
         locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
     final String localeName = Intl.canonicalizedLocale(name);
 
     return initializeMessages(localeName).then((_) {
-      return DemoLocalizations(localeName);
+      return AppLocalizations(localeName);
     });
   }
 
-  static DemoLocalizations of(BuildContext context) {
-    return Localizations.of<DemoLocalizations>(context, DemoLocalizations);
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   final String localeName;
