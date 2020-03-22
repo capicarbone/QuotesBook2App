@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quotesbook/helpers/app_localizations.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/widgets/quote_listitem.dart';
 
@@ -20,7 +21,7 @@ class FavoritesScreen extends StatelessWidget {
               height: 100,
               child: Column(
                 children: <Widget>[
-                  Text('Mark some quotes as favorites.', style: TextStyle(color: Colors.grey),),
+                  Text(AppLocalizations.of(context).favoritesEmptyMessage, style: TextStyle(color: Colors.grey),),
                   SizedBox(height: 12,),
                   Icon(Icons.star, color: Colors.grey, size: 48,)
                 ],

@@ -57,4 +57,22 @@ class AppLocalizations {
       locale: localeName,
     );
   }
+
+  String get favoritesEmptyMessage {
+    return Intl.message(
+      'Mark some quotes as favorites.',
+      name: 'favoritesEmptyMessage',
+      desc: 'Mesasge for empty favorites list',
+      locale: localeName
+    );
+  }
+
+  String get quotesLoadErrorMessage {
+    return Intl.message(
+      'Some error has ocurred. Trying again.',
+      name: 'quotesLoadErrorMessage',
+      desc: 'Mesasge for errors on quotes loading',
+      locale: localeName
+    );
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-03-21T17:57:42.862339",
+  "@@last_modified": "2020-03-21T22:36:27.542220",
   "someQuotesTitle": "Some Quotes",
   "@someQuotesTitle": {
     "description": "Title for some quotes screen.",
@@ -21,6 +21,18 @@
   "favoritesTab": "Favorites",
   "@favoritesTab": {
     "description": "Favorites tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favoritesEmptyMessage": "Mark some quotes as favorites.",
+  "@favoritesEmptyMessage": {
+    "description": "Mesasge for empty favorites list",
+    "type": "text",
+    "placeholders": {}
+  },
+  "quotesLoadErrorMessage": "Some error has ocurred. Trying again.",
+  "@quotesLoadErrorMessage": {
+    "description": "Mesasge for errors on quotes loading",
     "type": "text",
     "placeholders": {}
   }

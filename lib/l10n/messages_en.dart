@@ -21,7 +21,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "favoritesEmptyMessage" : MessageLookupByLibrary.simpleMessage("Mark some quotes as favorites."),
     "favoritesTab" : MessageLookupByLibrary.simpleMessage("Favorites"),
+    "quotesLoadErrorMessage" : MessageLookupByLibrary.simpleMessage("Some error has ocurred. Trying again."),
     "quotesTab" : MessageLookupByLibrary.simpleMessage("Quotes"),
     "savedQuotesTitle" : MessageLookupByLibrary.simpleMessage("Your Favorites"),
     "someQuotesTitle" : MessageLookupByLibrary.simpleMessage("Some Quotes")

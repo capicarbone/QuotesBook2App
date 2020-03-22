@@ -23,5 +23,17 @@
     "description": "Favorites tab label",
     "type": "text",
     "placeholders": {}
+  },
+    "favoritesEmptyMessage": "Marca algunas citas como tus favoritas.",
+    "@favoritesEmptyMessage": {
+    "description": "Mesasge for empty favorites list",
+    "type": "text",
+    "placeholders": {}
+  },
+  "quotesLoadErrorMessage": "Algún error ha ocurrido. Intentando de nuevo.",
+  "@quotesLoadErrorMessage": {
+    "description": "Mesasge for errors on quotes loading",
+    "type": "text",
+    "placeholders": {}
   }
 }

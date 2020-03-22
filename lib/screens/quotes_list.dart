@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quotesbook/helpers/app_localizations.dart';
 
 import '../providers/quotes.dart';
 import '../widgets/quote_listitem.dart';
@@ -74,7 +75,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         Scaffold.of(context).hideCurrentSnackBar();
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Scaffold.of(context)
-              .showSnackBar( _automaticReloadEnabled ? SnackBar(content: Text('Some error has ocurred. Trying again.'), duration: Duration(seconds: 20),) :  SnackBar(content: Text('Some error has ocurred.')));
+              .showSnackBar( _automaticReloadEnabled ? SnackBar(content: Text(AppLocalizations.of(context).quotesLoadErrorMessage), duration: Duration(seconds: 20),) :  SnackBar(content: Text('Some error has ocurred.')));
         });
       }
 
