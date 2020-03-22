@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quotesbook/helpers/demo_localizations.dart';
 import 'package:quotesbook/screens/favorites_list.dart';
 import 'package:quotesbook/screens/quotes_list.dart';
 
@@ -20,15 +21,13 @@ class _TabsScreenState extends State<TabsScreen>
   void _initPages() {
     if (_pages.isEmpty) {
       _pages.addAll([
-        {
-          'title': 'Quotes',
+        {          
           'page': QuotesListScreen(
             lang: widget.lang,
             key: PageStorageKey('Quotes'),
           ),
         },
-        {
-          'title': 'Favorites',
+        {          
           'page': FavoritesScreen(
             key: PageStorageKey('Favorites'),
           )
@@ -62,9 +61,10 @@ class _TabsScreenState extends State<TabsScreen>
   @override
   Widget build(BuildContext context) {
     final selectedPage = _pages[_selectedPageIndex];
+    var localizations = DemoLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(selectedPage['title']),
+        title: Text(_selectedPageIndex == 0 ? localizations.someQuotesTitle : localizations.savedQuotesTitle),
       ),
       body: IndexedStack(
         index: _selectedPageIndex,
@@ -78,11 +78,11 @@ class _TabsScreenState extends State<TabsScreen>
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.message),
-              title: Text("Quotes"),
+              title: Text(DemoLocalizations.of(context).quotesTab),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.star),
-              title: Text("Favorites"),
+              title: Text(DemoLocalizations.of(context).favoritesTab),
             )
           ]),
     );

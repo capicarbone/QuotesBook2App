@@ -6,6 +6,20 @@ import 'package:quotesbook/providers/saved_quotes.dart';
 
 import './screens/tabs_screen.dart';
 import './widgets/localize_lang_widget.dart';
+import './helpers/demo_localizations.dart';
+
+class DemoLocalizationsDelegate extends LocalizationsDelegate<DemoLocalizations> {
+  const DemoLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => ['en', 'es'].contains(locale.languageCode);
+
+  @override
+  Future<DemoLocalizations> load(Locale locale) => DemoLocalizations.load(locale);
+
+  @override
+  bool shouldReload(DemoLocalizationsDelegate old) => false;
+}
 
 void main() => runApp(MyApp());
 
@@ -29,13 +43,13 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         localizationsDelegates: [
+          const DemoLocalizationsDelegate(),
           GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate
+          GlobalWidgetsLocalizations.delegate,          
         ],
         supportedLocales: [
-          const Locale('en'),
-          const Locale('es')
+          const Locale('en', ''),
+          const Locale('es', '')
         ],
         title: 'Quotesbook',
         theme: ThemeData(primarySwatch: Colors.blue, accentColor: Colors.amber),

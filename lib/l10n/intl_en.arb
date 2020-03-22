@@ -1,0 +1,27 @@
+{
+  "@@last_modified": "2020-03-21T17:57:42.862339",
+  "someQuotesTitle": "Some Quotes",
+  "@someQuotesTitle": {
+    "description": "Title for some quotes screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "savedQuotesTitle": "Your Favorites",
+  "@savedQuotesTitle": {
+    "description": "Title for favorite quotes screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "quotesTab": "Quotes",
+  "@quotesTab": {
+    "description": "Quotes tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favoritesTab": "Favorites",
+  "@favoritesTab": {
+    "description": "Favorites tab label",
+    "type": "text",
+    "placeholders": {}
+  }
+}
