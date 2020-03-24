@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quotesbook/models/QuoteTheme.dart';
 
 import '../models/Quote.dart';
 import '../providers/saved_quotes.dart';
@@ -8,7 +9,12 @@ import 'package:google_fonts/google_fonts.dart';
 class QuoteListItem extends StatelessWidget {
   Quote quote;
 
-  QuoteListItem(this.quote);
+  QuoteListItem(this.quote){
+    if (quote.themeId == null)  {
+      quote.themeId = QuoteTheme.getRandomTheme().id;
+    }
+  }
+
   static final quoteFontSize = 27.0;
   static final authorFontSize = quoteFontSize * 0.57;
   static final authorDescriptionFontSize = quoteFontSize * 0.40;
@@ -18,11 +24,13 @@ class QuoteListItem extends StatelessWidget {
 
     var quotesProvider = Provider.of<SavedQuotes>(context, listen: false);
 
+    var theme = QuoteTheme.getThemeById(quote.themeId);
+
     return Container(
       padding: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 0),
       width: double.infinity,
       child: Card(
-        color: Colors.orange,
+        color: theme.backgroundColor,
         elevation: 4,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
@@ -34,7 +42,7 @@ class QuoteListItem extends StatelessWidget {
                 child: Text(
                   quote.body,
                   style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(fontSize: quoteFontSize, fontWeight: FontWeight.bold)
+                    textStyle: TextStyle(fontSize: quoteFontSize, fontWeight: FontWeight.bold, color: theme.textColor)
                   ),
                   textAlign: TextAlign.right,
                 ),
@@ -43,7 +51,7 @@ class QuoteListItem extends StatelessWidget {
                 height: 25,
               ),
               Container(
-                color: Colors.black,
+                color: theme.textColor,
                 height: 3.0,
                 width: 30,
               ),
@@ -58,14 +66,15 @@ class QuoteListItem extends StatelessWidget {
                     Text(
                       '${quote.author.firstName} ${quote.author.lastName},',
                       style: GoogleFonts.montserrat(
-                        textStyle: TextStyle(fontSize: authorFontSize)
+                        textStyle: TextStyle(fontSize: authorFontSize, color: theme.textColor)
                       ),
                       textAlign: TextAlign.right,                      
                     ),
                     Text(
-                      quote.author.shortDescription + ".",
+                      quote.author.shortDescription,
                       style: GoogleFonts.montserrat(
                         textStyle: TextStyle(
+                          color: theme.textColor,
                           fontSize: authorDescriptionFontSize
                         )
                       ),

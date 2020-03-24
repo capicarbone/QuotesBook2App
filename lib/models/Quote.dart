@@ -5,8 +5,9 @@ class Quote {
   String body;
   Author author;
   bool isFavorite;
+  String themeId;
 
-  Quote({this.id, this.body, this.author, this.isFavorite = false});
+  Quote({this.id, this.body, this.author, this.themeId = null, this.isFavorite = false});
 
   Quote.fromMap(Map<String, dynamic> map) {
     body = map['body'];
