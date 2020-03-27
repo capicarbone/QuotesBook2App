@@ -8,7 +8,8 @@ import './screens/tabs_screen.dart';
 import './widgets/localize_lang_widget.dart';
 import './helpers/app_localizations.dart';
 
-class DemoLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class DemoLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const DemoLocalizationsDelegate();
 
   @override
@@ -33,27 +34,33 @@ class MyApp extends StatelessWidget {
         ListenableProxyProvider<SavedQuotes, Quotes>(
           create: (_) {
             return Quotes();
-          } ,
+          },
           update: (_, saved, quotes) {
             if (quotes != null) quotes.savedQuotes = saved.savedQuotes;
 
-            return quotes; 
-          } ,
-        ),        
+            return quotes;
+          },
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: [
           const DemoLocalizationsDelegate(),
           GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,          
+          GlobalWidgetsLocalizations.delegate,
         ],
-        supportedLocales: [
-          const Locale('en', ''),
-          const Locale('es', '')
-        ],
+        supportedLocales: [const Locale('en', ''), const Locale('es', '')],
         title: 'Quotesbook',
-        theme: ThemeData(primarySwatch: Colors.blue, accentColor: Colors.amber),
-        home: LocalizeLang(builder: (lang) => TabsScreen(lang: lang,)  ) ,
+        theme: ThemeData(
+          primaryColor: Color(0xFF00BCD4),
+          accentColor: Colors.amber,
+          primaryTextTheme: TextTheme(
+            title: TextStyle(color: Colors.white),
+          ),
+        ),
+        home: LocalizeLang(
+            builder: (lang) => TabsScreen(
+                  lang: lang,
+                )),
       ),
     );
   }
