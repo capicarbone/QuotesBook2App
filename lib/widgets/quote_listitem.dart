@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/models/QuoteTheme.dart';
+import 'package:quotesbook/widgets/bookmark.dart';
 
 import '../models/Quote.dart';
 import '../providers/saved_quotes.dart';
@@ -38,7 +39,7 @@ class QuoteListItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GestureDetector(
-                  child: Container(width: 50, height: 60, color: quote.isFavorite ? Colors.amber : theme.secondaryColor),
+                  child: Container(width: 50, height: 50, child: Bookmark(quote.isFavorite ? Colors.amber : theme.secondaryColor),),
                   onTap: () {
                     if (quote.isFavorite) {
                       quotesProvider.removeQuote(quote);
