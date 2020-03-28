@@ -23,7 +23,7 @@ class FavoritesScreen extends StatelessWidget {
                 children: <Widget>[
                   Text(AppLocalizations.of(context).favoritesEmptyMessage, style: TextStyle(color: Colors.grey),),
                   SizedBox(height: 12,),
-                  Icon(Icons.star, color: Colors.grey, size: 48,)
+                  Icon(Icons.bookmark, color: Colors.grey, size: 48,)
                 ],
               ),
             ))
