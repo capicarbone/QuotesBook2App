@@ -63,6 +63,7 @@ class _TabsScreenState extends State<TabsScreen>
     final selectedPage = _pages[_selectedPageIndex];
     var localizations = AppLocalizations.of(context);
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: Text(_selectedPageIndex == 0 ? localizations.someQuotesTitle : localizations.savedQuotesTitle),
       ),
@@ -72,8 +73,8 @@ class _TabsScreenState extends State<TabsScreen>
       ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,
-          backgroundColor: Theme.of(context).primaryColor,
-          selectedItemColor: Theme.of(context).accentColor,
+          backgroundColor: Colors.white,
+          selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _selectedPageIndex,
           items: [
             BottomNavigationBarItem(
