@@ -7,18 +7,19 @@ class QuoteTheme {
   String id;
   Color textColor;
   Color backgroundColor;
+  Color secondaryColor;
 
-  QuoteTheme({@required this.id, @required this.textColor, @required this.backgroundColor});
+  QuoteTheme({@required this.id, @required this.textColor, @required this.backgroundColor, @required this.secondaryColor});
 
   static final themes = [
-    QuoteTheme(id: 'amber', textColor: Colors.black , backgroundColor: Colors.amber),
-    QuoteTheme(id: 'orange', textColor: Colors.white , backgroundColor: Colors.orange),
-    QuoteTheme(id: 'purple', textColor: Colors.white , backgroundColor: Colors.purple),
-    //QuoteTheme(id: 'cyan', textColor: Colors.black , backgroundColor: Colors.cyan),
-    QuoteTheme(id: 'pink', textColor: Colors.white , backgroundColor: Colors.pink),
-    QuoteTheme(id: 'teal', textColor: Colors.white , backgroundColor: Colors.teal),
-    QuoteTheme(id: 'lime', textColor: Colors.black , backgroundColor: Colors.lime),
-    QuoteTheme(id: 'green', textColor: Colors.white , backgroundColor: Colors.green),
+    //QuoteTheme(id: 'amber', textColor: Colors.black , backgroundColor: Colors.amber),
+    QuoteTheme(id: 'orange', textColor: Colors.white , backgroundColor: Colors.orange, secondaryColor: Colors.orange.shade600),
+    QuoteTheme(id: 'purple', textColor: Colors.white , backgroundColor: Colors.purple, secondaryColor: Colors.purple.shade600),
+    QuoteTheme(id: 'cyan', textColor: Colors.white , backgroundColor: Colors.cyan, secondaryColor: Colors.cyan.shade600),
+    QuoteTheme(id: 'pink', textColor: Colors.white , backgroundColor: Colors.pink, secondaryColor: Colors.pink.shade600),
+    QuoteTheme(id: 'teal', textColor: Colors.white , backgroundColor: Colors.teal, secondaryColor: Colors.teal.shade600),
+    //QuoteTheme(id: 'lime', textColor: Colors.black , backgroundColor: Colors.lime, secondaryColor: Colors.lime.shade600),
+    QuoteTheme(id: 'green', textColor: Colors.white , backgroundColor: Colors.green, secondaryColor: Colors.green.shade600),
   ];
 
   static QuoteTheme getThemeById(String id){

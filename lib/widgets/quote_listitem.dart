@@ -9,8 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 class QuoteListItem extends StatelessWidget {
   Quote quote;
 
-  QuoteListItem(this.quote){
-    if (quote.themeId == null)  {
+  QuoteListItem(this.quote) {
+    if (quote.themeId == null) {
       quote.themeId = QuoteTheme.getRandomTheme().id;
     }
   }
@@ -21,7 +21,6 @@ class QuoteListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     var quotesProvider = Provider.of<SavedQuotes>(context, listen: false);
 
     var theme = QuoteTheme.getThemeById(quote.themeId);
@@ -33,77 +32,96 @@ class QuoteListItem extends StatelessWidget {
         color: theme.backgroundColor,
         elevation: 4,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+          padding:
+              const EdgeInsets.only(right: 20, left: 20, bottom: 40, top: 0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                width: double.infinity,
-                child: Text(
-                  quote.body,
-                  style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(fontSize: quoteFontSize, fontWeight: FontWeight.bold, color: theme.textColor)
+              GestureDetector(
+                  child: Container(width: 50, height: 60, color: quote.isFavorite ? Colors.amber : theme.secondaryColor),
+                  onTap: () {
+                    if (quote.isFavorite) {
+                      quotesProvider.removeQuote(quote);
+                    } else {
+                      quotesProvider.saveQuote(quote);
+                    }
+                  }),
+              SizedBox(
+                height: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    child: Text(
+                      quote.body,
+                      style: GoogleFonts.montserrat(
+                          textStyle: TextStyle(
+                              fontSize: quoteFontSize,
+                              fontWeight: FontWeight.bold,
+                              color: theme.textColor)),
+                      textAlign: TextAlign.right,
+                    ),
                   ),
-                  textAlign: TextAlign.right,
-                ),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Container(
-                color: theme.textColor,
-                height: 3.0,
-                width: 30,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Container(                
-                alignment: Alignment.centerRight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      '${quote.author.firstName} ${quote.author.lastName},',
-                      style: GoogleFonts.montserrat(
-                        textStyle: TextStyle(fontSize: authorFontSize, color: theme.textColor)
-                      ),
-                      textAlign: TextAlign.right,                      
-                    ),
-                    Text(
-                      quote.author.shortDescription,
-                      style: GoogleFonts.montserrat(
-                        textStyle: TextStyle(
-                          color: theme.textColor,
-                          fontSize: authorDescriptionFontSize
-                        )
-                      ),
-                      textAlign: TextAlign.right,                    
-                    ),
-                    /*
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    color: theme.textColor,
+                    height: 3.0,
+                    width: 30,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        IconButton(
-                            icon: Icon(
-                              Icons.star,
-                              color:
-                                  quote.isFavorite ? Colors.amber : Colors.grey,
-                            ),
-                            onPressed: () {
-                              if (quote.isFavorite){
-                                quotesProvider.removeQuote(quote);
-                              }else {
-                                quotesProvider.saveQuote(quote);
-                              }
-                              
-                            })
+                        Text(
+                          '${quote.author.firstName} ${quote.author.lastName},',
+                          style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                  fontSize: authorFontSize,
+                                  color: theme.textColor)),
+                          textAlign: TextAlign.right,
+                        ),
+                        Text(
+                          quote.author.shortDescription,
+                          style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                  color: theme.textColor,
+                                  fontSize: authorDescriptionFontSize)),
+                          textAlign: TextAlign.right,
+                        ),
+                        /*
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            IconButton(
+                                icon: Icon(
+                                  Icons.star,
+                                  color:
+                                      quote.isFavorite ? Colors.amber : Colors.grey,
+                                ),
+                                onPressed: () {
+                                  if (quote.isFavorite){
+                                    quotesProvider.removeQuote(quote);
+                                  }else {
+                                    quotesProvider.saveQuote(quote);
+                                  }
+                                  
+                                })
+                          ],
+                        )
+                        */
                       ],
-                    )
-                    */
-                  ],
-                ),
-              )
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),
