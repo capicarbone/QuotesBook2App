@@ -82,7 +82,7 @@ class _TabsScreenState extends State<TabsScreen>
               title: Text(AppLocalizations.of(context).quotesTab),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.star),
+              icon: Icon(Icons.bookmark),
               title: Text(AppLocalizations.of(context).favoritesTab),
             )
           ]),
