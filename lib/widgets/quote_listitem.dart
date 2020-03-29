@@ -35,11 +35,17 @@ class QuoteListItem extends StatelessWidget {
         child: Padding(
           padding:
               const EdgeInsets.only(right: 20, left: 20, bottom: 40, top: 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(            
             children: <Widget>[
               GestureDetector(
-                  child: Container(width: 50, height: 50, child: Bookmark(quote.isFavorite ? Colors.amber : theme.secondaryColor),),
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    width: 50,
+                    curve: Curves.bounceOut,
+                    height: quote.isFavorite ? 50 : 30,
+                    child: Bookmark(
+                        quote.isFavorite ? Colors.amber : theme.secondaryColor),
+                  ),
                   onTap: () {
                     if (quote.isFavorite) {
                       quotesProvider.removeQuote(quote);
@@ -53,6 +59,7 @@ class QuoteListItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
+                  SizedBox(height: 50,),
                   Container(
                     width: double.infinity,
                     child: Text(
