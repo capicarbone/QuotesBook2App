@@ -14,7 +14,7 @@ class DBHelper {
     return await sql.openDatabase(path.join(dbPath, 'quotes.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE $_QUOTES_TABLE(id TEXT PRIMARY KEY, body TEXT, author_first_name TEXT, author_last_name TEXT, author_short_description TEXT, author_picture_url TEXT)');
+          'CREATE TABLE $_QUOTES_TABLE(id TEXT PRIMARY KEY, body TEXT, author_first_name TEXT, author_last_name TEXT, author_short_description TEXT, author_picture_url TEXT, theme_id TEXT)');
     }, version: 1);
   }
 
@@ -29,9 +29,10 @@ class DBHelper {
     var quoteMap = {
       'id': quote.id,
       'body': quote.body,
+      'theme_id': quote.themeId,
       'author_first_name': quote.author.firstName,
       'author_last_name': quote.author.lastName,
-      'author_short_description': quote.author.shortDescription,
+      'author_short_description': quote.author.shortDescription,    
       'author_picture_url': null,
     };
 
@@ -55,7 +56,7 @@ class DBHelper {
 
     List<Quote> quotes = data.map<Quote>( (map) {
       var author = Author(firstName: map['author_first_name'], lastName: map['author_last_name'], shortDescription: map['author_short_description'], pictureUrl: map['author_picture_url'] );
-      var quote = Quote(author: author, body: map['body'], id: map['id'], isFavorite: true);
+      var quote = Quote(author: author, body: map['body'], id: map['id'], isFavorite: true, themeId: map['theme_id']);
       return quote;
     }).toList();
 
