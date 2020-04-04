@@ -52,7 +52,10 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         itemBuilder: (ctx, position) {
           if (position == provider.quotes.length) {
             return Container(
-              child: Center(child: CircularProgressIndicator()),
+              child: Center(child: Theme(
+                data: Theme.of(context).copyWith(accentColor: Colors.grey),
+                child: CircularProgressIndicator(),
+              ) ),
               height: 80,
             );
           } else {
