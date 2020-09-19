@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/providers/quotes.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
+import 'package:quotesbook/screens/quote_details_screen.dart';
 
 import './screens/tabs_screen.dart';
 import './widgets/localize_lang_widget.dart';
@@ -61,6 +62,9 @@ class MyApp extends StatelessWidget {
             builder: (lang) => TabsScreen(
                   lang: lang,
                 )),
+        routes: {
+          QuoteDetailsScreen.routeName: (context) => QuoteDetailsScreen(),
+        }
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/helpers/app_localizations.dart';
+import 'package:quotesbook/screens/quote_details_screen.dart';
 
 import '../providers/quotes.dart';
 import '../widgets/quote_listitem.dart';
@@ -40,7 +41,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       _listController.addListener(() {
         if (_listController.position.pixels >=
                 _listController.position.maxScrollExtent - 200 &&
-            !_loadingQuotes) {          
+            !_loadingQuotes) {
           _fetchQuotes();
         }
       });
@@ -52,14 +53,20 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         itemBuilder: (ctx, position) {
           if (position == provider.quotes.length) {
             return Container(
-              child: Center(child: Theme(
+              child: Center(
+                  child: Theme(
                 data: Theme.of(context).copyWith(accentColor: Colors.grey),
                 child: CircularProgressIndicator(),
-              ) ),
+              )),
               height: 80,
             );
           } else {
-            return QuoteListItem(provider.quotes[position]);
+            var quote = provider.quotes[position];
+            return QuoteListItem(
+                quote: quote,
+                onTap: () {
+                  Navigator.of(context).pushNamed(QuoteDetailsScreen.routeName, arguments: {'quote': quote});
+                });
           }
         },
         itemCount: provider.quotes.length + 1,
@@ -77,8 +84,13 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       if (_elapsedErrors == 0) {
         Scaffold.of(context).hideCurrentSnackBar();
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Scaffold.of(context)
-              .showSnackBar( _automaticReloadEnabled ? SnackBar(content: Text(AppLocalizations.of(context).quotesLoadErrorMessage), duration: Duration(seconds: 20),) :  SnackBar(content: Text('Some error has ocurred.')));
+          Scaffold.of(context).showSnackBar(_automaticReloadEnabled
+              ? SnackBar(
+                  content:
+                      Text(AppLocalizations.of(context).quotesLoadErrorMessage),
+                  duration: Duration(seconds: 20),
+                )
+              : SnackBar(content: Text('Some error has ocurred.')));
         });
       }
 
@@ -88,7 +100,6 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
 
       _elapsedErrors++;
     });
-
 
     promise.then((res) {
       Scaffold.of(context).hideCurrentSnackBar();
