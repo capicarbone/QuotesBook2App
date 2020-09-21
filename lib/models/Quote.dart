@@ -19,4 +19,8 @@ class Quote {
         pictureUrl: null);
     isFavorite = false;
   }
+
+  String toText(){
+    return "$body - ${author.firstName} ${author.lastName}";
+  }
 }

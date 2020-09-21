@@ -17,7 +17,7 @@ class QuoteDetailsScreen extends StatelessWidget {
   final _screenPadding = 22.0;
 
   Widget _onTextSharePressed() {
-    Share.share(_quote.body);
+    Share.share(_quote.toText());
   }
 
 
