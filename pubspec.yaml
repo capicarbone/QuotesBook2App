@@ -28,6 +28,7 @@ dependencies:
   path: ^1.6.4
   sqflite: ^1.2.1
   intl: ^0.16.0
+  share: ^0.6.5+1
   intl_translation: ^0.17.9
   google_fonts: ^0.3.10
 

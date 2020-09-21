@@ -6,6 +6,7 @@ import 'package:quotesbook/models/QuoteTheme.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/widgets/bookmark.dart';
 import 'package:quotesbook/widgets/quote_body.dart';
+import 'package:share/share.dart';
 
 class QuoteDetailsScreen extends StatelessWidget {
   Quote _quote;
@@ -14,6 +15,10 @@ class QuoteDetailsScreen extends StatelessWidget {
   static final routeName = "/quote";
 
   final _screenPadding = 22.0;
+
+  Widget _onTextSharePressed() {
+    Share.share(_quote.body);
+  }
 
 
   Widget _onSharePressed(BuildContext ctx){
@@ -24,6 +29,10 @@ class QuoteDetailsScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.textsms),
               title: Text("Text", ),
+              onTap: (){
+                _onTextSharePressed();
+                Navigator.pop(ctx);
+              },
             ),
             ListTile(
               leading: Icon(Icons.image),
