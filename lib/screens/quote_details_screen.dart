@@ -15,6 +15,26 @@ class QuoteDetailsScreen extends StatelessWidget {
 
   final _screenPadding = 22.0;
 
+
+  Widget _onSharePressed(BuildContext ctx){
+    showModalBottomSheet(context: ctx, builder: (_){
+      return Container(
+        child: Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.textsms),
+              title: Text("Text", ),
+            ),
+            ListTile(
+              leading: Icon(Icons.image),
+              title: Text("Image", ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
   Widget _buildQuoteBody() {
     return Padding(
       padding: EdgeInsets.all(_screenPadding),
@@ -68,7 +88,7 @@ class QuoteDetailsScreen extends StatelessWidget {
         });
   }
 
-  Widget _buildBottomMenu(SavedQuotes quotesProvider) {
+  Widget _buildBottomMenu(BuildContext ctx, SavedQuotes quotesProvider) {
     return Container(
       height: 32,
       alignment: Alignment.centerRight,
@@ -100,7 +120,9 @@ class QuoteDetailsScreen extends StatelessWidget {
                       ),
                 label: Text("")),
             FlatButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  _onSharePressed(ctx);
+                },
                 icon: Icon(
                   Icons.share,
                   color: Colors.white,
@@ -138,7 +160,7 @@ class QuoteDetailsScreen extends StatelessWidget {
                   Flexible(
                     child: _buildQuoteBody(),
                   ),
-                  _buildBottomMenu(quotesProvider),
+                  _buildBottomMenu(context, quotesProvider),
                   SizedBox(
                     height: _screenPadding,
                   )
