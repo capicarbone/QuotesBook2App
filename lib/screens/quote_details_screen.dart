@@ -12,8 +12,105 @@ class QuoteDetailsScreen extends StatelessWidget {
   QuoteTheme _theme;
 
   static final routeName = "/quote";
-  
+
   final _screenPadding = 22.0;
+
+  Widget _buildQuoteBody() {
+    return Padding(
+      padding: EdgeInsets.all(_screenPadding),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            QuoteBody(
+              quote: _quote,
+            ),
+            SizedBox(
+              height: 120,
+            ) // For center taking account the app bar
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSavedMarker(SavedQuotes quotesProvider) {
+    return GestureDetector(
+        child: Stack(
+          children: <Widget>[
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              width: 50,
+              curve: Curves.bounceOut,
+              height: _quote.isFavorite ? 50 : 30,
+              child: Bookmark(
+                  _quote.isFavorite ? Colors.amber : _theme.secondaryColor),
+            ),
+            if (_quote.isFavorite)
+              Container(
+                child: Center(
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.white,
+                  ),
+                ),
+                width: 50,
+                height: 40,
+              )
+          ],
+        ),
+        onTap: () {
+          if (_quote.isFavorite) {
+            quotesProvider.removeQuote(_quote);
+          } else {
+            quotesProvider.saveQuote(_quote);
+          }
+        });
+  }
+
+  Widget _buildBottomMenu(SavedQuotes quotesProvider) {
+    return Container(
+      height: 32,
+      alignment: Alignment.centerRight,
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.black26,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(50), bottomLeft: Radius.circular(50))),
+        height: 32,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            FlatButton.icon(
+                onPressed: () {
+                  if (_quote.isFavorite) {
+                    quotesProvider.removeQuote(_quote);
+                  } else {
+                    quotesProvider.saveQuote(_quote);
+                  }
+                },
+                icon: _quote.isFavorite
+                    ? Icon(
+                        Icons.bookmark,
+                        color: Colors.amber,
+                      )
+                    : Icon(
+                        Icons.bookmark_border,
+                        color: Colors.white,
+                      ),
+                label: Text("")),
+            FlatButton.icon(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.share,
+                  color: Colors.white,
+                ),
+                label: Text("")),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,65 +136,9 @@ class QuoteDetailsScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.all(_screenPadding),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            QuoteBody(
-                              quote: _quote,
-                            ),
-                            SizedBox(
-                              height: 120,
-                            ) // For center taking account the app bar
-                          ],
-                        ),
-                      ),
-                    ),
+                    child: _buildQuoteBody(),
                   ),
-                  Container(
-                    height: 32,
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black26,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(50),
-                              bottomLeft: Radius.circular(50))),
-                      height: 32,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          FlatButton.icon(
-                              onPressed: () {
-                                if (_quote.isFavorite) {
-                                  quotesProvider.removeQuote(_quote);
-                                } else {
-                                  quotesProvider.saveQuote(_quote);
-                                }
-                              },
-                              icon: _quote.isFavorite
-                                  ? Icon(
-                                      Icons.bookmark,
-                                      color: Colors.amber,
-                                    )
-                                  : Icon(
-                                      Icons.bookmark_border,
-                                      color: Colors.white,
-                                    ),
-                              label: Text("")),
-                          FlatButton.icon(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.share,
-                                color: Colors.white,
-                              ),
-                              label: Text("")),
-                        ],
-                      ),
-                    ),
-                  ),
+                  _buildBottomMenu(quotesProvider),
                   SizedBox(
                     height: _screenPadding,
                   )
@@ -108,38 +149,8 @@ class QuoteDetailsScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.only(right: _screenPadding),
             alignment: Alignment.topRight,
-            child: GestureDetector(
-              child: Stack(
-                children: <Widget>[
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    width: 50,
-                    curve: Curves.bounceOut,
-                    height: _quote.isFavorite ? 50 : 30,
-                    child: Bookmark(_quote.isFavorite
-                        ? Colors.amber
-                        : _theme.secondaryColor),
-                  ),
-                  if (_quote.isFavorite)
-                    Container(
-                      child: Center(
-                        child: Icon(
-                          Icons.star,
-                          color: Colors.white,
-                        ),
-                      ),
-                      width: 50,
-                      height: 40,
-                    )
-                ],
-              ),
-              onTap: () {
-                if (_quote.isFavorite) {
-                  quotesProvider.removeQuote(_quote);
-                } else {
-                  quotesProvider.saveQuote(_quote);
-                }
-              }),),
+            child: _buildSavedMarker(quotesProvider),
+          ),
         ),
       ],
     );
