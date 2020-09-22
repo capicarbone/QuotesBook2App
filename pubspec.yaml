@@ -29,12 +29,13 @@ dependencies:
   sqflite: ^1.2.1
   intl: ^0.16.0
   share: ^0.6.5+1
+  image: ^2.1.17
   intl_translation: ^0.17.9
   google_fonts: ^0.3.10
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#dev_dependencies:
+#  flutter_test:
+#    sdk: flutter
 
 
 # For information on the generic Dart part of this file, see the
