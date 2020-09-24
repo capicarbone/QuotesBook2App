@@ -1,5 +1,11 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:flutter/services.dart';
+import 'package:image/image.dart' as image;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/models/Quote.dart';
 import 'package:quotesbook/models/QuoteTheme.dart';
@@ -8,18 +14,47 @@ import 'package:quotesbook/widgets/bookmark.dart';
 import 'package:quotesbook/widgets/quote_body.dart';
 import 'package:share/share.dart';
 
-class QuoteDetailsScreen extends StatelessWidget {
+class QuoteDetailsScreen extends StatefulWidget {
+  static final routeName = "/quote";
+
+  @override
+  _QuoteDetailsScreenState createState() => _QuoteDetailsScreenState();
+}
+
+class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   Quote _quote;
+
   QuoteTheme _theme;
 
-  static final routeName = "/quote";
+  GlobalKey _repaintBoundaryKey = new GlobalKey();
+
+  Uint8List _memoryImage;
 
   final _screenPadding = 22.0;
 
-  Widget _onTextSharePressed() {
-    Share.share(_quote.toText());
+  void _generateImage() async {
+    RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext.findRenderObject();
+    ui.Image quoteShot = await boundary.toImage();
+    final bytes = await quoteShot.toByteData(format: ui.ImageByteFormat.png);
+
+    var logoImage = image.decodePng((await rootBundle.load('assets/quote-logo.png')).buffer.asUint8List());
+    var quoteImage = image.decodePng(bytes.buffer.asUint8List());
+
+    var finalImage = image.copyInto(quoteImage, logoImage);
+
+    setState(() {
+      _memoryImage = image.encodePng(finalImage);
+    });
+
   }
 
+  void _onImageSharePressed() {
+    _generateImage();
+  }
+
+  void _onTextSharePressed() {
+    Share.share(_quote.toText());
+  }
 
   Widget _onSharePressed(BuildContext ctx){
     showModalBottomSheet(context: ctx, builder: (_){
@@ -37,6 +72,10 @@ class QuoteDetailsScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.image),
               title: Text("Image", ),
+              onTap: () {
+                _onImageSharePressed();
+                Navigator.pop(ctx);
+              },
             ),
           ],
         ),
@@ -45,19 +84,25 @@ class QuoteDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildQuoteBody() {
-    return Padding(
-      padding: EdgeInsets.all(_screenPadding),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            QuoteBody(
-              quote: _quote,
+    return RepaintBoundary(
+      key: _repaintBoundaryKey,
+      child: Container(
+        color: _theme.backgroundColor,
+        child: Padding(
+          padding: EdgeInsets.all(_screenPadding),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                QuoteBody(
+                  quote: _quote,
+                ),
+                SizedBox(
+                  height: 120,
+                ) // For center taking account the app bar
+              ],
             ),
-            SizedBox(
-              height: 120,
-            ) // For center taking account the app bar
-          ],
+          ),
         ),
       ),
     );
@@ -183,6 +228,17 @@ class QuoteDetailsScreen extends StatelessWidget {
             child: _buildSavedMarker(quotesProvider),
           ),
         ),
+        SafeArea(
+          child: Container(
+            width: 300,
+            height: 300,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blueAccent, width: 3)
+            ),
+            child: _memoryImage != null ?
+                Image.memory(_memoryImage)  : Placeholder(),
+          ),
+        )
       ],
     );
   }
