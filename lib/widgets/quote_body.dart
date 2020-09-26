@@ -23,9 +23,6 @@ class QuoteBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        SizedBox(
-          height: 50,
-        ),
         Container(
           width: double.infinity,
           child: Text(

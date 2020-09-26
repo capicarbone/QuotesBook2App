@@ -35,9 +35,9 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   void _generateImage() async {
 
     var logoProportion = 0.05;
-    var imageSize = 500;
-    var imagePadding = (imageSize*0.02).toInt();
-    var quotePadding = (imageSize*0.05).toInt();
+    var imageSize = 450;
+    var verticalPadding = (imageSize*0.02).toInt();
+    var horizontalPadding = (imageSize*0.05).toInt();
     var bgColor = _theme.backgroundColor;
 
     var finalQuoteImage = image.Image(imageSize, imageSize);
@@ -57,23 +57,26 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
         width: (logoImage.width * logoProportion).toInt(),
         height: (logoImage.height * logoProportion).toInt());
     
-    var destY = finalQuoteImage.height - logoImage.height - imagePadding;
+    var destY = finalQuoteImage.height - logoImage.height - verticalPadding;
     var quoteImageXCenter = finalQuoteImage.width ~/ 2;
     var logoImageXCenter = logoImage.width ~/ 2;
 
-    finalQuoteImage = image.copyInto(finalQuoteImage, quoteImage,
-        dstX: imageSize - quoteImage.width - quotePadding,
-        dstY: imageSize ~/ 2 - (quoteImage.width ~/ 2)
-    );
     finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter);
 
-    Share.file("A Quote from Quotesbook", 'quote.png', image.encodePng(finalQuoteImage), 'image/png');
-    /*
+    var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (verticalPadding*2);
+
+    finalQuoteImage = image.copyInto(finalQuoteImage, quoteImage,
+        dstX: imageSize - quoteImage.width - horizontalPadding,
+        dstY: imageSize ~/ 2 - (quoteImage.width ~/ 2)
+    );
+
+    //Share.file("A Quote from Quotesbook", 'quote.png', image.encodePng(finalQuoteImage), 'image/png');
+
     setState(() {
       _memoryImage = image.encodePng(finalQuoteImage);
     });
     
-    */
+
      
 
   }

@@ -73,7 +73,11 @@ class QuoteListItem extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                QuoteBody(quote: quote,),
+                Column(children: <Widget>[
+                  SizedBox(height: 50,),
+                  QuoteBody(quote: quote,)
+                ],)
+                ,
               ],
             ),
           ),
