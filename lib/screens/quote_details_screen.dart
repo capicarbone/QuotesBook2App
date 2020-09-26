@@ -12,7 +12,7 @@ import 'package:quotesbook/models/QuoteTheme.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/widgets/bookmark.dart';
 import 'package:quotesbook/widgets/quote_body.dart';
-import 'package:share/share.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 
 class QuoteDetailsScreen extends StatefulWidget {
   static final routeName = "/quote";
@@ -67,9 +67,14 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     );
     finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter);
 
+    Share.file("A Quote from Quotesbook", 'quote.png', image.encodePng(finalQuoteImage), 'image/png');
+    /*
     setState(() {
       _memoryImage = image.encodePng(finalQuoteImage);
     });
+    
+    */
+     
 
   }
 
@@ -78,7 +83,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   }
 
   void _onTextSharePressed() {
-    Share.share(_quote.toText());
+    Share.text('A quote from Quotesbook', _quote.toText(), 'text/plain');
   }
 
   Widget _onSharePressed(BuildContext ctx){
