@@ -67,7 +67,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
     finalQuoteImage = image.copyInto(finalQuoteImage, quoteImage,
         dstX: imageSize - quoteImage.width - horizontalPadding,
-        dstY: imageSize ~/ 2 - (quoteImage.width ~/ 2)
+        dstY: verticalPadding + (availableHeightForQuote ~/ 2) - (quoteImage.height ~/ 2)
     );
 
     //Share.file("A Quote from Quotesbook", 'quote.png', image.encodePng(finalQuoteImage), 'image/png');
