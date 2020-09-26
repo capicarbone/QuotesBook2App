@@ -34,8 +34,17 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
   void _generateImage() async {
 
-    var imagePadding = 16;
     var logoProportion = 0.05;
+    var imageSize = 500;
+    var imagePadding = (imageSize*0.02).toInt();
+    var quotePadding = (imageSize*0.05).toInt();
+    var bgColor = _theme.backgroundColor;
+
+    var finalQuoteImage = image.Image(imageSize, imageSize);
+
+    // The image library use the form 0xAABBGGRR for colors
+    finalQuoteImage.fill(Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
+
 
     RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext.findRenderObject();
     ui.Image quoteShot = await boundary.toImage();
@@ -48,14 +57,18 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
         width: (logoImage.width * logoProportion).toInt(),
         height: (logoImage.height * logoProportion).toInt());
     
-    var destY = quoteImage.height - logoImage.height - imagePadding;
-    var quoteImageXCenter = quoteImage.width ~/ 2;
+    var destY = finalQuoteImage.height - logoImage.height - imagePadding;
+    var quoteImageXCenter = finalQuoteImage.width ~/ 2;
     var logoImageXCenter = logoImage.width ~/ 2;
 
-    var finalImage = image.copyInto(quoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter);
+    finalQuoteImage = image.copyInto(finalQuoteImage, quoteImage,
+        dstX: imageSize - quoteImage.width - quotePadding,
+        dstY: imageSize ~/ 2 - (quoteImage.width ~/ 2)
+    );
+    finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter);
 
     setState(() {
-      _memoryImage = image.encodePng(finalImage);
+      _memoryImage = image.encodePng(finalQuoteImage);
     });
 
   }
