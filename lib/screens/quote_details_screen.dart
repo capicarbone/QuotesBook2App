@@ -33,6 +33,10 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   final _screenPadding = 22.0;
 
   void _generateImage() async {
+
+    var imagePadding = 16;
+    var logoProportion = 0.05;
+
     RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext.findRenderObject();
     ui.Image quoteShot = await boundary.toImage();
     final bytes = await quoteShot.toByteData(format: ui.ImageByteFormat.png);
@@ -40,7 +44,15 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     var logoImage = image.decodePng((await rootBundle.load('assets/quote-logo.png')).buffer.asUint8List());
     var quoteImage = image.decodePng(bytes.buffer.asUint8List());
 
-    var finalImage = image.copyInto(quoteImage, logoImage);
+    logoImage = image.copyResize(logoImage,
+        width: (logoImage.width * logoProportion).toInt(),
+        height: (logoImage.height * logoProportion).toInt());
+    
+    var destY = quoteImage.height - logoImage.height - imagePadding;
+    var quoteImageXCenter = quoteImage.width ~/ 2;
+    var logoImageXCenter = logoImage.width ~/ 2;
+
+    var finalImage = image.copyInto(quoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter);
 
     setState(() {
       _memoryImage = image.encodePng(finalImage);
