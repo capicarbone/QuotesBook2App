@@ -96,22 +96,20 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   }
 
   Widget _buildQuoteBody() {
-    return RepaintBoundary(
-      key: _repaintBoundaryKey,
-      child: Container(
-        color: _theme.backgroundColor,
-        child: Padding(
-          padding: EdgeInsets.all(_screenPadding),
-          child: Center(
+    return Container(
+      child: Center(
+        child: Container(
+          child: Padding(
+            padding: EdgeInsets.all(_screenPadding),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                QuoteBody(
-                  quote: _quote,
-                ),
-                SizedBox(
-                  height: 120,
-                ) // For center taking account the app bar
+                RepaintBoundary(
+                  key: _repaintBoundaryKey,
+                  child: QuoteBody(
+                    quote: _quote,
+                  ),
+                ),               // For center taking account the app bar
               ],
             ),
           ),
@@ -226,6 +224,9 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                   Flexible(
                     child: _buildQuoteBody(),
                   ),
+                  SizedBox(
+                    height: 100,
+                  ),
                   _buildBottomMenu(context, quotesProvider),
                   SizedBox(
                     height: _screenPadding,
@@ -240,6 +241,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
             child: _buildSavedMarker(quotesProvider),
           ),
         ),
+
         SafeArea(
           child: Container(
             width: 300,
