@@ -34,7 +34,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
   void _generateImage() async {
 
-    var logoProportion = 0.05;
+    var logoProportion = 0.30;
     var imageSize = 450;
     var verticalPadding = (imageSize*0.02).toInt();
     var horizontalPadding = (imageSize*0.05).toInt();
@@ -53,15 +53,18 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     var logoImage = image.decodePng((await rootBundle.load('assets/quote-logo.png')).buffer.asUint8List());
     var quoteImage = image.decodePng(bytes.buffer.asUint8List());
 
+    var newLogoWidth = (imageSize * logoProportion).toInt();
+    var newLogoHeight = (newLogoWidth * (logoImage.height / logoImage.width) ).toInt();
     logoImage = image.copyResize(logoImage,
-        width: (logoImage.width * logoProportion).toInt(),
-        height: (logoImage.height * logoProportion).toInt());
-    
+        width: newLogoWidth,
+        height: newLogoHeight);
+
     var destY = finalQuoteImage.height - logoImage.height - verticalPadding;
     var quoteImageXCenter = finalQuoteImage.width ~/ 2;
     var logoImageXCenter = logoImage.width ~/ 2;
 
-    finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter);
+
+    finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter, blend: true);
 
     var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (verticalPadding*2);
 
@@ -70,14 +73,11 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
         dstY: verticalPadding + (availableHeightForQuote ~/ 2) - (quoteImage.height ~/ 2)
     );
 
-    //Share.file("A Quote from Quotesbook", 'quote.png', image.encodePng(finalQuoteImage), 'image/png');
+    Share.file("A Quote from Quotesbook", 'quote.jpg', image.encodeJpg(finalQuoteImage), 'image/jpg');
 
     setState(() {
-      _memoryImage = image.encodePng(finalQuoteImage);
+      _memoryImage = image.encodeJpg(finalQuoteImage);
     });
-    
-
-     
 
   }
 
