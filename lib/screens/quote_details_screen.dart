@@ -42,7 +42,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
   void _generateImage() async {
 
-    var logoProportion = 0.30;
+    var logoProportion = 0.25;
     var imageSize = 1200;
     var verticalPadding = (imageSize*0.02).toInt();
     var horizontalPadding = (imageSize*0.05).toInt();
@@ -52,7 +52,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
     // The image library use the form 0xAABBGGRR for colors
     finalQuoteImage.fill(Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
-    finalQuoteImage = image.vignette(finalQuoteImage, amount: 0.2);
+    //finalQuoteImage = image.vignette(finalQuoteImage, amount: 0.2);
 
 
 
@@ -75,7 +75,12 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
     finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter, blend: true);
 
-    var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (verticalPadding*2);
+    var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (verticalPadding*4) - (logoImage.height ~/ 2);
+
+    if (quoteImage.height > availableHeightForQuote) {
+      quoteImage = image.copyResize(quoteImage, height: availableHeightForQuote,
+      width: availableHeightForQuote * (quoteImage.width / quoteImage.height).toInt() );
+    }
 
     finalQuoteImage = image.copyInto(finalQuoteImage, quoteImage,
         dstX: imageSize - quoteImage.width - horizontalPadding,
