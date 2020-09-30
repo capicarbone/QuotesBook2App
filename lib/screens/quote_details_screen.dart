@@ -53,7 +53,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   void _generateImage() async {
 
     var logoProportion = 0.25;
-    var imageSize = 1200;
+    var imageSize = 2400;
     var verticalPadding = (imageSize*0.02).toInt();
     var horizontalPadding = (imageSize*0.05).toInt();
     var bgColor = _theme.backgroundColor;
@@ -62,13 +62,12 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
     // The image library use the form 0xAABBGGRR for colors
     finalQuoteImage.fill(Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
-    //finalQuoteImage = image.vignette(finalQuoteImage, amount: 0.2);
+    finalQuoteImage = image.vignette(finalQuoteImage, amount: 0.2);
 
     var logoImage = image.decodePng((await rootBundle.load('assets/quote-logo.png')).buffer.asUint8List());
     var quoteImage = await _captureQuoteImage(pixelRatio: 3.0);
 
-    print("quote image width: ${quoteImage.width}");
-
+    // Adjusting QB logo image size
     var newLogoWidth = (imageSize * logoProportion).toInt();
     logoImage = _resizeImageByWidth(logoImage, newLogoWidth);
 
@@ -79,10 +78,27 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter, blend: true);
 
     var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (verticalPadding*4) - (logoImage.height ~/ 2);
+    var availableWidthForQuote = finalQuoteImage.width - (horizontalPadding*2);
 
+    // Adjusting if quote too small (width)
+    if (quoteImage.width < availableWidthForQuote*0.95) {
+      print("Image resized because too small on width");
+      quoteImage = _resizeImageByWidth(quoteImage, (availableHeightForQuote*0.95).toInt());
+    }
+
+    // Adjusting if quote too big (height)
     if (quoteImage.height > availableHeightForQuote) {
       quoteImage = _resizeImageByHeight(quoteImage, availableHeightForQuote);
     }
+
+    if (quoteImage.width > availableWidthForQuote) {
+      print("Image resized because too big on width");
+      quoteImage = _resizeImageByWidth(quoteImage, availableWidthForQuote);
+    }
+
+
+
+
 
     finalQuoteImage = image.copyInto(finalQuoteImage, quoteImage,
         dstX: imageSize - quoteImage.width - horizontalPadding,
@@ -91,10 +107,11 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
     Share.file("A Quote from Quotesbook", 'quote.jpg', image.encodeJpg(finalQuoteImage), 'image/jpg');
 
+    /*
     setState(() {
       _memoryImage = image.encodeJpg(finalQuoteImage);
     });
-
+*/
   }
 
   void _onImageSharePressed() {
@@ -278,7 +295,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
             child: _buildSavedMarker(quotesProvider),
           ),
         ),
-
+/*
         SafeArea(
           child: Container(
             width: 300,
@@ -290,6 +307,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                 Image.memory(_memoryImage)  : Placeholder(),
           ),
         )
+        */
       ],
     );
   }
