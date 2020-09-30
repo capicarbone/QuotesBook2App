@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:quotesbook/helpers/quote_image_generator.dart';
 import 'package:quotesbook/models/Quote.dart';
 import 'package:quotesbook/models/QuoteTheme.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
@@ -40,82 +41,23 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     return image.decodePng(bytes.buffer.asUint8List());
   }
 
-  image.Image _resizeImageByWidth(image.Image imageToResize, int width){
-    return image.copyResize(imageToResize, width: width,
-        height: width * imageToResize.height ~/ imageToResize.width );
-  }
 
-  image.Image _resizeImageByHeight(image.Image imageToResize, int height){
-    return image.copyResize(imageToResize, height: height,
-        width: height * imageToResize.width ~/ imageToResize.height );
-  }
-
-  void _generateImage() async {
-
-    var logoProportion = 0.25;
-    var imageSize = 2400;
-    var verticalPadding = (imageSize*0.02).toInt();
-    var horizontalPadding = (imageSize*0.05).toInt();
-    var bgColor = _theme.backgroundColor;
-
-    var finalQuoteImage = image.Image(imageSize, imageSize);
-
-    // The image library use the form 0xAABBGGRR for colors
-    finalQuoteImage.fill(Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
-    //finalQuoteImage = image.vignette(finalQuoteImage, amount: 1, end: 1.5);
-
-    var logoImage = image.decodePng((await rootBundle.load('assets/quote-logo.png')).buffer.asUint8List());
-    var quoteImage = await _captureQuoteImage(pixelRatio: 3.0);
-
-    // Adjusting QB logo image size
-    var newLogoWidth = (imageSize * logoProportion).toInt();
-    logoImage = _resizeImageByWidth(logoImage, newLogoWidth);
-
-    var destY = finalQuoteImage.height - logoImage.height - verticalPadding;
-    var quoteImageXCenter = finalQuoteImage.width ~/ 2;
-    var logoImageXCenter = logoImage.width ~/ 2;
-
-    finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter, blend: true);
-
-    var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (verticalPadding*4) - (logoImage.height ~/ 2);
-    var availableWidthForQuote = finalQuoteImage.width - (horizontalPadding*2);
-
-    // Adjusting if quote too small (width)
-    if (quoteImage.width < availableWidthForQuote*0.95) {
-      print("Image resized because too small on width");
-      quoteImage = _resizeImageByWidth(quoteImage, (availableHeightForQuote*0.95).toInt());
-    }
-
-    // Adjusting if quote too big (height)
-    if (quoteImage.height > availableHeightForQuote) {
-      quoteImage = _resizeImageByHeight(quoteImage, availableHeightForQuote);
-    }
-
-    if (quoteImage.width > availableWidthForQuote) {
-      print("Image resized because too big on width");
-      quoteImage = _resizeImageByWidth(quoteImage, availableWidthForQuote);
-    }
-
-
-
-
-
-    finalQuoteImage = image.copyInto(finalQuoteImage, quoteImage,
-        dstX: imageSize - quoteImage.width - horizontalPadding,
-        dstY: verticalPadding + (availableHeightForQuote ~/ 2) - (quoteImage.height ~/ 2)
-    );
-
-    Share.file("A Quote from Quotesbook", 'quote.jpg', image.encodeJpg(finalQuoteImage), 'image/jpg');
-
-    /*
-    setState(() {
-      _memoryImage = image.encodeJpg(finalQuoteImage);
-    });
-*/
-  }
 
   void _onImageSharePressed() {
-    _generateImage();
+
+    _captureQuoteImage(pixelRatio: 3.0).then((quoteImage) {
+      var generator = QuoteImageGenerator(quoteImage: quoteImage, backgroundColor: _theme.backgroundColor);
+
+      return generator.generateImage();
+    })
+    .then((generatedImage) {
+      Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage, 'image/jpg');
+
+      setState(() {
+        _memoryImage = generatedImage;
+      });
+    });
+
   }
 
   void _onTextSharePressed() {
@@ -295,7 +237,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
             child: _buildSavedMarker(quotesProvider),
           ),
         ),
-/*
+
         SafeArea(
           child: Container(
             width: 300,
@@ -307,7 +249,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                 Image.memory(_memoryImage)  : Placeholder(),
           ),
         )
-        */
+
       ],
     );
   }
