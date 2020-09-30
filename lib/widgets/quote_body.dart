@@ -52,13 +52,15 @@ class QuoteBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Text(
-                '${quote.author.firstName} ${quote.author.lastName},',
+                '${quote.author.firstName} ${quote.author.lastName}',
                 style: GoogleFonts.montserrat(
                     textStyle: TextStyle(
                         fontSize: authorFontSize,
                         color: theme.textColor)),
                 textAlign: TextAlign.right,
               ),
+              // Author description
+              /*
               Text(
                 quote.author.shortDescription,
                 style: GoogleFonts.montserrat(
@@ -67,6 +69,7 @@ class QuoteBody extends StatelessWidget {
                         fontSize: authorDescriptionFontSize)),
                 textAlign: TextAlign.right,
               ),
+              */
               /*
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
