@@ -40,6 +40,16 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     return image.decodePng(bytes.buffer.asUint8List());
   }
 
+  image.Image _resizeImageByWidth(image.Image imageToResize, int width){
+    return image.copyResize(imageToResize, width: width,
+        height: width * imageToResize.height ~/ imageToResize.width );
+  }
+
+  image.Image _resizeImageByHeight(image.Image imageToResize, int height){
+    return image.copyResize(imageToResize, height: height,
+        width: height * imageToResize.width ~/ imageToResize.height );
+  }
+
   void _generateImage() async {
 
     var logoProportion = 0.25;
@@ -54,32 +64,24 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     finalQuoteImage.fill(Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
     //finalQuoteImage = image.vignette(finalQuoteImage, amount: 0.2);
 
-
-
-
     var logoImage = image.decodePng((await rootBundle.load('assets/quote-logo.png')).buffer.asUint8List());
     var quoteImage = await _captureQuoteImage(pixelRatio: 3.0);
 
     print("quote image width: ${quoteImage.width}");
 
     var newLogoWidth = (imageSize * logoProportion).toInt();
-    var newLogoHeight = (newLogoWidth * (logoImage.height / logoImage.width) ).toInt();
-    logoImage = image.copyResize(logoImage,
-        width: newLogoWidth,
-        height: newLogoHeight);
+    logoImage = _resizeImageByWidth(logoImage, newLogoWidth);
 
     var destY = finalQuoteImage.height - logoImage.height - verticalPadding;
     var quoteImageXCenter = finalQuoteImage.width ~/ 2;
     var logoImageXCenter = logoImage.width ~/ 2;
-
 
     finalQuoteImage = image.copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter, blend: true);
 
     var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (verticalPadding*4) - (logoImage.height ~/ 2);
 
     if (quoteImage.height > availableHeightForQuote) {
-      quoteImage = image.copyResize(quoteImage, height: availableHeightForQuote,
-      width: availableHeightForQuote * (quoteImage.width / quoteImage.height).toInt() );
+      quoteImage = _resizeImageByHeight(quoteImage, availableHeightForQuote);
     }
 
     finalQuoteImage = image.copyInto(finalQuoteImage, quoteImage,
