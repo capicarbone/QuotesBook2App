@@ -62,7 +62,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
     // The image library use the form 0xAABBGGRR for colors
     finalQuoteImage.fill(Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
-    finalQuoteImage = image.vignette(finalQuoteImage, amount: 0.2);
+    //finalQuoteImage = image.vignette(finalQuoteImage, amount: 1, end: 1.5);
 
     var logoImage = image.decodePng((await rootBundle.load('assets/quote-logo.png')).buffer.asUint8List());
     var quoteImage = await _captureQuoteImage(pixelRatio: 3.0);
