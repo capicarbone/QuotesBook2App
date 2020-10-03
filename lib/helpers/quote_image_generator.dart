@@ -33,11 +33,46 @@ class QuoteImageGenerator {
     var newLogoWidth = (_imageSize * _logoProportion).toInt();
     logoImage = _resizeImageByWidth(logoImage, newLogoWidth);
 
-    var destY = quoteImage.height - logoImage.height - _verticalPadding;
     var quoteImageXCenter = quoteImage.width ~/ 2;
     var logoImageXCenter = logoImage.width ~/ 2;
+    var destY = quoteImage.height - logoImage.height - _verticalPadding;
+    var destX = quoteImageXCenter - logoImageXCenter;
+    
 
-    copyInto(quoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter, blend: true);
+    copyInto(quoteImage, logoImage, dstY: destY, dstX: destX, blend: true);
+    
+    // Drawing lines
+
+    var logoYCenterImagePosition = quoteImage.height - _verticalPadding - (logoImage.height ~/ 2);
+    var logoXEndImagePosition = destX + logoImage.width;
+    var linesLength = (logoImage.width*0.3).toInt();
+    var linesMargin = (logoImage.width*0.1).toInt();
+    var linesWidth = (logoImage.width*0.03).toInt();
+
+    var backgroundColor = quoteImage.getPixel(0, 0);
+    var linesColor = backgroundColor;
+
+    // Looking lines color by blended logo color
+    for (int i = destX + logoImage.width; i > quoteImageXCenter; i-- ) {
+      if (quoteImage.getPixel(i, logoYCenterImagePosition) != backgroundColor) {
+        linesColor = quoteImage.getPixel(i - 5, logoYCenterImagePosition);
+        break;
+      }
+    }
+    
+    // Drawing right line
+    fillRect(quoteImage, logoXEndImagePosition + linesMargin,
+        logoYCenterImagePosition - (linesWidth ~/ 2),
+        logoXEndImagePosition + linesMargin + linesLength,
+        logoYCenterImagePosition + (linesWidth ~/ 2),
+        linesColor);
+
+    // Drawing left line
+    fillRect(quoteImage, destX - linesMargin - linesLength,
+        logoYCenterImagePosition - (linesWidth ~/ 2),
+        destX - linesMargin,
+        logoYCenterImagePosition + (linesWidth ~/ 2),
+        linesColor);
 
     return logoImage;
   }
