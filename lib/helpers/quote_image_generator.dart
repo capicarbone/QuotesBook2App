@@ -14,6 +14,8 @@ class QuoteImageGenerator {
 
   QuoteImageGenerator({this.quoteImage, this.backgroundColor});
 
+  get _verticalPadding => (_imageSize*0.02).toInt();
+
   Image _resizeImageByWidth(Image imageToResize, int width){
     return copyResize(imageToResize, width: width,
         height: width * imageToResize.height ~/ imageToResize.width );
@@ -24,8 +26,20 @@ class QuoteImageGenerator {
         width: height * imageToResize.width ~/ imageToResize.height );
   }
 
-  void _drawLogoLines(){
+  Future<Image> _drawFooter(Image quoteImage) async {
+    var logoImage = await _loadImageAsset();
 
+    // Adjusting QB logo image size
+    var newLogoWidth = (_imageSize * _logoProportion).toInt();
+    logoImage = _resizeImageByWidth(logoImage, newLogoWidth);
+
+    var destY = quoteImage.height - logoImage.height - _verticalPadding;
+    var quoteImageXCenter = quoteImage.width ~/ 2;
+    var logoImageXCenter = logoImage.width ~/ 2;
+
+    copyInto(quoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter, blend: true);
+
+    return logoImage;
   }
 
   Future<Image> _loadImageAsset() async {
@@ -34,7 +48,6 @@ class QuoteImageGenerator {
 
   Future<List<int>> generateImage() async {
 
-    var verticalPadding = (_imageSize*0.02).toInt();
     var horizontalPadding = (_imageSize*0.05).toInt();
 
     var bgColor = backgroundColor;
@@ -45,19 +58,9 @@ class QuoteImageGenerator {
     finalQuoteImage.fill(painting.Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
     //finalQuoteImage = image.vignette(finalQuoteImage, amount: 1, end: 1.5);
 
-    var logoImage = await _loadImageAsset();
+    var logoImage = await _drawFooter(finalQuoteImage);
 
-    // Adjusting QB logo image size
-    var newLogoWidth = (_imageSize * _logoProportion).toInt();
-    logoImage = _resizeImageByWidth(logoImage, newLogoWidth);
-
-    var destY = finalQuoteImage.height - logoImage.height - verticalPadding;
-    var quoteImageXCenter = finalQuoteImage.width ~/ 2;
-    var logoImageXCenter = logoImage.width ~/ 2;
-
-    finalQuoteImage = copyInto(finalQuoteImage, logoImage, dstY: destY, dstX: quoteImageXCenter - logoImageXCenter, blend: true);
-
-    var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (verticalPadding*4) - (logoImage.height ~/ 2);
+    var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (_verticalPadding*4) - (logoImage.height ~/ 2);
     var availableWidthForQuote = finalQuoteImage.width - (horizontalPadding*2);
 
     // Adjusting if quote too small (width)
@@ -78,7 +81,7 @@ class QuoteImageGenerator {
 
     finalQuoteImage = copyInto(finalQuoteImage, quoteImage,
         dstX: _imageSize - quoteImage.width - horizontalPadding,
-        dstY: verticalPadding + (availableHeightForQuote ~/ 2) - (quoteImage.height ~/ 2)
+        dstY: _verticalPadding + (availableHeightForQuote ~/ 2) - (quoteImage.height ~/ 2)
     );
 
     return encodeJpg(finalQuoteImage);
