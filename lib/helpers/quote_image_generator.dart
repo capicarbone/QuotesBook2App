@@ -1,8 +1,11 @@
 
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as flutter;
 import 'package:flutter/services.dart';
 import 'package:image/image.dart';
 import 'package:flutter/painting.dart' as painting;
+
 
 class QuoteImageGenerator {
   final _logoProportion = 0.25;
@@ -10,9 +13,10 @@ class QuoteImageGenerator {
 
 
   Image quoteImage;
+  Image footerLogo;
   painting.Color backgroundColor;
 
-  QuoteImageGenerator({this.quoteImage, this.backgroundColor});
+  QuoteImageGenerator({this.quoteImage, this.backgroundColor, this.footerLogo});
 
   get _verticalPadding => (_imageSize*0.02).toInt();
 
@@ -27,7 +31,7 @@ class QuoteImageGenerator {
   }
 
   Future<Image> _drawFooter(Image quoteImage) async {
-    var logoImage = await _loadImageAsset();
+    var logoImage = footerLogo;
 
     // Adjusting QB logo image size
     var newLogoWidth = (_imageSize * _logoProportion).toInt();
@@ -77,9 +81,6 @@ class QuoteImageGenerator {
     return logoImage;
   }
 
-  Future<Image> _loadImageAsset() async {
-    return decodePng((await rootBundle.load('assets/quote-logo.png')).buffer.asUint8List());
-  }
 
   Future<List<int>> generateImage() async {
 
@@ -89,12 +90,13 @@ class QuoteImageGenerator {
 
     var finalQuoteImage = Image(_imageSize, _imageSize);
 
+
     // The image library use the form 0xAABBGGRR for colors
     finalQuoteImage.fill(painting.Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
     //finalQuoteImage = image.vignette(finalQuoteImage, amount: 1, end: 1.5);
 
-    var logoImage = await _drawFooter(finalQuoteImage);
 
+    var logoImage = await _drawFooter(finalQuoteImage);
     var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (_verticalPadding*4) - (logoImage.height ~/ 2);
     var availableWidthForQuote = finalQuoteImage.width - (horizontalPadding*2);
 
@@ -119,8 +121,20 @@ class QuoteImageGenerator {
         dstY: _verticalPadding + (availableHeightForQuote ~/ 2) - (quoteImage.height ~/ 2)
     );
 
+
     return encodeJpg(finalQuoteImage);
+  }
+
+  Future<List<int>> generate() async {
+    return generateImage();
 
   }
 
+}
+
+Future<List<int>> generateQuoteImage(Map<String, dynamic> params) async{
+
+  var generator = QuoteImageGenerator(quoteImage: params['quoteImage'], backgroundColor: params['backgroundColor'], footerLogo: params['footerLogo']);
+
+  return generator.generate();
 }

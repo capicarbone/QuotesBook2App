@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as image;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:quotesbook/helpers/quote_image_generator.dart';
+import 'package:quotesbook/helpers/quote_image_generator.dart' as generator;
 import 'package:quotesbook/models/Quote.dart';
 import 'package:quotesbook/models/QuoteTheme.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
@@ -43,20 +44,27 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
 
 
-  void _onImageSharePressed() {
+  void _onImageSharePressed()  {
 
     _captureQuoteImage(pixelRatio: 3.0).then((quoteImage) {
-      var generator = QuoteImageGenerator(quoteImage: quoteImage, backgroundColor: _theme.backgroundColor);
 
-      return generator.generateImage();
-    })
-    .then((generatedImage) {
-      Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage, 'image/jpg');
+      rootBundle.load('assets/quote-logo.png').then((footerImage) {
+          return compute(generator.generateQuoteImage, {'quoteImage': quoteImage,
+            'backgroundColor': _theme.backgroundColor,
+            'footerLogo': image.decodePng(footerImage.buffer.asUint8List())});
 
-      setState(() {
-        _memoryImage = generatedImage;
+      }).then((generatedImage) {
+
+        Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage, 'image/jpg');
+
+        setState(() {
+          _memoryImage = generatedImage;
+        });
+
       });
+
     });
+
 
   }
 
