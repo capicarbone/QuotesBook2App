@@ -25,6 +25,7 @@ class QuoteDetailsScreen extends StatefulWidget {
 
 class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   Quote _quote;
+  var _debugMode = false;
 
   QuoteTheme _theme;
 
@@ -69,9 +70,11 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
         Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage, 'image/jpg');
 
-        setState(() {
-          _memoryImage = generatedImage;
-        });
+        if (_debugMode){
+          setState(() {
+            _memoryImage = generatedImage;
+          });
+        }
 
       }).catchError(() => _toggleLoader(false));
 
@@ -269,7 +272,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
             child: _buildSavedMarker(quotesProvider),
           ),
         ),
-
+        if (_debugMode)
         SafeArea(
           child: Container(
             width: 300,
