@@ -32,6 +32,8 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
   Uint8List _memoryImage;
 
+  var loading = false;
+
   final _screenPadding = 22.0;
 
   Future<image.Image> _captureQuoteImage({pixelRatio: 1.0}) async {
@@ -42,9 +44,17 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     return image.decodePng(bytes.buffer.asUint8List());
   }
 
+  void _toggleLoader(bool enabled) {
+    setState(() {
+      loading = enabled;
+    });
+  }
+
 
 
   void _onImageSharePressed()  {
+
+    _toggleLoader(true);
 
     _captureQuoteImage(pixelRatio: 3.0).then((quoteImage) {
 
@@ -55,13 +65,15 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
       }).then((generatedImage) {
 
+        _toggleLoader(false);
+
         Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage, 'image/jpg');
 
         setState(() {
           _memoryImage = generatedImage;
         });
 
-      });
+      }).catchError(() => _toggleLoader(false));
 
     });
 
@@ -160,44 +172,56 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     return Container(
       height: 32,
       alignment: Alignment.centerRight,
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.black26,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50), bottomLeft: Radius.circular(50))),
-        height: 32,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            FlatButton.icon(
-                onPressed: () {
-                  if (_quote.isFavorite) {
-                    quotesProvider.removeQuote(_quote);
-                  } else {
-                    quotesProvider.saveQuote(_quote);
-                  }
-                },
-                icon: _quote.isFavorite
-                    ? Icon(
-                        Icons.bookmark,
-                        color: Colors.amber,
-                      )
-                    : Icon(
-                        Icons.bookmark_border,
-                        color: Colors.white,
-                      ),
-                label: Text("")),
-            FlatButton.icon(
-                onPressed: () {
-                  _onSharePressed(ctx);
-                },
-                icon: Icon(
-                  Icons.share,
-                  color: Colors.white,
-                ),
-                label: Text("")),
-          ],
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          if (loading)
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          ),
+          if (!loading)
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50), bottomLeft: Radius.circular(50))),
+            height: 32,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                FlatButton.icon(
+                    onPressed: () {
+                      if (_quote.isFavorite) {
+                        quotesProvider.removeQuote(_quote);
+                      } else {
+                        quotesProvider.saveQuote(_quote);
+                      }
+                    },
+                    icon: _quote.isFavorite
+                        ? Icon(
+                            Icons.bookmark,
+                            color: Colors.amber,
+                          )
+                        : Icon(
+                            Icons.bookmark_border,
+                            color: Colors.white,
+                          ),
+                    label: Text("")),
+                FlatButton.icon(
+                    onPressed: () {
+                      _onSharePressed(ctx);
+                    },
+                    icon: Icon(
+                      Icons.share,
+                      color: Colors.white,
+                    ),
+                    label: Text("")),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
