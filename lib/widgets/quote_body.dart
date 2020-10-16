@@ -7,17 +7,17 @@ import 'package:quotesbook/models/QuoteTheme.dart';
 class QuoteBody extends StatelessWidget {
 
   Quote quote;
+  var quoteFontSize = 27.0;
 
-  QuoteBody({this.quote});
-
-  static final quoteFontSize = 27.0;
-  static final authorFontSize = quoteFontSize * 0.57;
-  static final authorDescriptionFontSize = quoteFontSize * 0.40;
+  QuoteBody({this.quote, this.quoteFontSize: 27});
 
   @override
   Widget build(BuildContext context) {
 
     var theme = QuoteTheme.getThemeById(quote.themeId);
+
+    final authorFontSize = quoteFontSize * 0.57;
+    final authorDescriptionFontSize = quoteFontSize * 0.40;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,

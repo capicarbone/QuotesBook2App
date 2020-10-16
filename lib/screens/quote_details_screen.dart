@@ -115,6 +115,8 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   }
 
   Widget _buildQuoteBody() {
+
+    var fontSize = _quote.body.length < 174 ? 33.0 : 27.0;
     return Container(
       child: Center(
         child: Container(
@@ -126,6 +128,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                 RepaintBoundary(
                   key: _repaintBoundaryKey,
                   child: QuoteBody(
+                    quoteFontSize:  fontSize,
                     quote: _quote,
                   ),
                 ),               // For center taking account the app bar
@@ -256,7 +259,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                     child: _buildQuoteBody(),
                   ),
                   SizedBox(
-                    height: 100,
+                    height: 20,
                   ),
                   _buildBottomMenu(context, quotesProvider),
                   SizedBox(
