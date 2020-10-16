@@ -248,7 +248,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
         Scaffold(
             backgroundColor: _theme.backgroundColor,
             appBar: AppBar(
-              iconTheme: IconThemeData(color: Colors.white),
+              iconTheme: (_theme.id != "white") ? IconThemeData(color: Colors.white) : null,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
             ),
