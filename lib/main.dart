@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +10,8 @@ import 'package:quotesbook/screens/quote_details_screen.dart';
 import './screens/tabs_screen.dart';
 import './widgets/localize_lang_widget.dart';
 import './helpers/app_localizations.dart';
+
+FirebaseAnalytics analytics = FirebaseAnalytics();
 
 class DemoLocalizationsDelegate
     extends LocalizationsDelegate<AppLocalizations> {
@@ -29,6 +33,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SavedQuotes()),
@@ -44,6 +50,9 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        navigatorObservers: [
+          FirebaseAnalyticsObserver(analytics: analytics)
+        ],
         localizationsDelegates: [
           const DemoLocalizationsDelegate(),
           GlobalMaterialLocalizations.delegate,

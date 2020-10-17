@@ -1,6 +1,11 @@
 # quotesbook
 
-A new Flutter project.
+Flutter project for QuotesBook mobile app.
+
+# Setup
+
+Remember to ad the google-services.json to the android/app folder. Get this from the firebase
+project.
 
 ## Utilities commands
 
