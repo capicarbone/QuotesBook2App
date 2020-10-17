@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-03-21T22:36:27.542220",
+  "@@last_modified": "2020-10-17T17:26:24.517849",
   "someQuotesTitle": "Some Quotes",
   "@someQuotesTitle": {
     "description": "Title for some quotes screen.",
@@ -33,6 +33,18 @@
   "quotesLoadErrorMessage": "Some error has ocurred. Trying again.",
   "@quotesLoadErrorMessage": {
     "description": "Mesasge for errors on quotes loading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "shareQuoteTextOption": "Text",
+  "@shareQuoteTextOption": {
+    "description": "Share option for text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "shareQuoteImageOption": "Image",
+  "@shareQuoteImageOption": {
+    "description": "Share option for image.",
     "type": "text",
     "placeholders": {}
   }

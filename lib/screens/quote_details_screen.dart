@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:quotesbook/helpers/app_localizations.dart';
 import 'package:quotesbook/helpers/quote_image_generator.dart' as generator;
 import 'package:quotesbook/models/Quote.dart';
 import 'package:quotesbook/models/QuoteTheme.dart';
@@ -94,7 +95,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
           children: <Widget>[
             ListTile(
               leading: Icon(Icons.textsms),
-              title: Text("Text", ),
+              title: Text(AppLocalizations.of(context).shareQuoteTextOption, ),
               onTap: (){
                 _onTextSharePressed();
                 Navigator.pop(ctx);
@@ -102,7 +103,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
             ),
             ListTile(
               leading: Icon(Icons.image),
-              title: Text("Image", ),
+              title: Text(AppLocalizations.of(context).shareQuoteImageOption, ),
               onTap: () {
                 _onImageSharePressed();
                 Navigator.pop(ctx);

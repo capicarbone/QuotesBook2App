@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-03-21T17:57:42.862339",
+  "@@last_modified": "2020-10-17T17:26:24.517849",
   "someQuotesTitle": "Algunas citas",
   "@someQuotesTitle": {
     "description": "Title for some quotes screen.",
@@ -35,5 +35,17 @@
     "description": "Mesasge for errors on quotes loading",
     "type": "text",
     "placeholders": {}
-  }
+  },
+    "shareQuoteTextOption": "Texto",
+    "@shareQuoteTextOption": {
+      "description": "Share option for text",
+      "type": "text",
+      "placeholders": {}
+    },
+    "shareQuoteImageOption": "Imagen",
+    "@shareQuoteImageOption": {
+      "description": "Share option for image.",
+      "type": "text",
+      "placeholders": {}
+    }
 }

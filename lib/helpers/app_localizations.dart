@@ -75,4 +75,20 @@ class AppLocalizations {
       locale: localeName
     );
   }
+
+  String get shareQuoteTextOption {
+    return Intl.message('Text',
+    name: "shareQuoteTextOption",
+    desc: 'Share option for text',
+      locale: localeName
+    );
+  }
+
+  String get shareQuoteImageOption {
+    return Intl.message('Image',
+        name: "shareQuoteImageOption",
+        desc: 'Share option for image.',
+        locale: localeName
+    );
+  }
 }

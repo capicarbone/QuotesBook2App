@@ -26,6 +26,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "quotesLoadErrorMessage" : MessageLookupByLibrary.simpleMessage("Algún error ha ocurrido. Intentando de nuevo."),
     "quotesTab" : MessageLookupByLibrary.simpleMessage("Citas"),
     "savedQuotesTitle" : MessageLookupByLibrary.simpleMessage("Tus favoritos"),
+    "shareQuoteImageOption" : MessageLookupByLibrary.simpleMessage("Imagen"),
+    "shareQuoteTextOption" : MessageLookupByLibrary.simpleMessage("Texto"),
     "someQuotesTitle" : MessageLookupByLibrary.simpleMessage("Algunas citas")
   };
 }
