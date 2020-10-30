@@ -36,7 +36,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
   var loading = false;
 
-  final _screenPadding = 22.0;
+   var _screenPadding = 0.0;
 
   Future<image.Image> _captureQuoteImage({pixelRatio: 1.0}) async {
     RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext.findRenderObject();
@@ -115,9 +115,13 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     });
   }
 
-  Widget _buildQuoteBody() {
+  Widget _buildQuoteBody(Size size) {
 
-    var fontSize = _quote.body.length < 174 ? 33.0 : 27.0;
+    var fontSize = _quote.body.length < 174 ? size.width * 0.0825 : size.width * 0.0675;
+
+    print("Screen width: " + size.width.toString());
+
+
     return Container(
       child: Center(
         child: Container(
@@ -244,6 +248,9 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
       _theme = QuoteTheme.getThemeById(_quote.themeId);
     }
 
+    var screenSize = MediaQuery.of(context).size;
+    _screenPadding = screenSize.width * 0.05;
+
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -257,7 +264,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
               child: Column(
                 children: <Widget>[
                   Flexible(
-                    child: _buildQuoteBody(),
+                    child: _buildQuoteBody(screenSize),
                   ),
                   SizedBox(
                     height: 20,
