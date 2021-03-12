@@ -27,10 +27,10 @@ dependencies:
   http: ^0.12.0+4
   path: ^1.6.4
   sqflite: ^1.2.1
-  intl: ^0.16.0
+  intl: ^0.17.0
   esys_flutter_share: ^1.0.2
   image: ^2.1.17
-  intl_translation: ^0.17.9
+  #intl_translation: ^0.17.9
   google_fonts: ^0.3.10
   firebase_analytics: ^6.0.2
 
