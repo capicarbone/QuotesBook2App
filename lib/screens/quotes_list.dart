@@ -51,9 +51,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
         }
       });
     }
-
-    _pageController.addListener(() {print("Hola");});
-
+    
     return Consumer<Quotes>(
       builder: (context, provider, _) => PageView.builder(
         scrollDirection: Axis.vertical,
