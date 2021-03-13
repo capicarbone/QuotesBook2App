@@ -15,6 +15,9 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen>
     with SingleTickerProviderStateMixin {
   var _selectedPageIndex = 0;
+  var _pageController = PageController();
+
+  final bucket = PageStorageBucket();
 
   final _pages = [];
 
@@ -36,26 +39,29 @@ class _TabsScreenState extends State<TabsScreen>
     }
   }
 
-  AnimationController _controller;
-  final bucket = PageStorageBucket();
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
     _initPages();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _pageController.dispose();
   }
 
-  _selectPage(pageIndex) {
+  _onTabSelected(pageIndex) {
     setState(() {
       _selectedPageIndex = pageIndex;
     });
+
+    _pageController.animateToPage(pageIndex,
+        duration: Duration(milliseconds: 200),
+      curve: Curves.easeInOut
+    );
+
   }
 
   @override
@@ -64,29 +70,20 @@ class _TabsScreenState extends State<TabsScreen>
     var localizations = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
-      /*appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Text(_selectedPageIndex == 0 ? localizations.someQuotesTitle : localizations.savedQuotesTitle),
-      ),*/
+
       body: SafeArea(
         child: Stack(
           children: [
-            IndexedStack(
-              index: _selectedPageIndex,
+            PageView(
+              physics: NeverScrollableScrollPhysics(),
               children: _pages.map<Widget>((i) => i['page']).toList(),
-            ),
-            /*Positioned(
-              top: 17,
-              left: 16,
-              child: Text(_selectedPageIndex == 0 ? localizations.someQuotesTitle : localizations.savedQuotesTitle,
-              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),),
-            ),*/
+              controller: _pageController,
+            )
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          onTap: _selectPage,
+          onTap: _onTabSelected,
           backgroundColor: Colors.white,
           selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _selectedPageIndex,
