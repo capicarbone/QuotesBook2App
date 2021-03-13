@@ -11,35 +11,60 @@ import 'package:google_fonts/google_fonts.dart';
 
 class QuoteListItem extends StatelessWidget {
   Quote quote;
+  Quote previousQuote;
   Function onTap;
 
-  QuoteListItem({this.quote, this.onTap}) {
+  QuoteListItem({this.quote, this.previousQuote, this.onTap}) {
     if (quote.themeId == null) {
       quote.themeId = QuoteTheme.getRandomTheme().id;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     var quotesProvider = Provider.of<SavedQuotes>(context, listen: false);
 
     var theme = QuoteTheme.getThemeById(quote.themeId);
+    var prevTheme = (previousQuote == null) ? null : QuoteTheme.getThemeById(previousQuote.themeId);
 
     return Container(
-      padding: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 0),
       width: double.infinity,
       child: GestureDetector(
         onTap: onTap,
-        child: Card(
+        child: Material(
           color: theme.backgroundColor,
-          elevation: 4,
-          child: Padding(
-            padding:
-                const EdgeInsets.only(right: 20, left: 20, bottom: 40, top: 0),
-            child: Stack(
-              children: <Widget>[
-                GestureDetector(
+          child: Stack(
+            children: <Widget>[
+              SizedBox(
+                height: 20,
+                child: Stack(
+                  children: [
+                    Container(
+                      color: (prevTheme == null) ? Colors.grey.shade50 : prevTheme.backgroundColor
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              offset: Offset(0, -3),
+                              blurRadius: 2,
+                              color: Color.fromARGB(70, 0, 0, 0)
+                            )
+                          ],
+                          color: theme.backgroundColor,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(45), topRight: Radius.circular(45))
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                right: 22,
+                top: 6,
+                child: GestureDetector(
                     child: Stack(
                       children: <Widget>[
                         AnimatedContainer(
@@ -51,16 +76,17 @@ class QuoteListItem extends StatelessWidget {
                               ? Colors.amber
                               : theme.secondaryColor),
                         ),
-                        if (quote.isFavorite) Container(
-                          child: Center(
-                            child: Icon(
-                              Icons.star,
-                              color: Colors.white,
+                        if (quote.isFavorite)
+                          Container(
+                            child: Center(
+                              child: Icon(
+                                Icons.star,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          width: 50,
-                          height: 40,
-                        )
+                            width: 50,
+                            height: 40,
+                          )
                       ],
                     ),
                     onTap: () {
@@ -70,16 +96,27 @@ class QuoteListItem extends StatelessWidget {
                         quotesProvider.saveQuote(quote);
                       }
                     }),
-                SizedBox(
-                  height: 10,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(right: 20, left: 20, bottom: 40, top: 0),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Expanded(
+                        child: Center(
+                            child: QuoteBody(
+                      quote: quote,
+                    )))
+                  ],
                 ),
-                Column(children: <Widget>[
-                  SizedBox(height: 50,),
-                  QuoteBody(quote: quote,)
-                ],)
-                ,
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

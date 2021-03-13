@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/helpers/app_localizations.dart';
@@ -20,6 +21,9 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   var _loadingQuotes = false;
   var _automaticReloadEnabled = false;
   var _elapsedErrors = 0;
+  var _pageController = PageController(viewportFraction: 0.9);
+
+
   Future<void> _initialLoad;
 
   @override
@@ -34,6 +38,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   dispose() {
     super.dispose();
     _listController.dispose();
+    _pageController.dispose();
   }
 
   Widget _buildList(context) {
@@ -47,9 +52,13 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
       });
     }
 
+    _pageController.addListener(() {print("Hola");});
+
     return Consumer<Quotes>(
-      builder: (context, provider, _) => ListView.builder(
-        controller: _listController,
+      builder: (context, provider, _) => PageView.builder(
+        scrollDirection: Axis.vertical,
+        //controller: _listController,
+        controller: _pageController,
         itemBuilder: (ctx, position) {
           if (position == provider.quotes.length) {
             return Container(
@@ -62,11 +71,15 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
             );
           } else {
             var quote = provider.quotes[position];
+            var prevQuote = (position-1 >= 0) ? provider.quotes[position-1] : null;
             return QuoteListItem(
                 quote: quote,
+                previousQuote: prevQuote, // (position-1 >= 0) ? provider.quotes[position-1] : null,
                 onTap: () {
                   Navigator.of(context).pushNamed(QuoteDetailsScreen.routeName, arguments: {'quote': quote});
                 });
+
+
           }
         },
         itemCount: provider.quotes.length + 1,

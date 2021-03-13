@@ -21,13 +21,13 @@ class _TabsScreenState extends State<TabsScreen>
   void _initPages() {
     if (_pages.isEmpty) {
       _pages.addAll([
-        {          
+        {
           'page': QuotesListScreen(
             lang: widget.lang,
             key: PageStorageKey('Quotes'),
           ),
         },
-        {          
+        {
           'page': FavoritesScreen(
             key: PageStorageKey('Favorites'),
           )
@@ -64,12 +64,26 @@ class _TabsScreenState extends State<TabsScreen>
     var localizations = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
-      appBar: AppBar(
+      /*appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
         title: Text(_selectedPageIndex == 0 ? localizations.someQuotesTitle : localizations.savedQuotesTitle),
-      ),
-      body: IndexedStack(
-        index: _selectedPageIndex,
-        children: _pages.map<Widget>((i) => i['page']).toList(),
+      ),*/
+      body: SafeArea(
+        child: Stack(
+          children: [
+            IndexedStack(
+              index: _selectedPageIndex,
+              children: _pages.map<Widget>((i) => i['page']).toList(),
+            ),
+            /*Positioned(
+              top: 17,
+              left: 16,
+              child: Text(_selectedPageIndex == 0 ? localizations.someQuotesTitle : localizations.savedQuotesTitle,
+              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),),
+            ),*/
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,
