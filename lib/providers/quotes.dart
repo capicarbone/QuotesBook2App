@@ -32,7 +32,7 @@ class Quotes with ChangeNotifier {
     'Authorization': 'Token 9598020bb81bf271c7105c9b057823b62463eae2'
   };
 
-  Future<void> fetchQuotes({String lang = 'en'}) async {
+  Future<List<Quote>> fetchQuotes({String lang = 'en'}) async {
     lang = lang == 'es' ? lang : 'en';
     final url = "${SERVER_HOST}api/v1/quotes/sample?lang=$lang";
 
@@ -44,8 +44,12 @@ class Quotes with ChangeNotifier {
 
     //print(quotesMap);
 
-    _quotes.addAll(quotesMap.map((map) => Quote.fromMap(map)));
+    var newQuotes = quotesMap.map((map) => Quote.fromMap(map)).toList();
+    _quotes.addAll(newQuotes);
 
     notifyListeners();
+
+    return newQuotes;
+
   }
 }

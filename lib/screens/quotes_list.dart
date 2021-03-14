@@ -17,11 +17,14 @@ class QuotesListScreen extends StatefulWidget {
 }
 
 class _QuotesListScreenState extends State<QuotesListScreen> {
-  var _listController = ScrollController();
+
   var _loadingQuotes = false;
   var _automaticReloadEnabled = false;
   var _elapsedErrors = 0;
   var _pageController = PageController(viewportFraction: 0.9);
+
+  // Allows to know when to ask the next quotes page
+  var _totalQuotes = 0;
 
 
   Future<void> _initialLoad;
@@ -37,25 +40,23 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   @override
   dispose() {
     super.dispose();
-    _listController.dispose();
     _pageController.dispose();
   }
 
   Widget _buildList(context) {
-    if (!_listController.hasListeners) {
-      _listController.addListener(() {
-        if (_listController.position.pixels >=
-                _listController.position.maxScrollExtent - 200 &&
-            !_loadingQuotes) {
+
+    if (!_pageController.hasListeners){
+      _pageController.addListener(() {
+        if (_pageController.page > _totalQuotes - 5 && !_loadingQuotes ) {
           _fetchQuotes();
         }
       });
     }
     
     return Consumer<Quotes>(
-      builder: (context, provider, _) => PageView.builder(
+      builder: (context, provider, _) {
+        return PageView.builder(
         scrollDirection: Axis.vertical,
-        //controller: _listController,
         controller: _pageController,
         itemBuilder: (ctx, position) {
           if (position == provider.quotes.length) {
@@ -81,15 +82,19 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
           }
         },
         itemCount: provider.quotes.length + 1,
-      ),
+      );
+      },
     );
   }
 
   Future<void> _fetchQuotes() {
+
+    _loadingQuotes = true;
+
     var promise = Provider.of<Quotes>(context, listen: false)
         .fetchQuotes(lang: widget.lang);
 
-    _loadingQuotes = true;
+    promise.then((value) => _totalQuotes += value.length);
 
     promise.catchError((err) {
       if (_elapsedErrors == 0) {
