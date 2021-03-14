@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quotesbook/helpers/app_localizations.dart';
+import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/screens/favorites_list.dart';
 import 'package:quotesbook/screens/quotes_list.dart';
 
@@ -66,8 +68,11 @@ class _TabsScreenState extends State<TabsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final selectedPage = _pages[_selectedPageIndex];
+
+    Provider.of<SavedQuotes>(context, listen: false).loadSavedQuotes();
     var localizations = AppLocalizations.of(context);
+
+
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
 
@@ -90,11 +95,11 @@ class _TabsScreenState extends State<TabsScreen>
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.message),
-              title: Text(AppLocalizations.of(context).quotesTab),
+              title: Text(localizations.quotesTab),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.bookmark),
-              title: Text(AppLocalizations.of(context).favoritesTab),
+              title: Text(localizations.favoritesTab),
             )
           ]),
     );

@@ -10,7 +10,6 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<SavedQuotes>(context, listen: false).loadSavedQuotes();
 
     return Consumer<SavedQuotes>(
       builder: (ctx, provider, _) => provider.savedQuotes == null ||
