@@ -23,7 +23,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   var _pageController = QuotesListController();
 
   // Allows to know when to ask the next quotes page
-  var _totalQuotes = 0;
+  static int _totalQuotes = 0;
 
 
   Future<void> _initialLoad;
@@ -31,7 +31,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   @override
   void initState() {
     super.initState();
-    if (_initialLoad == null) {
+    if (_initialLoad == null && _totalQuotes == 0) {
       _initialLoad = _fetchQuotes();
     }
   }
@@ -93,7 +93,9 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     var promise = Provider.of<Quotes>(context, listen: false)
         .fetchQuotes(lang: widget.lang);
 
-    promise.then((value) => _totalQuotes += value.length);
+    promise.then((value) =>
+    _totalQuotes += value.length
+    );
 
     promise.catchError((err) {
       if (_elapsedErrors == 0) {
