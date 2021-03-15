@@ -29,7 +29,7 @@ class QuoteListItem extends StatelessWidget {
 
   QuoteListItem({this.quote, this.previousQuote, this.onTap}) {
     if (quote.themeId == null) {
-      quote.themeId = QuoteTheme.getRandomTheme().id;
+      quote.themeId = QuoteTheme.getNextTheme().id;
     }
   }
 
