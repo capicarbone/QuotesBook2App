@@ -3,8 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/helpers/app_localizations.dart';
-import 'package:quotesbook/screens/quote_details_screen.dart';
-
+import 'package:quotesbook/quotes_list_controller.dart';
 import '../providers/quotes.dart';
 import '../widgets/quote_listitem.dart';
 
@@ -21,7 +20,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
   var _loadingQuotes = false;
   var _automaticReloadEnabled = false;
   var _elapsedErrors = 0;
-  var _pageController = PageController(viewportFraction: 0.9);
+  var _pageController = QuotesListController();
 
   // Allows to know when to ask the next quotes page
   var _totalQuotes = 0;
@@ -75,7 +74,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
                 quote: quote,
                 previousQuote: prevQuote, // (position-1 >= 0) ? provider.quotes[position-1] : null,
                 onTap: () {
-                  Navigator.of(context).pushNamed(QuoteDetailsScreen.routeName, arguments: {'quote': quote});
+                  _pageController.animateToNextPage();
                 });
 
 

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/helpers/app_localizations.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
+import 'package:quotesbook/quotes_list_controller.dart';
 import 'package:quotesbook/screens/quote_details_screen.dart';
 import 'package:quotesbook/widgets/quote_listitem.dart';
 
 class FavoritesScreen extends StatelessWidget {
   FavoritesScreen({Key key}) : super(key: key);
+  var _pageController = QuotesListController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +44,7 @@ class FavoritesScreen extends StatelessWidget {
                   quote: provider.savedQuotes[index],
                   previousQuote: (index-1 >= 0) ? provider.savedQuotes[index-1] : null,
                   onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(QuoteDetailsScreen.routeName, arguments: {'quote': provider.savedQuotes[index]});
+                    _pageController.animateToNextPage();
                   }),
             ),
     );
