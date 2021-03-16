@@ -13,10 +13,10 @@ class Environment {
 }
 ```
 
-2. Add android/key.properties to sign apk/bundle.
-
 Remember to add the google-services.json to the android/app folder. Get this from the firebase
 project.
+
+Add android/key.properties to sign apk/bundle.
 
 ## To generate internationalizations
 
