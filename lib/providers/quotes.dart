@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:quotesbook/environment.dart';
 import 'package:quotesbook/models/Quote.dart';
 import 'package:http/http.dart' as http;
 
@@ -7,7 +8,6 @@ class Quotes with ChangeNotifier {
   final List<Quote> _quotes = [];
   List<Quote> _savedQuotes = [];
 
-  static const SERVER_HOST = "https://quotesbook.herokuapp.com/";
 
   get quotes {
     return _quotes;
@@ -29,12 +29,12 @@ class Quotes with ChangeNotifier {
   }
 
   final _authenticatedHeader = {
-    'Authorization': 'Token 9598020bb81bf271c7105c9b057823b62463eae2'
+    'Authorization': 'Token ${Environment.AUTH_TOKEN}'
   };
 
   Future<List<Quote>> fetchQuotes({String lang = 'en'}) async {
     lang = lang == 'es' ? lang : 'en';
-    final url = "${SERVER_HOST}api/v1/quotes/sample?lang=$lang";
+    final url = "${Environment.SERVER_HOST}api/v1/quotes/sample?lang=$lang";
 
     print(url);
 
