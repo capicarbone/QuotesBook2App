@@ -4,10 +4,21 @@ Flutter project for QuotesBook mobile app.
 
 # Setup
 
-Remember to ad the google-services.json to the android/app folder. Get this from the firebase
+1. Add lib/environment.dart file with
+
+```
+class Environment {
+  static const AUTH_TOKEN = "...";
+  static const SERVER_HOST = "...";
+}
+```
+
+2. Add android/key.properties to sign apk/bundle.
+
+Remember to add the google-services.json to the android/app folder. Get this from the firebase
 project.
 
-## For generate internationalizations
+## To generate internationalizations
 
 1. Update the ```lib/helpers/app_localizations.dart``` with the new texts.
 
