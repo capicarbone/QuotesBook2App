@@ -1,6 +1,6 @@
 # quotesbook
 
-Flutter project for QuotesBook mobile app.
+Flutter project for Quotesbook mobile app. Found in [Google Play](https://play.google.com/store/apps/details?id=com.medic.quotesbook).
 
 # Setup
 
