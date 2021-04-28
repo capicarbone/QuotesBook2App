@@ -3,6 +3,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/providers/quotes.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
@@ -39,6 +40,8 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown
     ]);
 
+    var blackTintColor = Color(0xFF3B3840);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SavedQuotes()),
@@ -65,10 +68,14 @@ class MyApp extends StatelessWidget {
         supportedLocales: [const Locale('en', ''), const Locale('es', '')],
         title: 'Quotesbook',
         theme: ThemeData(
-          primaryColor: Color(0xFF00BCD4),
+          primaryColor: blackTintColor,
           accentColor: Colors.amber,
           primaryTextTheme: TextTheme(
-            title: TextStyle(color: Colors.white),
+            bodyText1: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+                    fontSize: 27,
+                    fontWeight: FontWeight.bold,
+                    color: blackTintColor))
           ),
         ),
         home: LocalizeLang(

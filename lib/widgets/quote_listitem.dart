@@ -149,10 +149,6 @@ class QuoteListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     var quotesProvider = Provider.of<SavedQuotes>(context, listen: false);
 
-    var theme = QuoteTheme.getThemeById(quote.themeId);
-    var prevTheme = (previousQuote == null)
-        ? null
-        : QuoteTheme.getThemeById(previousQuote.themeId);
 
     var screenSize = MediaQuery.of(context).size;
     var fontSize = quote.body.length < 174
@@ -164,69 +160,87 @@ class QuoteListItem extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Material(
-          color: (prevTheme == null)
-              ? Colors.transparent
-              : prevTheme.backgroundColor,
+          color: Colors.transparent,
           child: Stack(
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0),
-                    child: SizedBox(
-                      height: 18,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: Offset(0, -3),
-                                      blurRadius: 2,
-                                      color: Color.fromARGB(70, 0, 0, 0))
-                                ],
-                                color: theme.backgroundColor,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(12),
-                                    topRight: Radius.circular(12))),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: theme.backgroundColor,
-                      child: Stack(
-                        children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(22),
 
-                          Padding(
-                            padding:
-                                EdgeInsets.only(right: 20, left: 20, bottom: 40, top: 0),
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 50,
-                                ),
-                                Expanded(
-                                    child: Center(
-                                        child: RepaintBoundary(
-                                          key: _repaintBoundaryKey,
-                                          child: QuoteBody(
-                                  quoteFontSize: fontSize,
-                                  quote: quote,
-                                ),
-                                        )))
+
+                  child: Column(
+                    children: [
+                      Expanded(
+                        // Quote card
+                        child: Container(
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                    offset: Offset(0, -3),
+                                    blurRadius: 2,
+                                    color: Color.fromARGB(70, 0, 0, 0))
                               ],
-                            ),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(2))),
+                          child: Stack(
+                            children: <Widget>[
+
+                              Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Theme.of(context).primaryColor, width: 2)
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
+                                    child: Expanded(
+                                        child: Center(
+                                            child: RepaintBoundary(
+                                              key: _repaintBoundaryKey,
+                                              child: QuoteBody(
+                                      quoteFontSize: fontSize,
+                                      quote: quote,
+                                    ),
+                                            ))),
+                                  ),
+                                ),
+                              ),
+
+                              Positioned(
+                                bottom: 5,
+                                  left: 0,
+                                  right: 0,
+                                  child: Center(
+                                    child: Container(
+                                      width: 130,
+                                      color: Colors.white,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text("Quotes", style: TextStyle(color: Theme.of(context).primaryColor),),
+                                          Text("Book", style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),)
+                                        ],
+                                      ),
+                                    ),
+                                  ))
+                            ],
                           ),
-                          Positioned(bottom: 32, right: 0, child: _buildBottomMenu(context))
-                        ],
+                        ),
                       ),
-                    ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _buildBottomMenu(context)
+
+                      ],)
+                    ],
                   ),
-                ],
+                ),
               ),
+
+              // Bookmark
+              /*
               Positioned(
                 right: 22,
                 child: GestureDetector(
@@ -239,7 +253,7 @@ class QuoteListItem extends StatelessWidget {
                           height: quote.isFavorite ? 70 : 42,
                           child: Bookmark(quote.isFavorite
                               ? Colors.amber
-                              : theme.secondaryColor),
+                              : Colors.black12),
                         ),
                         /*
                                 if (quote.isFavorite)
@@ -263,6 +277,7 @@ class QuoteListItem extends StatelessWidget {
                       }
                     }),
               ),
+               */
             ],
           ),
         ),

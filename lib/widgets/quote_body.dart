@@ -14,13 +14,13 @@ class QuoteBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var theme = QuoteTheme.getThemeById(quote.themeId);
+    var textColor = Color(0xFF3B3840);
 
     final authorFontSize = quoteFontSize * 0.57;
     final authorDescriptionFontSize = quoteFontSize * 0.40;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Container(
@@ -31,15 +31,15 @@ class QuoteBody extends StatelessWidget {
                 textStyle: TextStyle(
                     fontSize: quoteFontSize,
                     fontWeight: FontWeight.bold,
-                    color: theme.textColor)),
-            textAlign: TextAlign.right,
+                    color: textColor)),
+            textAlign: TextAlign.center,
           ),
         ),
         SizedBox(
           height: 25,
         ),
         Container(
-          color: theme.textColor,
+          color: textColor,
           height: 3.0,
           width: 30,
         ),
@@ -47,7 +47,7 @@ class QuoteBody extends StatelessWidget {
           height: 5,
         ),
         Container(
-          alignment: Alignment.centerRight,
+          alignment: Alignment.center,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
@@ -56,41 +56,9 @@ class QuoteBody extends StatelessWidget {
                 style: GoogleFonts.montserrat(
                     textStyle: TextStyle(
                         fontSize: authorFontSize,
-                        color: theme.textColor)),
-                textAlign: TextAlign.right,
+                        color: textColor)),
+                textAlign: TextAlign.center,
               ),
-              // Author description
-              /*
-              Text(
-                quote.author.shortDescription,
-                style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(
-                        color: theme.textColor,
-                        fontSize: authorDescriptionFontSize)),
-                textAlign: TextAlign.right,
-              ),
-              */
-              /*
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.star,
-                                    color:
-                                        quote.isFavorite ? Colors.amber : Colors.grey,
-                                  ),
-                                  onPressed: () {
-                                    if (quote.isFavorite){
-                                      quotesProvider.removeQuote(quote);
-                                    }else {
-                                      quotesProvider.saveQuote(quote);
-                                    }
-
-                                  })
-                            ],
-                          )
-                          */
             ],
           ),
         )
