@@ -25,11 +25,7 @@ class QuoteListItem extends StatelessWidget {
 
   var loading = false;
 
-  QuoteListItem({this.quote, this.previousQuote, this.onTap}) {
-    if (quote.themeId == null) {
-      quote.themeId = QuoteTheme.getNextTheme().id;
-    }
-  }
+  QuoteListItem({this.quote, this.previousQuote, this.onTap});
 
   void _onTextSharePressed() {
     Share.text('A quote from Quotesbook', quote.toText(), 'text/plain');
