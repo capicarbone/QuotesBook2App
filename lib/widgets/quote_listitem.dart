@@ -142,12 +142,6 @@ class QuoteListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-
-    var screenSize = MediaQuery.of(context).size;
-    var fontSize = quote.body.length < 174
-        ? screenSize.width * 0.0825
-        : screenSize.width * 0.0675;
-
     return Container(
       width: double.infinity,
       child: GestureDetector(
@@ -188,7 +182,6 @@ class QuoteListItem extends StatelessWidget {
                                       child: RepaintBoundary(
                                     key: _repaintBoundaryKey,
                                     child: QuoteBody(
-                                      quoteFontSize: fontSize,
                                       quote: quote,
                                     ),
                                   )),

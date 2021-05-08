@@ -73,9 +73,7 @@ class QuoteBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var textColor = Color(0xFF3B3840);
-
-    final authorFontSize = quoteFontSize * 0.57;
+    var textColor = Theme.of(context).primaryColor;
 
     return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
       var quoteConstraints = constraints.copyWith(maxHeight: constraints.maxHeight*0.7);
@@ -114,7 +112,7 @@ class QuoteBody extends StatelessWidget {
                   '${quote.author.firstName} ${quote.author.lastName}',
                   style: GoogleFonts.montserrat(
                       textStyle: TextStyle(
-                          fontSize: authorFontSize,
+                          fontSize: 15,
                           color: textColor)),
                   textAlign: TextAlign.center,
                 ),
