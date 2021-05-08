@@ -42,7 +42,6 @@ class FavoritesScreen extends StatelessWidget {
               controller: PageController(viewportFraction: 0.9),
               itemBuilder: (context, index) => QuoteListItem(
                   quote: provider.savedQuotes[index],
-                  previousQuote: (index-1 >= 0) ? provider.savedQuotes[index-1] : null,
                   onTap: () {
                     _pageController.animateToNextPage();
                   }),

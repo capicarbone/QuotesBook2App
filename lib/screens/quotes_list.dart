@@ -69,10 +69,8 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
             );
           } else {
             var quote = provider.quotes[position];
-            var prevQuote = (position-1 >= 0) ? provider.quotes[position-1] : null;
             return QuoteListItem(
                 quote: quote,
-                previousQuote: prevQuote, // (position-1 >= 0) ? provider.quotes[position-1] : null,
                 onTap: () {
                   _pageController.animateToNextPage();
                 });

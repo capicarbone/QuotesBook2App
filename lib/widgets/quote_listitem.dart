@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import 'package:image/image.dart' as image;
@@ -18,13 +19,12 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 
 class QuoteListItem extends StatelessWidget {
   Quote quote;
-  Quote previousQuote;
   Function onTap;
   GlobalKey _repaintBoundaryKey = GlobalKey();
 
   var loading = false;
 
-  QuoteListItem({this.quote, this.previousQuote, this.onTap});
+  QuoteListItem({this.quote, this.onTap});
 
   void _onTextSharePressed() {
     Share.text('A quote from Quotesbook', quote.toText(), 'text/plain');
@@ -103,50 +103,45 @@ class QuoteListItem extends StatelessWidget {
   }
 
   Widget _buildBottomMenu(BuildContext ctx) {
-    return Container(
-      height: 32,
-      alignment: Alignment.centerRight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          if (loading)
-            Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            ),
-          if (!loading)
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.black26,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      bottomLeft: Radius.circular(50))),
-              height: 32,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  FlatButton.icon(
-                      onPressed: () {
-                        _onSharePressed(ctx);
-                      },
-                      icon: Icon(
-                        Icons.share,
-                        color: Colors.white,
-                      ),
-                      label: Text("")),
-                ],
-              ),
-            ),
-        ],
-      ),
+    final quotesProvider = Provider.of<SavedQuotes>(ctx, listen: false);
+    final saved = quotesProvider.isSaved(quote.id);
+
+    var buttonsStyle =
+        TextButton.styleFrom(primary: Theme.of(ctx).primaryColor, textStyle: GoogleFonts.montserrat());
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        if (saved)
+        TextButton(
+            style: buttonsStyle,
+            child: Text("Remove".toUpperCase()),
+            onPressed: () {
+              quotesProvider.removeQuote(quote);
+            }),
+        if (!saved)
+        TextButton(
+          onPressed: () {
+            quotesProvider.saveQuote(quote);
+          },
+          child: Text("Save".toUpperCase()),
+          style: buttonsStyle,
+        ),
+
+        TextButton(
+            style: buttonsStyle,
+            child: Text("Share".toUpperCase()),
+            onPressed: () {
+              _onSharePressed(ctx);
+            }),
+
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    var quotesProvider = Provider.of<SavedQuotes>(context, listen: false);
+
 
     var screenSize = MediaQuery.of(context).size;
     var fontSize = quote.body.length < 174
@@ -171,13 +166,12 @@ class QuoteListItem extends StatelessWidget {
                         decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                  offset: Offset(0, -3),
+                                  offset: Offset(0, 3),
                                   blurRadius: 2,
                                   color: Color.fromARGB(70, 0, 0, 0))
                             ],
                             color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(2))),
+                            borderRadius: BorderRadius.all(Radius.circular(2))),
                         child: Stack(
                           children: <Widget>[
                             Padding(
@@ -189,10 +183,7 @@ class QuoteListItem extends StatelessWidget {
                                         width: 2)),
                                 child: Padding(
                                   padding: EdgeInsets.only(
-                                      left: 40,
-                                      right: 40,
-                                      top: 20,
-                                      bottom: 20),
+                                      left: 40, right: 40, top: 20, bottom: 20),
                                   child: Center(
                                       child: RepaintBoundary(
                                     key: _repaintBoundaryKey,
@@ -216,15 +207,13 @@ class QuoteListItem extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          "Quotes",
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                        ),
+                                        Text("Quotes",
+                                            style: GoogleFonts.robotoSlab(
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
                                         Text(
                                           "Book",
-                                          style: TextStyle(
+                                          style: GoogleFonts.robotoSlab(
                                               fontWeight: FontWeight.bold,
                                               color: Theme.of(context)
                                                   .primaryColor),
