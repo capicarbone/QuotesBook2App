@@ -5,7 +5,7 @@ import 'package:image/image.dart';
 import 'package:flutter/painting.dart' as painting;
 
 class QuoteImageGenerator {
-  final _logoProportion = 0.25;
+
   final _imageSize = 2400;
 
   Image quoteImage;
@@ -76,6 +76,25 @@ class QuoteImageGenerator {
 
   }
 
+  Future<Image> _drawFooter(Image quoteImage) async {
+    final logoProportion = _imagePadding / quoteImage.height;
+    var qbLogo = _resizeImageByHeight(footerLogo, (quoteImage.height * logoProportion ).toInt());
+
+    final logoHeightCenterPosition = quoteImage.height - _imagePadding - (_borderThickness ~/ 2);
+    final imageWidthCenter = quoteImage.width ~/ 2;
+
+    var logoPosition = {'x': imageWidthCenter - qbLogo.width ~/ 2, 'y': logoHeightCenterPosition - qbLogo.height ~/ 2};
+
+    final backgroundMargin = (qbLogo.width * 0.25).toInt();
+    final logoBackground = Image(qbLogo.width + backgroundMargin*2, qbLogo.height, channels: Channels.rgba);
+    logoBackground.fill(0xFFFFFFFF);
+
+    var result = copyInto(quoteImage, logoBackground, dstX: logoPosition['x'] - backgroundMargin, dstY: logoPosition['y']);
+
+    return copyInto(result, qbLogo, dstX: logoPosition['x'] , dstY: logoPosition['y']);
+
+  }
+
   Future<List<int>> generateImage() async {
 
     var bgColor = backgroundColor;
@@ -89,6 +108,8 @@ class QuoteImageGenerator {
     //finalQuoteImage = image.vignette(finalQuoteImage, amount: 1, end: 1.5);
 
     finalQuoteImage = await _drawFrame(finalQuoteImage);
+    finalQuoteImage = await _drawFooter(finalQuoteImage);
+
     var availableHeightForQuote =
         finalQuoteImage.height - _imagePadding * 2 - _insetPadding * 2;
     var availableWidthForQuote =
