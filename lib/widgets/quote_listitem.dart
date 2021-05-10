@@ -32,7 +32,7 @@ class QuoteListItem extends StatefulWidget {
 class _QuoteListItemState extends State<QuoteListItem> {
   GlobalKey _repaintBoundaryKey = GlobalKey();
 
-  final _shareDebugMode = true;
+  final _shareDebugMode = false;
 
   Uint8List _memoryImage;
 
@@ -67,16 +67,14 @@ class _QuoteListItemState extends State<QuoteListItem> {
       }).then((generatedImage) {
         _toggleLoader(false);
 
-        /*
-        Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage,
-            'image/jpg');
-        */
-        if (_shareDebugMode){
+        if (_shareDebugMode) {
           setState(() {
             _memoryImage = generatedImage;
           });
+        } else {
+          Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage,
+              'image/jpg');
         }
-
       }).catchError((err) {
         developer.log("on image generation", error: err);
         _toggleLoader(false);
@@ -239,46 +237,6 @@ class _QuoteListItemState extends State<QuoteListItem> {
                   ],
                 ),
               ),
-
-              // Bookmark
-              /*
-              Positioned(
-                right: 22,
-                child: GestureDetector(
-                    child: Stack(
-                      children: <Widget>[
-                        AnimatedContainer(
-                          duration: Duration(milliseconds: 300),
-                          width: 70,
-                          curve: Curves.bounceOut,
-                          height: quote.isFavorite ? 70 : 42,
-                          child: Bookmark(quote.isFavorite
-                              ? Colors.amber
-                              : Colors.black12),
-                        ),
-                        /*
-                                if (quote.isFavorite)
-                                  Container(
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.star,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    width: 50,
-                                    height: 40,
-                                  ) */
-                      ],
-                    ),
-                    onTap: () {
-                      if (quote.isFavorite) {
-                        quotesProvider.removeQuote(quote);
-                      } else {
-                        quotesProvider.saveQuote(quote);
-                      }
-                    }),
-              ),
-               */
             ],
           ),
         ),
@@ -291,8 +249,7 @@ class _QuoteListItemState extends State<QuoteListItem> {
           listItem,
           Container(
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent, width: 3)
-              ),
+                  border: Border.all(color: Colors.blueAccent, width: 3)),
               width: 300,
               height: 300,
               child: _memoryImage != null
