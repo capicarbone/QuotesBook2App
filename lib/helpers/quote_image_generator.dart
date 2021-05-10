@@ -1,109 +1,104 @@
-
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as flutter;
 import 'package:flutter/services.dart';
 import 'package:image/image.dart';
 import 'package:flutter/painting.dart' as painting;
 
-
 class QuoteImageGenerator {
   final _logoProportion = 0.25;
   final _imageSize = 2400;
 
-
   Image quoteImage;
   Image footerLogo;
   painting.Color backgroundColor;
+  painting.Color frameColor;
 
-  QuoteImageGenerator({this.quoteImage, this.backgroundColor, this.footerLogo});
+  QuoteImageGenerator({this.quoteImage, this.backgroundColor, this.frameColor, this.footerLogo});
 
-  get _verticalPadding => (_imageSize*0.02).toInt();
+  get _imagePadding => (_imageSize * 0.04).toInt();
+  get _insetPadding => (_imagePadding*2).toInt();
+  get _borderThickness => _imagePadding * 0.19;
 
-  Image _resizeImageByWidth(Image imageToResize, int width){
-    return copyResize(imageToResize, width: width,
-        height: width * imageToResize.height ~/ imageToResize.width );
+  Image _resizeImageByWidth(Image imageToResize, int width) {
+    return copyResize(imageToResize,
+        width: width,
+        height: width * imageToResize.height ~/ imageToResize.width);
   }
 
-  Image _resizeImageByHeight(Image imageToResize, int height){
-    return copyResize(imageToResize, height: height,
-        width: height * imageToResize.width ~/ imageToResize.height );
+  Image _resizeImageByHeight(Image imageToResize, int height) {
+    return copyResize(imageToResize,
+        height: height,
+        width: height * imageToResize.width ~/ imageToResize.height);
   }
 
-  Future<Image> _drawFooter(Image quoteImage) async {
-    var logoImage = footerLogo;
+  Future<Image> _drawFrame(Image quoteImage) async {
 
-    // Adjusting QB logo image size
-    var newLogoWidth = (_imageSize * _logoProportion).toInt();
-    logoImage = _resizeImageByWidth(logoImage, newLogoWidth);
+    var color = painting.Color.fromARGB(frameColor.alpha, frameColor.blue, frameColor.green, frameColor.red).value;
+    var positionAdjustmet = _borderThickness ~/ 2;
 
-    var quoteImageXCenter = quoteImage.width ~/ 2;
-    var logoImageXCenter = logoImage.width ~/ 2;
-    var destY = quoteImage.height - logoImage.height - _verticalPadding;
-    var destX = quoteImageXCenter - logoImageXCenter;
-    
+    var borders = {
+      'top-left' : [_imagePadding, _imagePadding],
+      'top-right' : [quoteImage.width - _imagePadding, _imagePadding],
+      'bottom-left': [_imagePadding, quoteImage.height - _imagePadding ],
+      'bottom-right': [quoteImage.width - _imagePadding, quoteImage.height - _imagePadding]
+    };
 
-    copyInto(quoteImage, logoImage, dstY: destY, dstX: destX, blend: true);
-    
-    // Drawing lines
+    var framedImage = drawLine(quoteImage,
+        borders['top-left'][0],
+        borders['top-left'][1] - positionAdjustmet,
+        borders['bottom-left'][0],
+        borders['bottom-left'][1] + positionAdjustmet,
+        color, thickness: _borderThickness);
 
-    var logoYCenterImagePosition = quoteImage.height - _verticalPadding - (logoImage.height ~/ 2);
-    var logoXEndImagePosition = destX + logoImage.width;
-    var linesLength = (logoImage.width*0.3).toInt();
-    var linesMargin = (logoImage.width*0.1).toInt();
-    var linesWidth = (logoImage.width*0.03).toInt();
+    framedImage = drawLine(quoteImage,
+        borders['top-left'][0],
+        borders['top-left'][1],
+        borders['top-right'][0],
+        borders['top-right'][1],
+        color, thickness: _borderThickness);
 
-    var backgroundColor = quoteImage.getPixel(0, 0);
-    var linesColor = backgroundColor;
 
-    // Looking lines color by blended logo color
-    for (int i = destX + logoImage.width; i > quoteImageXCenter; i-- ) {
-      if (quoteImage.getPixel(i, logoYCenterImagePosition) != backgroundColor) {
-        linesColor = quoteImage.getPixel(i - 5, logoYCenterImagePosition);
-        break;
-      }
-    }
-    
-    // Drawing right line
-    fillRect(quoteImage, logoXEndImagePosition + linesMargin,
-        logoYCenterImagePosition - (linesWidth ~/ 2),
-        logoXEndImagePosition + linesMargin + linesLength,
-        logoYCenterImagePosition + (linesWidth ~/ 2),
-        linesColor);
+    framedImage = drawLine(quoteImage,
+        borders['top-right'][0],
+        borders['top-right'][1] - positionAdjustmet,
+        borders['bottom-right'][0],
+        borders['bottom-right'][1] + positionAdjustmet,
+        color, thickness: _borderThickness);
 
-    // Drawing left line
-    fillRect(quoteImage, destX - linesMargin - linesLength,
-        logoYCenterImagePosition - (linesWidth ~/ 2),
-        destX - linesMargin,
-        logoYCenterImagePosition + (linesWidth ~/ 2),
-        linesColor);
+    framedImage = drawLine(quoteImage,
+        borders['bottom-left'][0],
+        borders['bottom-left'][1],
+        borders['bottom-right'][0],
+        borders['bottom-right'][1],
+        color, thickness: _borderThickness);
 
-    return logoImage;
+    return framedImage;
+
   }
-
 
   Future<List<int>> generateImage() async {
-
-    var horizontalPadding = (_imageSize*0.05).toInt();
 
     var bgColor = backgroundColor;
 
     var finalQuoteImage = Image(_imageSize, _imageSize);
 
-
     // The image library use the form 0xAABBGGRR for colors
-    finalQuoteImage.fill(painting.Color.fromARGB(bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red).value);
+    finalQuoteImage.fill(painting.Color.fromARGB(
+            bgColor.alpha, bgColor.blue, bgColor.green, bgColor.red)
+        .value);
     //finalQuoteImage = image.vignette(finalQuoteImage, amount: 1, end: 1.5);
 
-
-    var logoImage = await _drawFooter(finalQuoteImage);
-    var availableHeightForQuote = finalQuoteImage.height - logoImage.height - (_verticalPadding*4) - (logoImage.height ~/ 2);
-    var availableWidthForQuote = finalQuoteImage.width - (horizontalPadding*2);
+    finalQuoteImage = await _drawFrame(finalQuoteImage);
+    var availableHeightForQuote =
+        finalQuoteImage.height - _imagePadding * 2 - _insetPadding * 2;
+    var availableWidthForQuote =
+        finalQuoteImage.width - _imagePadding * 2 - _insetPadding * 2;
 
     // Adjusting if quote too small (width)
-    if (quoteImage.width < availableWidthForQuote*0.95) {
+    if (quoteImage.width < availableWidthForQuote * 0.95) {
       print("Image resized because too small on width");
-      quoteImage = _resizeImageByWidth(quoteImage, (availableHeightForQuote*0.95).toInt());
+      quoteImage = _resizeImageByWidth(
+          quoteImage, (availableHeightForQuote * 0.95).toInt());
     }
 
     // Adjusting if quote too big (height)
@@ -117,24 +112,26 @@ class QuoteImageGenerator {
     }
 
     finalQuoteImage = copyInto(finalQuoteImage, quoteImage,
-        dstX: _imageSize - quoteImage.width - horizontalPadding,
-        dstY: _verticalPadding + (availableHeightForQuote ~/ 2) - (quoteImage.height ~/ 2)
-    );
-
+        dstX: (finalQuoteImage.width ~/ 2) -
+            (quoteImage.width ~/ 2),
+        dstY:
+            (finalQuoteImage.height ~/ 2) -
+            (quoteImage.height ~/ 2));
 
     return encodeJpg(finalQuoteImage);
   }
 
   Future<List<int>> generate() async {
     return generateImage();
-
   }
-
 }
 
-Future<List<int>> generateQuoteImage(Map<String, dynamic> params) async{
-
-  var generator = QuoteImageGenerator(quoteImage: params['quoteImage'], backgroundColor: params['backgroundColor'], footerLogo: params['footerLogo']);
+Future<List<int>> generateQuoteImage(Map<String, dynamic> params) async {
+  var generator = QuoteImageGenerator(
+      quoteImage: params['quoteImage'],
+      frameColor: params['frameColor'],
+      backgroundColor: params['backgroundColor'],
+      footerLogo: params['footerLogo']);
 
   return generator.generate();
 }

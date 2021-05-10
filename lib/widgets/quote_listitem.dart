@@ -53,7 +53,7 @@ class _QuoteListItemState extends State<QuoteListItem> {
     return image.decodePng(bytes.buffer.asUint8List());
   }
 
-  void _onImageSharePressed() {
+  void _onImageSharePressed(BuildContext context) {
     _toggleLoader(true);
 
     _captureQuoteImage(pixelRatio: 3.0).then((quoteImage) {
@@ -61,6 +61,7 @@ class _QuoteListItemState extends State<QuoteListItem> {
         return compute(generator.generateQuoteImage, {
           'quoteImage': quoteImage,
           'backgroundColor': Colors.white,
+          'frameColor': Theme.of(context).primaryColor,
           'footerLogo': image.decodePng(footerImage.buffer.asUint8List())
         });
       }).then((generatedImage) {
@@ -106,7 +107,7 @@ class _QuoteListItemState extends State<QuoteListItem> {
                     AppLocalizations.of(ctx).shareQuoteImageOption,
                   ),
                   onTap: () {
-                    _onImageSharePressed();
+                    _onImageSharePressed(ctx);
                     Navigator.pop(ctx);
                   },
                 ),
