@@ -24,11 +24,11 @@ class AppBarBottomDecorationPainter extends CustomPainter {
 
     path.close();
 
-    var paint2 = Paint();
-    paint2.color = Colors.black.withOpacity(0.1);
+    //var paint2 = Paint();
+    //paint2.color = Colors.black.withOpacity(0.1);
 
-    canvas.drawLine(Offset(0, (size.height / 2) + 1),
-        Offset(size.width, (size.height / 2) + 1), paint2);
+   // canvas.drawLine(Offset(0, (size.height / 2) + 1),
+        //Offset(size.width, (size.height / 2) + 1), paint2);
     canvas.drawShadow(path, Colors.black, 2, false);
     canvas.drawPath(path, paint);
   }
@@ -45,13 +45,13 @@ class CustomTopbar extends StatelessWidget {
   double margin;
 
   static const double HEIGHT = 70;
-  static const double SPIKE_HEIGHT = 10;
+  static const double SPIKE_HEIGHT = 7;
 
   CustomTopbar({this.title, this.color, this.margin = 25});
 
   @override
   Widget build(BuildContext context) {
-    var diamondMargin = margin - 8;
+    var diamondMargin = 5.0;
     return Container(
       width: double.infinity,
       height: HEIGHT,
@@ -187,9 +187,9 @@ class _TabsScreenState extends State<TabsScreen>
                         duration: Duration(milliseconds: 300),
                         width: 70,
                         curve: Curves.bounceOut,
-                        height: _selectedPageIndex == 1 ? 70 : 42,
+                        height: _selectedPageIndex == 1 ? CustomTopbar.HEIGHT - 10 : CustomTopbar.HEIGHT - 30,
                         child: Bookmark(_selectedPageIndex == 1
-                            ? Colors.amber
+                            ? Theme.of(context).accentColor
                             : Colors.black12),
                       ),
                     ],
