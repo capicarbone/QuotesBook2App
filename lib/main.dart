@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
     ]);
 
     var blackTintColor = Color(0xFF3B3840);
+    var accentColor = Color(0xFFFFA95A);
 
     return MultiProvider(
       providers: [
@@ -69,7 +70,7 @@ class MyApp extends StatelessWidget {
         title: 'Quotesbook',
         theme: ThemeData(
           primaryColor: blackTintColor,
-          accentColor: Colors.amber,
+          accentColor: accentColor,
           primaryTextTheme: TextTheme(
             bodyText1: GoogleFonts.montserrat(
                 textStyle: TextStyle(
