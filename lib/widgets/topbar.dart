@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class AppBarBottomDecorationPainter extends CustomPainter {
@@ -34,15 +33,33 @@ class AppBarBottomDecorationPainter extends CustomPainter {
   }
 }
 
-class Topbar extends StatelessWidget {
+class _TopBarTitle extends StatelessWidget {
   String title;
+  bool isExpanded;
+
+  _TopBarTitle({this.title, this.isExpanded});
+
+  @override
+  Widget build(BuildContext context) {
+    return isExpanded ? Text(
+      title.toUpperCase(),
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    ) : Container();
+  }
+}
+
+class Topbar extends StatelessWidget {
+  List<String> titles;
+  int selectedIndex;
   Color color;
   double margin;
 
   static const double HEIGHT = 70;
   static const double SPIKE_HEIGHT = 7;
 
-  Topbar({this.title, this.color, this.margin = 25});
+  Topbar({this.titles, this.selectedIndex, this.color, this.margin = 25});
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +86,13 @@ class Topbar extends StatelessWidget {
                   color: color,
                   height: HEIGHT - (SPIKE_HEIGHT / 2),
                 ),
-                Text(
-                  title.toUpperCase(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
+                // optimize
+                ...titles
+                    .map((e) => _TopBarTitle(
+                          title: e,
+                          isExpanded: titles.indexOf(e) == selectedIndex,
+                        ))
+                    .toList()
               ],
             ),
           ],

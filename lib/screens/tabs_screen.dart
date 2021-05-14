@@ -92,7 +92,8 @@ class _TabsScreenState extends State<TabsScreen>
             ),
 
             Topbar(
-              title: "home",
+              titles: ['Home', 'Favorites'],
+              selectedIndex: _selectedPageIndex,
               color: Colors.grey.shade300,
               margin: 25,
             ),
