@@ -33,20 +33,58 @@ class AppBarBottomDecorationPainter extends CustomPainter {
   }
 }
 
-class _TopBarTitle extends StatelessWidget {
+class _TopBarTitle extends StatefulWidget {
   String title;
   bool isExpanded;
-
+  
   _TopBarTitle({this.title, this.isExpanded});
 
   @override
+  __TopBarTitleState createState() => __TopBarTitleState();
+}
+
+class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInCubic);
+    if (widget.isExpanded){
+      _controller.value = 1;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _TopBarTitle oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isExpanded){
+      _controller.forward();
+    }else{
+      _controller.reverse();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return isExpanded ? Text(
-      title.toUpperCase(),
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Text(
+        widget.title.toUpperCase(),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
       ),
-    ) : Container();
+    );
   }
 }
 
