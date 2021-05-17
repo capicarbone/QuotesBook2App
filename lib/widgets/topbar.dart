@@ -46,6 +46,8 @@ class _TopBarTitle extends StatefulWidget {
 class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _fadeAnimation;
+  Animation<RelativeRect> _postionAnimation;
+  Size containerSize = Size(200, 80);
 
   @override
   void initState() {
@@ -56,6 +58,13 @@ class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderSt
     if (widget.isExpanded){
       _controller.value = 1;
     }
+  }
+
+  Size _textSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style), maxLines: 1, textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
   }
 
   @override
@@ -76,12 +85,23 @@ class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: Text(
-        widget.title.toUpperCase(),
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
+
+    final title = Text(
+      widget.title.toUpperCase(),
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    );
+
+    var titleSize = _textSize(title.data, title.style);
+
+    return Container(
+      width: titleSize.width + titleSize.width*0.2,
+      height: titleSize.height,
+      child: Center(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: title,
         ),
       ),
     );
