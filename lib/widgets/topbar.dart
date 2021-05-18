@@ -36,14 +36,15 @@ class AppBarBottomDecorationPainter extends CustomPainter {
 class _TopBarTitle extends StatefulWidget {
   String title;
   bool isExpanded;
-  
+
   _TopBarTitle({this.title, this.isExpanded});
 
   @override
   __TopBarTitleState createState() => __TopBarTitleState();
 }
 
-class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderStateMixin {
+class __TopBarTitleState extends State<_TopBarTitle>
+    with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _fadeAnimation;
   Animation<RelativeRect> _postionAnimation;
@@ -52,17 +53,21 @@ class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 300), vsync: this);
 
-    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInCubic);
-    if (widget.isExpanded){
+    _fadeAnimation =
+        CurvedAnimation(parent: _controller, curve: Curves.easeInCubic);
+    if (widget.isExpanded) {
       _controller.value = 1;
     }
   }
 
   Size _textSize(String text, TextStyle style) {
     final TextPainter textPainter = TextPainter(
-        text: TextSpan(text: text, style: style), maxLines: 1, textDirection: TextDirection.ltr)
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
       ..layout(minWidth: 0, maxWidth: double.infinity);
     return textPainter.size;
   }
@@ -70,9 +75,9 @@ class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderSt
   @override
   void didUpdateWidget(covariant _TopBarTitle oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.isExpanded){
+    if (widget.isExpanded) {
       _controller.forward();
-    }else{
+    } else {
       _controller.reverse();
     }
   }
@@ -85,7 +90,6 @@ class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-
     final title = Text(
       widget.title.toUpperCase(),
       style: TextStyle(
@@ -95,14 +99,31 @@ class __TopBarTitleState extends State<_TopBarTitle> with SingleTickerProviderSt
 
     var titleSize = _textSize(title.data, title.style);
 
+    Size containerSize =
+        Size(titleSize.width + titleSize.width * 2, titleSize.height);
+
+    var begin = RelativeRect.fromSize(
+        Rect.fromLTWH(0, 0, titleSize.width, titleSize.height), containerSize);
+    var end = RelativeRect.fromSize(
+        Rect.fromLTWH(containerSize.width/2 - titleSize.width/2, 0, titleSize.width,
+            titleSize.height),
+        containerSize);
+
     return Container(
-      width: titleSize.width + titleSize.width*0.2,
-      height: titleSize.height,
-      child: Center(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: title,
-        ),
+      width: containerSize.width,
+      height: containerSize.height,
+      child: Stack(
+        children: [
+          PositionedTransition(
+            rect: RelativeRectTween(begin: begin, end: end).animate(
+                CurvedAnimation(
+                    parent: _controller, curve: Curves.easeOut)),
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: title,
+            ),
+          ),
+        ],
       ),
     );
   }
