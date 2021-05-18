@@ -20,7 +20,7 @@ Add android/key.properties to sign apk/bundle.
 
 ## To generate internationalizations
 
-1. Update the ```lib/helpers/app_localizations.dart``` with the new texts.
+1. Update the ```lib/helpers/app_localizations.dart``` with the new texts.¡
 
 2. Create base arb base file for localization.
 ```
