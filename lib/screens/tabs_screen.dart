@@ -61,7 +61,7 @@ class _TabsScreenState extends State<TabsScreen>
     });
 
     _pageController.animateToPage(_selectedPageIndex,
-        duration: Duration(milliseconds: 700), curve: Curves.easeInOut);
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override

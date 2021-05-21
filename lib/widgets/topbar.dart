@@ -36,8 +36,9 @@ class AppBarBottomDecorationPainter extends CustomPainter {
 class _TopBarTitle extends StatefulWidget {
   String title;
   bool isExpanded;
+  bool moveToRight;
 
-  _TopBarTitle({this.title, this.isExpanded});
+  _TopBarTitle({this.title, this.isExpanded, this.moveToRight});
 
   @override
   __TopBarTitleState createState() => __TopBarTitleState();
@@ -102,11 +103,38 @@ class __TopBarTitleState extends State<_TopBarTitle>
     Size containerSize =
         Size(titleSize.width + titleSize.width * 2, titleSize.height);
 
+    var startPosition = 0.0;
+    var middlePosition = containerSize.width / 2 - titleSize.width / 2;
+    var endPosition = containerSize.width - titleSize.width;
+
+    var beginPosition = 0.0;
+    var finishPosition = 0.0;
+
+    if (widget.isExpanded){
+      if (widget.moveToRight){
+        beginPosition = endPosition;
+        finishPosition = middlePosition;
+      }else{
+        beginPosition = startPosition;
+        finishPosition = middlePosition;
+      }
+    }else{
+      if (widget.moveToRight){
+        beginPosition = startPosition;
+        finishPosition = middlePosition;
+      }else{
+        beginPosition = endPosition;
+        finishPosition = middlePosition;
+      }
+    }
+
     var begin = RelativeRect.fromSize(
-        Rect.fromLTWH(0, 0, titleSize.width, titleSize.height), containerSize);
+        Rect.fromLTWH(beginPosition, 0,
+            titleSize.width, titleSize.height),
+        containerSize);
     var end = RelativeRect.fromSize(
-        Rect.fromLTWH(containerSize.width/2 - titleSize.width/2, 0, titleSize.width,
-            titleSize.height),
+        Rect.fromLTWH(finishPosition, 0,
+            titleSize.width, titleSize.height),
         containerSize);
 
     return Container(
@@ -116,8 +144,7 @@ class __TopBarTitleState extends State<_TopBarTitle>
         children: [
           PositionedTransition(
             rect: RelativeRectTween(begin: begin, end: end).animate(
-                CurvedAnimation(
-                    parent: _controller, curve: Curves.easeOut)),
+                CurvedAnimation(parent: _controller, curve: Curves.easeOut)),
             child: FadeTransition(
               opacity: _fadeAnimation,
               child: title,
@@ -129,7 +156,7 @@ class __TopBarTitleState extends State<_TopBarTitle>
   }
 }
 
-class Topbar extends StatelessWidget {
+class Topbar extends StatefulWidget {
   List<String> titles;
   int selectedIndex;
   Color color;
@@ -141,35 +168,56 @@ class Topbar extends StatelessWidget {
   Topbar({this.titles, this.selectedIndex, this.color, this.margin = 25});
 
   @override
+  _TopbarState createState() => _TopbarState();
+}
+
+class _TopbarState extends State<Topbar> {
+  var movingToRight = false;
+
+  @override
+  void didUpdateWidget(covariant Topbar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedIndex < oldWidget.selectedIndex) {
+      movingToRight = false;
+    }
+
+    if (widget.selectedIndex > oldWidget.selectedIndex) {
+      movingToRight = true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     var diamondMargin = 5.0;
     return Container(
       width: double.infinity,
-      height: HEIGHT,
+      height: Topbar.HEIGHT,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) => Stack(
           children: [
             Positioned(
               bottom: 0,
-              height: SPIKE_HEIGHT,
+              height: Topbar.SPIKE_HEIGHT,
               left: diamondMargin,
               width: constraints.maxWidth - (diamondMargin * 2),
               child: CustomPaint(
-                painter: AppBarBottomDecorationPainter(color: color),
+                painter: AppBarBottomDecorationPainter(color: widget.color),
               ),
             ),
             Stack(
               alignment: Alignment.center,
               children: [
                 Container(
-                  color: color,
-                  height: HEIGHT - (SPIKE_HEIGHT / 2),
+                  color: widget.color,
+                  height: Topbar.HEIGHT - (Topbar.SPIKE_HEIGHT / 2),
                 ),
                 // optimize
-                ...titles
+                ...widget.titles
                     .map((e) => _TopBarTitle(
                           title: e,
-                          isExpanded: titles.indexOf(e) == selectedIndex,
+                          isExpanded:
+                              widget.titles.indexOf(e) == widget.selectedIndex,
+                          moveToRight: movingToRight,
                         ))
                     .toList()
               ],
