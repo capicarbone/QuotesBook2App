@@ -68,55 +68,59 @@ class _TabsScreenState extends State<TabsScreen>
   Widget build(BuildContext context) {
     Provider.of<SavedQuotes>(context, listen: false).loadSavedQuotes();
     final screenSize = MediaQuery.of(context).size;
+    final screenInsets = MediaQuery.of(context).viewPadding;
     final listHeight = screenSize.height - Topbar.HEIGHT + (Topbar.SPIKE_HEIGHT / 2);
+
+    final bookmarkHeight = Topbar.HEIGHT + screenInsets.top - 10;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                // I don't use a Positioned widget because throws some
-                // "RenderBox was not laid out" error
-                SizedBox(height: screenSize.height - listHeight,),
-                Expanded(
-                  child: PageView(
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              // I don't use a Positioned widget because throws some
+              // "RenderBox was not laid out" error
+              SizedBox(height: screenSize.height - listHeight,),
+              Expanded(
+                child: PageView(
 
-                    physics: NeverScrollableScrollPhysics(),
-                    children: _pages.map<Widget>((i) => i['page']).toList(),
-                    controller: _pageController,
-                  ),
+                  physics: NeverScrollableScrollPhysics(),
+                  children: _pages.map<Widget>((i) => i['page']).toList(),
+                  controller: _pageController,
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
 
-            Topbar(
+          SafeArea(
+            child: Topbar(
               titles: ['Home', 'Favorites'],
               selectedIndex: _selectedPageIndex,
               color: Colors.grey.shade300,
               margin: 25,
             ),
-            Positioned(
-              right: 22,
-              child: GestureDetector(
-                  child: Stack(
-                    children: <Widget>[
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        width: 70,
-                        curve: Curves.bounceOut,
-                        height: _selectedPageIndex == 1 ? Topbar.HEIGHT - 10 : Topbar.HEIGHT - 30,
-                        child: Bookmark(_selectedPageIndex == 1
-                            ? Theme.of(context).accentColor
-                            : Colors.black12),
-                      ),
-                    ],
-                  ),
-                  onTap: _onTabSelected),
-            ),
-          ],
-        ),
+          ),
+          Positioned(
+            right: 22,
+            child: GestureDetector(
+                child: Stack(
+                  children: <Widget>[
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 300),
+                      width: 70,
+                      curve: Curves.bounceOut,
+                      height: _selectedPageIndex == 1 ? bookmarkHeight : bookmarkHeight - 20,
+                      child: Bookmark(color: _selectedPageIndex == 1
+                          ? Theme.of(context).accentColor
+                          : Colors.black12,
+                      apexHeight: 20,),
+                    ),
+                  ],
+                ),
+                onTap: _onTabSelected),
+          ),
+        ],
       ),
     );
   }
