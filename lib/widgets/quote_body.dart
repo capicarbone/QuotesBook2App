@@ -66,9 +66,9 @@ class QuoteText extends StatelessWidget {
 class QuoteBody extends StatelessWidget {
 
   Quote quote;
-  var quoteFontSize = 27.0;
+  var quoteFontSize;
 
-  QuoteBody({this.quote, this.quoteFontSize: 27});
+  QuoteBody({this.quote, this.quoteFontSize: 50.0});
 
   @override
   Widget build(BuildContext context) {
