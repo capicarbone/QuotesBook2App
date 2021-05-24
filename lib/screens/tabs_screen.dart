@@ -81,7 +81,7 @@ class _TabsScreenState extends State<TabsScreen>
             children: [
               // I don't use a Positioned widget because throws some
               // "RenderBox was not laid out" error
-              SizedBox(height: screenSize.height - listHeight,),
+              SizedBox(height: screenSize.height - listHeight + screenInsets.top,),
               Expanded(
                 child: PageView(
 
