@@ -54,13 +54,19 @@ class QuoteText extends StatelessWidget {
       ..sort((a, b) => b.length.compareTo(a.length));
     final largestWordLength = sortedWords[0].length;
 
-    if (largestWordLength > 6) {
-      final measuredFontSize = painter.text.style.fontSize;
+    final measuredFontSize = painter.text.style.fontSize;
+
+    // It can't apply an adjustment if the font size is lower than
+    // 28px since a lower number will lead to a negative adjustment value
+    // and will increase the font size instead.
+    if (largestWordLength > 7 && measuredFontSize > 28) {
+
       // The constant in the adjustment are calculated as a line equation (mx + b)
-      // using (font size calculated, min font size for correct adjustment) => (50, 12), (38, 12)
+      // using (font size calculated, min font size for correct adjustment) tuples => (50, 12), (38, 12)
       // as points for determine the constants.
       // This is not a definitive solution for clipped large words yet, but has
       // decreased considerably the number of occurrences.
+      // In a better solution I think should consider the largest word length.
       final fontSizeAdjustment = (0.583 * measuredFontSize - 17.17);
       painter.text = TextSpan(
           text: text.text,
