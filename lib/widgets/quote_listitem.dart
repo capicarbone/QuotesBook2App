@@ -29,7 +29,10 @@ class QuoteListItem extends StatefulWidget {
   _QuoteListItemState createState() => _QuoteListItemState();
 }
 
-class _QuoteListItemState extends State<QuoteListItem> {
+class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation<double> _fadeInAnimation;
+  Animation<double> _fadeOutAnimation;
   GlobalKey _repaintBoundaryKey = GlobalKey();
 
   final _shareDebugMode = false;
@@ -37,12 +40,47 @@ class _QuoteListItemState extends State<QuoteListItem> {
   Uint8List _memoryImage;
 
   var loading = false;
+  var transitioning = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this
+    );
+    _fadeInAnimation = _animationController.drive(Tween<double>(begin: 0, end: 1));
+    _fadeOutAnimation = _animationController.drive(Tween<double>(begin: 1, end: 0));
+    _animationController.value = 1;
+  }
+/*
+  @override
+  void didUpdateWidget(covariant QuoteListItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (transitioning){
+      transitioning = false;
+      if (loading){
+        _animationController.forward();
+      }else{
+        _animationController.reverse();
+      }
+    }
+  } */
 
   void _onTextSharePressed() {
     Share.text('A quote from Quotesbook', widget.quote.toText(), 'text/plain');
   }
 
-  void _toggleLoader(bool enabled) {}
+  void _toggleLoader(bool enabled) {
+    setState(() {
+      loading = enabled;
+      if (loading){
+        _animationController.reverse();
+      }else{
+        _animationController.forward();
+      }
+    });
+  }
 
   Future<image.Image> _captureQuoteImage({pixelRatio: 1.0}) async {
     RenderRepaintBoundary boundary =
@@ -122,31 +160,57 @@ class _QuoteListItemState extends State<QuoteListItem> {
     var buttonsStyle = TextButton.styleFrom(
         primary: Theme.of(ctx).primaryColor,
         textStyle: GoogleFonts.montserrat());
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        if (saved)
-          TextButton(
-              style: buttonsStyle,
-              child: Text(AppLocalizations.of(context).removeAction.toUpperCase()),
-              onPressed: () {
-                quotesProvider.removeQuote(widget.quote);
-              }),
-        if (!saved)
-          TextButton(
-            onPressed: () {
-              quotesProvider.saveQuote(widget.quote);
-            },
-            child: Text(AppLocalizations.of(context).saveAction.toUpperCase()),
-            style: buttonsStyle,
-          ),
+
+    final actionsButtons = [
+      if (saved)
         TextButton(
             style: buttonsStyle,
-            child: Text(AppLocalizations.of(context).shareAction.toUpperCase()),
+            child: Text(AppLocalizations.of(context).removeAction.toUpperCase()),
             onPressed: () {
-              _onSharePressed(ctx);
+              if (!loading)
+                quotesProvider.removeQuote(widget.quote);
             }),
+      if (!saved)
+        TextButton(
+          onPressed: () {
+            if (!loading)
+              quotesProvider.saveQuote(widget.quote);
+          },
+          child: Text(AppLocalizations.of(context).saveAction.toUpperCase()),
+          style: buttonsStyle,
+        ),
+      TextButton(
+          style: buttonsStyle,
+          child: Text(AppLocalizations.of(context).shareAction.toUpperCase()),
+          onPressed: () {
+            if (!loading)
+              _onSharePressed(ctx);
+          }),
+    ];
+    return Stack(
+      children: [
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: FadeTransition(
+                opacity: _fadeOutAnimation,
+                child: Container(width: 150, child: LinearProgressIndicator(backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor) ,),),
+              ),
+            ),
+          ),
+        FadeTransition(
+          opacity: _fadeInAnimation,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ...actionsButtons,
+            ],
+          ),
+        ),
       ],
     );
   }
