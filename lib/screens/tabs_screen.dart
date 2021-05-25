@@ -102,20 +102,16 @@ class _TabsScreenState extends State<TabsScreen>
           ),
           Positioned(
             right: 22,
+            width: 70,
             child: GestureDetector(
-                child: Stack(
-                  children: <Widget>[
-                    AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      width: 70,
-                      curve: Curves.bounceOut,
-                      height: _selectedPageIndex == 1 ? bookmarkHeight : bookmarkHeight - 20,
-                      child: Bookmark(color: _selectedPageIndex == 1
-                          ? Theme.of(context).accentColor
-                          : Colors.black12,
-                      apexHeight: 20,),
-                    ),
-                  ],
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.bounceOut,
+                  height: _selectedPageIndex == 1 ? bookmarkHeight : bookmarkHeight - 20,
+                  child: Bookmark(color: _selectedPageIndex == 1
+                      ? Theme.of(context).accentColor
+                      : Colors.black12,
+                  apexHeight: ((bookmarkHeight - screenInsets.top)*0.19).toInt()),
                 ),
                 onTap: _onTabSelected),
           ),
