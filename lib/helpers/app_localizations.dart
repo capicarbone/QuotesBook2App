@@ -21,6 +21,33 @@ class AppLocalizations {
 
   final String localeName;
 
+  String get saveAction {
+    return Intl.message(
+      'Save',
+      name: 'saveAction',
+      desc: '',
+      locale: localeName
+    );
+  }
+
+  String get removeAction {
+    return Intl.message(
+      'Remove',
+      name: 'removeAction',
+      desc: '',
+      locale: localeName
+    );
+  }
+
+  String get shareAction {
+    return Intl.message(
+      'Share',
+      name: 'shareAction',
+      desc: '',
+      locale: localeName
+    );
+  }
+
   String get someQuotesTitle {
     return Intl.message(
       'Some Quotes',

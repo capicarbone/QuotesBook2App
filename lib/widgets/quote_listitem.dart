@@ -129,7 +129,7 @@ class _QuoteListItemState extends State<QuoteListItem> {
         if (saved)
           TextButton(
               style: buttonsStyle,
-              child: Text("Remove".toUpperCase()),
+              child: Text(AppLocalizations.of(context).removeAction.toUpperCase()),
               onPressed: () {
                 quotesProvider.removeQuote(widget.quote);
               }),
@@ -138,12 +138,12 @@ class _QuoteListItemState extends State<QuoteListItem> {
             onPressed: () {
               quotesProvider.saveQuote(widget.quote);
             },
-            child: Text("Save".toUpperCase()),
+            child: Text(AppLocalizations.of(context).saveAction.toUpperCase()),
             style: buttonsStyle,
           ),
         TextButton(
             style: buttonsStyle,
-            child: Text("Share".toUpperCase()),
+            child: Text(AppLocalizations.of(context).shareAction.toUpperCase()),
             onPressed: () {
               _onSharePressed(ctx);
             }),

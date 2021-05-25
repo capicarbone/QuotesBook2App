@@ -84,7 +84,6 @@ class _TabsScreenState extends State<TabsScreen>
               SizedBox(height: screenSize.height - listHeight + screenInsets.top,),
               Expanded(
                 child: PageView(
-
                   physics: NeverScrollableScrollPhysics(),
                   children: _pages.map<Widget>((i) => i['page']).toList(),
                   controller: _pageController,

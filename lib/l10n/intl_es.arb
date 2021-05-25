@@ -1,5 +1,23 @@
 {
   "@@last_modified": "2020-10-17T17:26:24.517849",
+    "saveAction": "Guardar",
+    "@saveAction": {
+      "description": "",
+      "type": "text",
+      "placeholders": {}
+    },
+    "removeAction": "Eliminar",
+    "@removeAction": {
+      "description": "",
+      "type": "text",
+      "placeholders": {}
+    },
+    "shareAction": "Compartir",
+    "@shareAction": {
+      "description": "",
+      "type": "text",
+      "placeholders": {}
+    },
   "someQuotesTitle": "Algunas citas",
   "@someQuotesTitle": {
     "description": "Title for some quotes screen.",

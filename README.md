@@ -27,7 +27,7 @@ Add android/key.properties to sign apk/bundle.
 flutter pub run intl_translation:extract_to_arb --output-dir=lib/l10n lib/helpers/app_localizations.dart
 ```
 
-3. Update the files ```I10n/*_en.arb``` languages specific files with translations.
+3. Update the files ```I10n/intl_*.arb``` languages specific files with translations.
 
 4. Generate source code for localization messages from arb files.
 ```
