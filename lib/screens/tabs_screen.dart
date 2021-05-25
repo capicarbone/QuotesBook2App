@@ -95,7 +95,7 @@ class _TabsScreenState extends State<TabsScreen>
 
           SafeArea(
             child: Topbar(
-              titles: ['Home', 'Favorites'],
+              titles: [AppLocalizations.of(context).quotesTab, AppLocalizations.of(context).favoritesTab],
               selectedIndex: _selectedPageIndex,
               color: Colors.grey.shade300,
               margin: 25,
