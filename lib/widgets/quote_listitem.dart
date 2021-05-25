@@ -53,19 +53,12 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
     _fadeOutAnimation = _animationController.drive(Tween<double>(begin: 1, end: 0));
     _animationController.value = 1;
   }
-/*
+
   @override
-  void didUpdateWidget(covariant QuoteListItem oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (transitioning){
-      transitioning = false;
-      if (loading){
-        _animationController.forward();
-      }else{
-        _animationController.reverse();
-      }
-    }
-  } */
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+  }
 
   void _onTextSharePressed() {
     Share.text('A quote from Quotesbook', widget.quote.toText(), 'text/plain');
