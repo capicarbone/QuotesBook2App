@@ -30,9 +30,12 @@ dependencies:
   intl: ^0.17.0
   esys_flutter_share: ^1.0.2
   image: ^2.1.17
-  #intl_translation: ^0.17.9
+  intl_translation: ^0.17.10+1
   google_fonts: ^0.3.10
   firebase_analytics: ^6.0.2
+
+dependency_overrides:
+  intl: 0.17.0
 
 dev_dependencies:
   flutter_test:
