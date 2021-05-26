@@ -121,11 +121,11 @@ class QuoteBody extends StatelessWidget {
           ),
           Container(
             color: textColor,
-            height: 3.0,
-            width: 30,
+            height: 6,
+            width: 50,
           ),
           SizedBox(
-            height: 5,
+            height: 10,
           ),
           Container(
             alignment: Alignment.center,
@@ -135,6 +135,7 @@ class QuoteBody extends StatelessWidget {
                 Text(
                   '${quote.author.firstName} ${quote.author.lastName}',
                   style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w600,
                       textStyle: TextStyle(fontSize: 15, color: textColor)),
                   textAlign: TextAlign.center,
                 ),
