@@ -152,7 +152,7 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
 
     var buttonsStyle = TextButton.styleFrom(
         primary: Theme.of(ctx).primaryColor,
-        textStyle: GoogleFonts.montserrat());
+        textStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w500));
 
     final actionsButtons = [
       if (saved)
