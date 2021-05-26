@@ -114,7 +114,7 @@ class QuoteBody extends StatelessWidget {
                   style: GoogleFonts.montserrat(
                       textStyle: TextStyle(
                           fontSize: quoteFontSize,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w800,
                           color: textColor)))),
           SizedBox(
             height: 25,

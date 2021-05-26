@@ -95,7 +95,7 @@ class __TopBarTitleState extends State<_TopBarTitle>
     final title = Text(
       widget.title,
       textAlign: TextAlign.center,
-      style: GoogleFonts.montserrat(fontWeight: FontWeight.w500, fontSize: 18),
+      style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 18),
     );
 
     final titleSize = _textSize(title.data, title.style, MediaQuery.of(context).textScaleFactor);
