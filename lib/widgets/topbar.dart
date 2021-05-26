@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppBarBottomDecorationPainter extends CustomPainter {
   Color color;
@@ -48,7 +49,6 @@ class __TopBarTitleState extends State<_TopBarTitle>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _fadeAnimation;
-  Animation<RelativeRect> _postionAnimation;
   Size containerSize = Size(200, 80);
 
   @override
@@ -64,10 +64,11 @@ class __TopBarTitleState extends State<_TopBarTitle>
     }
   }
 
-  Size _textSize(String text, TextStyle style) {
+  Size _textSize(String text, TextStyle style, double scaleFactor) {
     final TextPainter textPainter = TextPainter(
         text: TextSpan(text: text, style: style),
         maxLines: 1,
+        textScaleFactor: scaleFactor,
         textDirection: TextDirection.ltr)
       ..layout(minWidth: 0, maxWidth: double.infinity);
     return textPainter.size;
@@ -92,23 +93,22 @@ class __TopBarTitleState extends State<_TopBarTitle>
   @override
   Widget build(BuildContext context) {
     final title = Text(
-      widget.title.toUpperCase(),
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
+      widget.title,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 16),
     );
 
-    var titleSize = _textSize(title.data, title.style);
+    final titleSize = _textSize(title.data, title.style, MediaQuery.of(context).textScaleFactor);
 
-    Size containerSize =
+    final containerSize =
         Size(titleSize.width + titleSize.width * 2, titleSize.height);
 
-    var startPosition = 0.0;
-    var middlePosition = containerSize.width / 2 - titleSize.width / 2;
-    var endPosition = containerSize.width - titleSize.width;
+    final startPosition = 0.0;
+    final middlePosition = containerSize.width / 2 - titleSize.width / 2;
+    final endPosition = containerSize.width - titleSize.width;
 
-    var beginPosition = 0.0;
-    var finishPosition = 0.0;
+    double beginPosition;
+    double finishPosition;
 
     if (widget.isExpanded){
       if (widget.moveToRight){
@@ -128,29 +128,31 @@ class __TopBarTitleState extends State<_TopBarTitle>
       }
     }
 
-    var begin = RelativeRect.fromSize(
+    final begin = RelativeRect.fromSize(
         Rect.fromLTWH(beginPosition, 0,
             titleSize.width, titleSize.height),
         containerSize);
-    var end = RelativeRect.fromSize(
+    final end = RelativeRect.fromSize(
         Rect.fromLTWH(finishPosition, 0,
             titleSize.width, titleSize.height),
         containerSize);
 
-    return Container(
-      width: containerSize.width,
-      height: containerSize.height,
-      child: Stack(
-        children: [
-          PositionedTransition(
-            rect: RelativeRectTween(begin: begin, end: end).animate(
-                CurvedAnimation(parent: _controller, curve: Curves.easeOut)),
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: title,
+    return Center(
+      child: Container(
+        width: containerSize.width,
+        height: containerSize.height,
+        child: Stack(
+          children: [
+            PositionedTransition(
+              rect: RelativeRectTween(begin: begin, end: end).animate(
+                  CurvedAnimation(parent: _controller, curve: Curves.easeOut)),
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: title,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
