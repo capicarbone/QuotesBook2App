@@ -49,19 +49,35 @@ class __TopBarTitleState extends State<_TopBarTitle>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _fadeAnimation;
-  Size containerSize = Size(200, 80);
+
+  static var fontLoadWaited = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 300), vsync: this);
+        duration: const Duration(milliseconds: 100), vsync: this);
 
     _fadeAnimation =
         CurvedAnimation(parent: _controller, curve: Curves.easeInCubic);
     if (widget.isExpanded) {
       _controller.value = 1;
     }
+
+    // As the font load last some time and we cannot
+    // have some listener for that, wee need to wait an arbitrary time
+    // to recalculate de container used for animations.
+    //https://stackoverflow.com/questions/63659812/how-can-i-know-when-a-google-font-have-been-loaded-completely-in-flutter-for-web
+    if (!fontLoadWaited)
+      _waitForSomeMoment();
+  }
+
+  void _waitForSomeMoment() async {
+    await Future.delayed(Duration(milliseconds: 300), (){
+      setState(() {
+        fontLoadWaited = true;
+      });
+    });
   }
 
   Size _textSize(String text, TextStyle style, double scaleFactor) {
