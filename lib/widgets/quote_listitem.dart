@@ -35,6 +35,8 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
   Animation<double> _fadeOutAnimation;
   GlobalKey _repaintBoundaryKey = GlobalKey();
 
+  static var fontLoadWaited = false;
+
   final _shareDebugMode = false;
 
   Uint8List _memoryImage;
@@ -46,12 +48,22 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 100),
       vsync: this
     );
     _fadeInAnimation = _animationController.drive(Tween<double>(begin: 0, end: 1));
     _fadeOutAnimation = _animationController.drive(Tween<double>(begin: 1, end: 0));
     _animationController.value = 1;
+
+    _waitForSomeMoment();
+  }
+
+  void _waitForSomeMoment() async {
+    await Future.delayed(Duration(milliseconds: 300), (){
+      setState(() {
+        fontLoadWaited = true;
+      });
+    });
   }
 
   @override
