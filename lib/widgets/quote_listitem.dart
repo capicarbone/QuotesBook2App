@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -126,36 +127,68 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
   }
 
   Widget _onSharePressed(BuildContext ctx) {
-    showModalBottomSheet(
-        context: ctx,
-        builder: (_) {
-          return Container(
-            child: Wrap(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.textsms),
-                  title: Text(
-                    AppLocalizations.of(ctx).shareQuoteTextOption,
+    final platform = Theme.of(context).platform;
+
+    if (platform == TargetPlatform.android){
+
+      showModalBottomSheet(
+          context: ctx,
+          builder: (_) {
+            return Container(
+              child: Wrap(
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.textsms),
+                    title: Text(
+                      AppLocalizations.of(ctx).shareQuoteTextOption,
+                    ),
+                    onTap: () {
+                      _onTextSharePressed();
+                      Navigator.pop(ctx);
+                    },
                   ),
-                  onTap: () {
-                    _onTextSharePressed();
-                    Navigator.pop(ctx);
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.image),
-                  title: Text(
-                    AppLocalizations.of(ctx).shareQuoteImageOption,
+                  ListTile(
+                    leading: Icon(Icons.image),
+                    title: Text(
+                      AppLocalizations.of(ctx).shareQuoteImageOption,
+                    ),
+                    onTap: () {
+                      _onImageSharePressed(ctx);
+                      Navigator.pop(ctx);
+                    },
                   ),
-                  onTap: () {
-                    _onImageSharePressed(ctx);
-                    Navigator.pop(ctx);
-                  },
-                ),
-              ],
-            ),
-          );
-        });
+                ],
+              ),
+            );
+          });
+    }
+
+    if (platform == TargetPlatform.iOS){
+
+      showCupertinoModalPopup(context: ctx, builder: (BuildContext context) => CupertinoActionSheet(
+          title: Text("Share quote as"),
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: (){
+              Navigator.pop(context);
+            },
+            child: Text("Cancel")
+          ),
+          actions: <CupertinoActionSheetAction>[
+            CupertinoActionSheetAction(onPressed: () {
+              _onTextSharePressed();
+              Navigator.pop(context);
+            }, child: Text(AppLocalizations.of(context).shareQuoteTextOption)),
+            CupertinoActionSheetAction(
+              onPressed: (){
+                _onImageSharePressed(context);
+                Navigator.pop(context);
+              },
+              child: Text(AppLocalizations.of(context).shareQuoteImageOption),
+            )
+          ]
+      ));
+    }
+
   }
 
   Widget _buildBottomMenu(BuildContext ctx) {
