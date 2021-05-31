@@ -4,6 +4,8 @@ import 'package:quotesbook/helpers/app_localizations.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/screens/favorites_list.dart';
 import 'package:quotesbook/screens/quotes_list.dart';
+import 'package:quotesbook/widgets/bookmark.dart';
+import 'package:quotesbook/widgets/topbar.dart';
 
 class TabsScreen extends StatefulWidget {
   var lang = 'en';
@@ -41,7 +43,6 @@ class _TabsScreenState extends State<TabsScreen>
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -54,54 +55,68 @@ class _TabsScreenState extends State<TabsScreen>
     _pageController.dispose();
   }
 
-  _onTabSelected(pageIndex) {
+  _onTabSelected() {
     setState(() {
-      _selectedPageIndex = pageIndex;
+      _selectedPageIndex = (_selectedPageIndex == 1) ? 0 : 1;
     });
 
-    _pageController.animateToPage(pageIndex,
-        duration: Duration(milliseconds: 400),
-      curve: Curves.easeInOut
-    );
-
+    _pageController.animateToPage(_selectedPageIndex,
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
   Widget build(BuildContext context) {
-
     Provider.of<SavedQuotes>(context, listen: false).loadSavedQuotes();
-    var localizations = AppLocalizations.of(context);
+    final screenSize = MediaQuery.of(context).size;
+    final screenInsets = MediaQuery.of(context).viewPadding;
+    final listHeight = screenSize.height - Topbar.HEIGHT + (Topbar.SPIKE_HEIGHT / 2);
 
+    final bookmarkHeight = Topbar.HEIGHT + screenInsets.top - 10;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              // I don't use a Positioned widget because throws some
+              // "RenderBox was not laid out" error
+              SizedBox(height: screenSize.height - listHeight + screenInsets.top,),
+              Expanded(
+                child: PageView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: _pages.map<Widget>((i) => i['page']).toList(),
+                  controller: _pageController,
+                ),
+              ),
+            ],
+          ),
 
-      body: SafeArea(
-        child: Stack(
-          children: [
-            PageView(
-              physics: NeverScrollableScrollPhysics(),
-              children: _pages.map<Widget>((i) => i['page']).toList(),
-              controller: _pageController,
-            )
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-          onTap: _onTabSelected,
-          backgroundColor: Colors.white,
-          selectedItemColor: Theme.of(context).primaryColor,
-          currentIndex: _selectedPageIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              title: Text(localizations.quotesTab),
+          SafeArea(
+            child: Topbar(
+              titles: [AppLocalizations.of(context).quotesTab, AppLocalizations.of(context).favoritesTab],
+              selectedIndex: _selectedPageIndex,
+              color: Colors.grey.shade300,
+              margin: 25,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark),
-              title: Text(localizations.favoritesTab),
-            )
-          ]),
+          ),
+          Positioned(
+            right: 22,
+            width: 70,
+            child: GestureDetector(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.bounceOut,
+                  height: _selectedPageIndex == 1 ? bookmarkHeight : bookmarkHeight - 20,
+                  child: Bookmark(color: _selectedPageIndex == 1
+                      ? Theme.of(context).accentColor
+                      : Colors.black12,
+                  apexHeight: ((bookmarkHeight - screenInsets.top)*0.19).toInt()),
+                ),
+                onTap: _onTabSelected),
+          ),
+        ],
+      ),
     );
   }
 }

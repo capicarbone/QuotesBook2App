@@ -154,8 +154,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
               width: 50,
               curve: Curves.bounceOut,
               height: _quote.isFavorite ? 50 : 30,
-              child: Bookmark(
-                  _quote.isFavorite ? Colors.amber : _theme.secondaryColor),
+              child:Center(),
             ),
             if (_quote.isFavorite)
               Container(

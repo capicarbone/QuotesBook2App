@@ -22,6 +22,10 @@ class SavedQuotes extends ChangeNotifier {
     return _savedQuotes.firstWhere((item) => item.id == id);
   }
 
+  bool isSaved(String id) {
+    return _savedQuotes.map((e) => e.id).toList().contains(id);
+  }
+
   Future<void> saveQuote(Quote quote) async {
     quote.isFavorite = true;
 

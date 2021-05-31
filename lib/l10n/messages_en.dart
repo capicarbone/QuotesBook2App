@@ -25,7 +25,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "favoritesTab" : MessageLookupByLibrary.simpleMessage("Favorites"),
     "quotesLoadErrorMessage" : MessageLookupByLibrary.simpleMessage("Some error has ocurred. Trying again."),
     "quotesTab" : MessageLookupByLibrary.simpleMessage("Quotes"),
+    "removeAction" : MessageLookupByLibrary.simpleMessage("Remove"),
+    "saveAction" : MessageLookupByLibrary.simpleMessage("Save"),
     "savedQuotesTitle" : MessageLookupByLibrary.simpleMessage("Your Favorites"),
+    "shareAction" : MessageLookupByLibrary.simpleMessage("Share"),
     "shareQuoteImageOption" : MessageLookupByLibrary.simpleMessage("Image"),
     "shareQuoteTextOption" : MessageLookupByLibrary.simpleMessage("Text"),
     "someQuotesTitle" : MessageLookupByLibrary.simpleMessage("Some Quotes")

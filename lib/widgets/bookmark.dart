@@ -4,24 +4,26 @@ import 'package:provider/provider.dart';
 class Bookmark extends StatelessWidget {
 
   Color color;
+  int apexHeight;
 
-  Bookmark(@required this.color);
+  Bookmark({@required this.color, this.apexHeight});
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: BookmarkPainter(color)
+      painter: _BookmarkPainter(color, apexHeight)
     );
   }
 }
 
 
 
-class BookmarkPainter extends CustomPainter {
+class _BookmarkPainter extends CustomPainter {
 
   Color color;
+  int apexHeight;
 
-  BookmarkPainter(this.color);
+  _BookmarkPainter(this.color, this.apexHeight);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -33,7 +35,7 @@ class BookmarkPainter extends CustomPainter {
       
       path.lineTo(size.width, 0);      
       path.lineTo(size.width, size.height);
-      path.lineTo(size.width / 2, size.height * 0.7);
+      path.lineTo(size.width / 2, size.height - apexHeight);
       path.lineTo(0, size.height);
       
 

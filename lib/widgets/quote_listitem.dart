@@ -1,7 +1,10 @@
+import 'dart:developer' as developer;
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import 'package:image/image.dart' as image;
@@ -16,257 +19,315 @@ import '../models/Quote.dart';
 import '../providers/saved_quotes.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 
-
-class QuoteListItem extends StatelessWidget {
+class QuoteListItem extends StatefulWidget {
   Quote quote;
-  Quote previousQuote;
   Function onTap;
+
+  QuoteListItem({this.quote, this.onTap});
+
+  @override
+  _QuoteListItemState createState() => _QuoteListItemState();
+}
+
+class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation<double> _fadeInAnimation;
+  Animation<double> _fadeOutAnimation;
   GlobalKey _repaintBoundaryKey = GlobalKey();
 
-  var loading = false;
+  static var fontLoadWaited = false;
 
-  QuoteListItem({this.quote, this.previousQuote, this.onTap}) {
-    if (quote.themeId == null) {
-      quote.themeId = QuoteTheme.getNextTheme().id;
-    }
+  final _shareDebugMode = false;
+
+  Uint8List _memoryImage;
+
+  var loading = false;
+  var transitioning = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this
+    );
+    _fadeInAnimation = _animationController.drive(Tween<double>(begin: 0, end: 1));
+    _fadeOutAnimation = _animationController.drive(Tween<double>(begin: 1, end: 0));
+    _animationController.value = 1;
+
+    _waitForSomeMoment();
+  }
+
+  void _waitForSomeMoment() async {
+    await Future.delayed(Duration(milliseconds: 300), (){
+      setState(() {
+        fontLoadWaited = true;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
   }
 
   void _onTextSharePressed() {
-    Share.text('A quote from Quotesbook', quote.toText(), 'text/plain');
+    Share.text('A quote from Quotesbook', widget.quote.toText(), 'text/plain');
   }
 
-  void _toggleLoader(bool enabled){
-
+  void _toggleLoader(bool enabled) {
+    setState(() {
+      loading = enabled;
+      if (loading){
+        _animationController.reverse();
+      }else{
+        _animationController.forward();
+      }
+    });
   }
 
   Future<image.Image> _captureQuoteImage({pixelRatio: 1.0}) async {
-    RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext.findRenderObject();
+    RenderRepaintBoundary boundary =
+        _repaintBoundaryKey.currentContext.findRenderObject();
     ui.Image quoteShot = await boundary.toImage(pixelRatio: pixelRatio);
     final bytes = await quoteShot.toByteData(format: ui.ImageByteFormat.png);
 
     return image.decodePng(bytes.buffer.asUint8List());
   }
 
-  void _onImageSharePressed()  {
-
+  void _onImageSharePressed(BuildContext context) {
     _toggleLoader(true);
 
     _captureQuoteImage(pixelRatio: 3.0).then((quoteImage) {
-
       rootBundle.load('assets/quote-logo.png').then((footerImage) {
-        return compute(generator.generateQuoteImage, {'quoteImage': quoteImage,
-          'backgroundColor': QuoteTheme.getThemeById(quote.themeId).backgroundColor,
-          'footerLogo': image.decodePng(footerImage.buffer.asUint8List())});
-
+        return compute(generator.generateQuoteImage, {
+          'quoteImage': quoteImage,
+          'backgroundColor': Colors.white,
+          'frameColor': Theme.of(context).primaryColor,
+          'footerLogo': image.decodePng(footerImage.buffer.asUint8List())
+        });
       }).then((generatedImage) {
-
         _toggleLoader(false);
 
-        Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage, 'image/jpg');
-
-        /*
-        if (_debugMode){
+        if (_shareDebugMode) {
           setState(() {
             _memoryImage = generatedImage;
           });
+        } else {
+          Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage,
+              'image/jpg');
         }
-         */
-
-      }).catchError(() => _toggleLoader(false));
-
+      }).catchError((err) {
+        developer.log("on image generation", error: err);
+        _toggleLoader(false);
+      });
     });
-
   }
 
-  Widget _onSharePressed(BuildContext ctx){
-    showModalBottomSheet(context: ctx, builder: (_){
-      return Container(
-        child: Wrap(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.textsms),
-              title: Text(AppLocalizations.of(ctx).shareQuoteTextOption, ),
-              onTap: (){
-                _onTextSharePressed();
-                Navigator.pop(ctx);
-              },
+  Widget _onSharePressed(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.textsms),
+                  title: Text(
+                    AppLocalizations.of(ctx).shareQuoteTextOption,
+                  ),
+                  onTap: () {
+                    _onTextSharePressed();
+                    Navigator.pop(ctx);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.image),
+                  title: Text(
+                    AppLocalizations.of(ctx).shareQuoteImageOption,
+                  ),
+                  onTap: () {
+                    _onImageSharePressed(ctx);
+                    Navigator.pop(ctx);
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: Icon(Icons.image),
-              title: Text(AppLocalizations.of(ctx).shareQuoteImageOption, ),
-              onTap: () {
-                _onImageSharePressed();
-                Navigator.pop(ctx);
-              },
-            ),
-          ],
-        ),
-      );
-    });
+          );
+        });
   }
 
   Widget _buildBottomMenu(BuildContext ctx) {
-    return Container(
-      height: 32,
-      alignment: Alignment.centerRight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          if (loading)
-            Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+    final quotesProvider = Provider.of<SavedQuotes>(ctx, listen: false);
+    final saved = quotesProvider.isSaved(widget.quote.id);
+
+    var buttonsStyle = TextButton.styleFrom(
+        primary: Theme.of(ctx).primaryColor,
+        textStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w500));
+
+    final actionsButtons = [
+      if (saved)
+        TextButton(
+            style: buttonsStyle,
+            child: Text(AppLocalizations.of(context).removeAction.toUpperCase()),
+            onPressed: () {
+              if (!loading)
+                quotesProvider.removeQuote(widget.quote);
+            }),
+      if (!saved)
+        TextButton(
+          onPressed: () {
+            if (!loading)
+              quotesProvider.saveQuote(widget.quote);
+          },
+          child: Text(AppLocalizations.of(context).saveAction.toUpperCase()),
+          style: buttonsStyle,
+        ),
+      TextButton(
+          style: buttonsStyle,
+          child: Text(AppLocalizations.of(context).shareAction.toUpperCase()),
+          onPressed: () {
+            if (!loading)
+              _onSharePressed(ctx);
+          }),
+    ];
+    return Stack(
+      children: [
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: FadeTransition(
+                opacity: _fadeOutAnimation,
+                child: Container(width: 150, child: LinearProgressIndicator(backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor) ,),),
               ),
             ),
-          if (!loading)
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.black26,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50), bottomLeft: Radius.circular(50))),
-              height: 32,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  FlatButton.icon(
-                      onPressed: () {
-                        _onSharePressed(ctx);
-                      },
-                      icon: Icon(
-                        Icons.share,
-                        color: Colors.white,
-                      ),
-                      label: Text("")),
-                ],
-              ),
-            ),
-        ],
-      ),
+          ),
+        FadeTransition(
+          opacity: _fadeInAnimation,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ...actionsButtons,
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    var quotesProvider = Provider.of<SavedQuotes>(context, listen: false);
-
-    var theme = QuoteTheme.getThemeById(quote.themeId);
-    var prevTheme = (previousQuote == null)
-        ? null
-        : QuoteTheme.getThemeById(previousQuote.themeId);
-
-    var screenSize = MediaQuery.of(context).size;
-    var fontSize = quote.body.length < 174
-        ? screenSize.width * 0.0825
-        : screenSize.width * 0.0675;
-
-    return Container(
+    final listItem = Container(
       width: double.infinity,
       child: GestureDetector(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: Material(
-          color: (prevTheme == null)
-              ? Colors.transparent
-              : prevTheme.backgroundColor,
+          color: Colors.transparent,
           child: Stack(
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0),
-                    child: SizedBox(
-                      height: 18,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: Offset(0, -3),
-                                      blurRadius: 2,
-                                      color: Color.fromARGB(70, 0, 0, 0))
-                                ],
-                                color: theme.backgroundColor,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(12),
-                                    topRight: Radius.circular(12))),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: theme.backgroundColor,
-                      child: Stack(
-                        children: <Widget>[
-
-                          Padding(
-                            padding:
-                                EdgeInsets.only(right: 20, left: 20, bottom: 40, top: 0),
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 50,
-                                ),
-                                Expanded(
-                                    child: Center(
-                                        child: RepaintBoundary(
-                                          key: _repaintBoundaryKey,
-                                          child: QuoteBody(
-                                  quoteFontSize: fontSize,
-                                  quote: quote,
-                                ),
-                                        )))
-                              ],
-                            ),
-                          ),
-                          Positioned(bottom: 32, right: 0, child: _buildBottomMenu(context))
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                right: 22,
-                child: GestureDetector(
-                    child: Stack(
-                      children: <Widget>[
-                        AnimatedContainer(
-                          duration: Duration(milliseconds: 300),
-                          width: 70,
-                          curve: Curves.bounceOut,
-                          height: quote.isFavorite ? 70 : 42,
-                          child: Bookmark(quote.isFavorite
-                              ? Colors.amber
-                              : theme.secondaryColor),
-                        ),
-                        /*
-                                if (quote.isFavorite)
-                                  Container(
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.star,
-                                        color: Colors.white,
-                                      ),
+              Padding(
+                padding: const EdgeInsets.all(22),
+                child: Column(
+                  children: [
+                    Expanded(
+                      // Quote card
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(0, 3),
+                                  blurRadius: 2,
+                                  color: Color.fromARGB(70, 0, 0, 0))
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(2))),
+                        child: Stack(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Theme.of(context).primaryColor,
+                                        width: 2)),
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 40, right: 40, top: 20, bottom: 20),
+                                  child: Center(
+                                      child: RepaintBoundary(
+                                    key: _repaintBoundaryKey,
+                                    child: QuoteBody(
+                                      quote: widget.quote,
                                     ),
-                                    width: 50,
-                                    height: 40,
-                                  ) */
-                      ],
+                                  )),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                                bottom: 5,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: Container(
+                                    width: 130,
+                                    color: Colors.white,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text("Quotes",
+                                            style: GoogleFonts.robotoSlab(
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
+                                        Text(
+                                          "Book",
+                                          style: GoogleFonts.robotoSlab(
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
                     ),
-                    onTap: () {
-                      if (quote.isFavorite) {
-                        quotesProvider.removeQuote(quote);
-                      } else {
-                        quotesProvider.saveQuote(quote);
-                      }
-                    }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [_buildBottomMenu(context)],
+                    )
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+
+    if (_shareDebugMode) {
+      return Stack(
+        children: [
+          listItem,
+          Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent, width: 3)),
+              width: 300,
+              height: 300,
+              child: _memoryImage != null
+                  ? Image.memory(_memoryImage)
+                  : Placeholder()),
+        ],
+      );
+    } else {
+      return listItem;
+    }
   }
 }
