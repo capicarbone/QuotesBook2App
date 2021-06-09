@@ -166,12 +166,12 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
     if (platform == TargetPlatform.iOS){
 
       showCupertinoModalPopup(context: ctx, builder: (BuildContext context) => CupertinoActionSheet(
-          title: Text("Share quote as"),
+          title: Text(AppLocalizations.of(ctx).shareQuoteAs),
           cancelButton: CupertinoActionSheetAction(
             onPressed: (){
               Navigator.pop(context);
             },
-            child: Text("Cancel")
+            child: Text(AppLocalizations.of(ctx).cancelAction)
           ),
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(onPressed: () {
