@@ -60,11 +60,13 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
   }
 
   void _waitForSomeMoment() async {
-    await Future.delayed(Duration(milliseconds: 300), (){
-      setState(() {
-        fontLoadWaited = true;
+    if (!fontLoadWaited){
+      await Future.delayed(Duration(milliseconds: 300), (){
+        setState(() {
+          fontLoadWaited = true;
+        });
       });
-    });
+    }
   }
 
   @override
