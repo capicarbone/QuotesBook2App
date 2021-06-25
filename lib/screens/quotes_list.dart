@@ -61,10 +61,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
           if (position == provider.quotes.length) {
             return Container(
               child: Center(
-                  child: Theme(
-                data: Theme.of(context).copyWith(accentColor: Colors.grey),
-                child: CircularProgressIndicator(),
-              )),
+                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),)),
               height: 80,
             );
           } else {
@@ -157,7 +154,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.grey)));
               } else {
                 _automaticReloadEnabled = true;
                 return _buildList(context);
