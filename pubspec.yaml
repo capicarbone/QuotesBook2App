@@ -33,6 +33,7 @@ dependencies:
   intl_translation: ^0.17.10+1
   google_fonts: ^0.3.10
   firebase_analytics: ^6.0.2
+  flutter_dotenv: ^5.0.0
 
 dependency_overrides:
   intl: 0.17.0
@@ -57,6 +58,7 @@ flutter:
   assets:
     - assets/quote-logo.png
     - google_fonts/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

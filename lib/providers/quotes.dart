@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:quotesbook/environment.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:quotesbook/models/Quote.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,12 +29,12 @@ class Quotes with ChangeNotifier {
   }
 
   final _authenticatedHeader = {
-    'Authorization': 'Token ${Environment.AUTH_TOKEN}'
+    'Authorization': 'Token ${dotenv.env['AUTH_TOKEN']}'
   };
 
   Future<List<Quote>> fetchQuotes({String lang = 'en'}) async {
     lang = lang == 'es' ? lang : 'en';
-    final url = "${Environment.SERVER_HOST}api/v1/quotes/sample?lang=$lang";
+    final url = "${dotenv.env['SERVER_HOST']}api/v1/quotes/sample?lang=$lang";
 
     print(url);
 

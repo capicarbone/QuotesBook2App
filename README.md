@@ -6,19 +6,11 @@ Partial implementation of the [previous version](https://github.com/cpinelly/Old
 
 # Setup
 
-1. Add lib/environment.dart file with
+1. Create .env file .env.sample.
 
-```
-class Environment {
-  static const AUTH_TOKEN = "...";
-  static const SERVER_HOST = "...";
-}
-```
+2. Add the google-services.json to the android/app folder. Get this from the firebase project.
 
-Remember to add the google-services.json to the android/app folder. Get this from the firebase
-project.
-
-Add android/key.properties to sign apk/bundle.
+3. Add android/key.properties to sign apk/bundle.
 
 ## To generate internationalizations
 
