@@ -65,5 +65,17 @@
       "description": "Share option for image.",
       "type": "text",
       "placeholders": {}
-    }
+    },
+      "cancelAction": "Cancelar",
+      "@cancelAction": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+      },
+      "shareQuoteAs": "Compartir frase como",
+      "@shareQuoteAs": {
+        "description": "share quote description",
+        "type": "text",
+        "placeholders": {}
+      }
 }

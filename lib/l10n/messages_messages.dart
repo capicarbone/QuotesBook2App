@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "cancelAction" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "favoritesEmptyMessage" : MessageLookupByLibrary.simpleMessage("Mark some quotes as favorites."),
     "favoritesTab" : MessageLookupByLibrary.simpleMessage("Favorites"),
     "quotesLoadErrorMessage" : MessageLookupByLibrary.simpleMessage("Some error has ocurred. Trying again."),
@@ -29,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveAction" : MessageLookupByLibrary.simpleMessage("Save"),
     "savedQuotesTitle" : MessageLookupByLibrary.simpleMessage("Your Favorites"),
     "shareAction" : MessageLookupByLibrary.simpleMessage("Share"),
+    "shareQuoteAs" : MessageLookupByLibrary.simpleMessage("Share quote as"),
     "shareQuoteImageOption" : MessageLookupByLibrary.simpleMessage("Image"),
     "shareQuoteTextOption" : MessageLookupByLibrary.simpleMessage("Text"),
     "someQuotesTitle" : MessageLookupByLibrary.simpleMessage("Some Quotes")

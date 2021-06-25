@@ -118,4 +118,18 @@ class AppLocalizations {
         locale: localeName
     );
   }
+
+  String get cancelAction {
+    return Intl.message('Cancel',
+    name: 'cancelAction',
+    desc: "",
+    locale: localeName);
+  }
+
+  String get shareQuoteAs {
+    return Intl.message('Share quote as',
+    name: 'shareQuoteAs',
+    desc: 'share quote description',
+    locale: localeName);
+  }
 }

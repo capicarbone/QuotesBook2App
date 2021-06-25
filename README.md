@@ -17,8 +17,6 @@ Partial implementation of the [previous version](https://github.com/cpinelly/Old
 1. Update the ```lib/helpers/app_localizations.dart``` with the new texts.¡
 
 
-
-
 2. Create base arb base file for localization.
 ```
 flutter pub run intl_translation:extract_to_arb --output-dir=lib/l10n lib/helpers/app_localizations.dart
