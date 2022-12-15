@@ -94,9 +94,9 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
 
     promise.catchError((err) {
       if (_elapsedErrors == 0) {
-        Scaffold.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Scaffold.of(context).showSnackBar(_automaticReloadEnabled
+          ScaffoldMessenger.of(context).showSnackBar(_automaticReloadEnabled
               ? SnackBar(
                   content:
                       Text(AppLocalizations.of(context).quotesLoadErrorMessage),
@@ -114,7 +114,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
     });
 
     promise.then((res) {
-      Scaffold.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       _elapsedErrors = 0;
     });
 

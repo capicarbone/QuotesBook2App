@@ -201,7 +201,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                FlatButton.icon(
+                TextButton(
                     onPressed: () {
                       if (_quote.isFavorite) {
                         quotesProvider.removeQuote(_quote);
@@ -209,7 +209,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                         quotesProvider.saveQuote(_quote);
                       }
                     },
-                    icon: _quote.isFavorite
+                    child: _quote.isFavorite
                         ? Icon(
                             Icons.bookmark,
                             color: Colors.amber,
@@ -218,16 +218,16 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                             Icons.bookmark_border,
                             color: Colors.white,
                           ),
-                    label: Text("")),
-                FlatButton.icon(
+                ),
+                TextButton(
                     onPressed: () {
                       _onSharePressed(ctx);
                     },
-                    icon: Icon(
+                    child: Icon(
                       Icons.share,
                       color: Colors.white,
                     ),
-                    label: Text("")),
+                ),
               ],
             ),
           ),
