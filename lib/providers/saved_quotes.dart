@@ -1,10 +1,16 @@
 import 'package:flutter/foundation.dart';
+import 'package:quotesbook/helpers/quotes_provider.dart';
 
 import '../helpers/db_helper.dart';
 import '../models/Quote.dart';
 
 class SavedQuotes extends ChangeNotifier {
+
+  final QuotesProvider _quotesProvider;
+
   List<Quote> _savedQuotes;
+
+  SavedQuotes(QuotesProvider quotesProvider) : _quotesProvider = quotesProvider;
 
   get savedQuotes {
     return _savedQuotes;
@@ -12,7 +18,7 @@ class SavedQuotes extends ChangeNotifier {
 
   Future<void> loadSavedQuotes() async {
     if (_savedQuotes == null) {
-      _savedQuotes = await DBHelper.getQuotes();
+      _savedQuotes = await _quotesProvider.getQuotes(isFavorite: true);
 
       notifyListeners();
     }  
@@ -29,7 +35,7 @@ class SavedQuotes extends ChangeNotifier {
   Future<void> saveQuote(Quote quote) async {
     quote.isFavorite = true;
 
-    DBHelper.insertQuote(quote);
+    _quotesProvider.insertQuote(quote);
     _savedQuotes.add(quote);
 
     notifyListeners();
@@ -38,7 +44,7 @@ class SavedQuotes extends ChangeNotifier {
   Future<void> removeQuote(Quote quote) async {
     quote.isFavorite = false;
 
-    DBHelper.deleteQuote(quote);
+    _quotesProvider.deleteQuote(quote);
 
     _savedQuotes.remove(quote);
 

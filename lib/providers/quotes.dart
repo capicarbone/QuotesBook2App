@@ -1,30 +1,32 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:quotesbook/helpers/quotes_provider.dart';
 import 'package:quotesbook/models/Quote.dart';
-import 'package:http/http.dart' as http;
 
 class Quotes with ChangeNotifier {
-  final List<Quote> _quotes = [];
+  final QuotesProvider _quotesProvider;
+
+  Quotes(QuotesProvider quotesProvider) : _quotesProvider = quotesProvider;
+
+  final List<Quote> _quoteList = [];
   List<Quote> _savedQuotes = [];
 
-
   get quotes {
-    return _quotes;
+    return _quoteList;
   }
 
   set savedQuotes(List<Quote> savedQuotes) {
     _savedQuotes = savedQuotes;
 
     if (savedQuotes != null) {
-      _quotes.forEach((quote) {
+      _quoteList.forEach((quote) {
         quote.isFavorite = _savedQuotes.firstWhere(
                 (savedQuote) => savedQuote.id == quote.id,
                 orElse: () => null) !=
             null;
       });
     }
-    
+
     notifyListeners();
   }
 
@@ -33,23 +35,13 @@ class Quotes with ChangeNotifier {
   };
 
   Future<List<Quote>> fetchQuotes({String lang = 'en'}) async {
-    lang = lang == 'es' ? lang : 'en';
-    final url = "${dotenv.env['SERVER_HOST']}api/v1/quotes/sample?lang=$lang";
 
-    print(url);
+    var newQuotes = await _quotesProvider.getQuotes(isFavorite: false);
 
-    var response = await http.get(url, headers: _authenticatedHeader);
-
-    List<dynamic> quotesMap = json.decode(response.body);
-
-    //print(quotesMap);
-
-    var newQuotes = quotesMap.map((map) => Quote.fromMap(map)).toList();
-    _quotes.addAll(newQuotes);
+    _quoteList.addAll(newQuotes);
 
     notifyListeners();
 
     return newQuotes;
-
   }
 }

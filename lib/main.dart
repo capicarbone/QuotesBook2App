@@ -6,13 +6,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:quotesbook/helpers/quotes_provider.dart';
 import 'package:quotesbook/providers/quotes.dart';
 import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/screens/quote_details_screen.dart';
+import 'package:sqflite/sqflite.dart';
 
 import './screens/tabs_screen.dart';
 import './widgets/localize_lang_widget.dart';
 import './helpers/app_localizations.dart';
+import 'helpers/db_helper.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
 
@@ -39,57 +42,65 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown
-    ]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     var blackTintColor = Color(0xFF3B3840);
     var accentColor = Color(0xFFFFA95A);
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => SavedQuotes()),
-        ListenableProxyProvider<SavedQuotes, Quotes>(
-          create: (_) {
-            return Quotes();
-          },
-          update: (_, saved, quotes) {
-            if (quotes != null) quotes.savedQuotes = saved.savedQuotes;
-
-            return quotes;
-          },
-        ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
+      localizationsDelegates: [
+        const DemoLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: analytics)
-        ],
-        localizationsDelegates: [
-          const DemoLocalizationsDelegate(),
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: [const Locale('en', ''), const Locale('es', '')],
-        title: 'Quotesbook',
-        theme: ThemeData(
-          primaryColor: blackTintColor,
-          accentColor: accentColor,
-          primaryTextTheme: TextTheme(
+      supportedLocales: [const Locale('en', ''), const Locale('es', '')],
+      title: 'Quotesbook',
+      theme: ThemeData(
+        primaryColor: blackTintColor,
+        accentColor: accentColor,
+        primaryTextTheme: TextTheme(
             bodyText1: GoogleFonts.montserrat(
                 textStyle: TextStyle(
                     fontSize: 27,
                     fontWeight: FontWeight.bold,
-                    color: blackTintColor))
-          ),
-        ),
-        home: LocalizeLang(
-            builder: (lang) => TabsScreen(
-                  lang: lang,
-                )),
-
+                    color: blackTintColor))),
       ),
+      home: FutureBuilder<Database>(
+          future: DBHelper.getDatabase(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            var db = snapshot.data;
+            var quotesProvider = QuotesProvider(db: db);
+            if (snapshot.connectionState == ConnectionState.done) {
+              return MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(
+                      create: (_) => SavedQuotes(quotesProvider)),
+                  ListenableProxyProvider<SavedQuotes, Quotes>(
+                    create: (_) {
+                      return Quotes(quotesProvider);
+                    },
+                    update: (_, saved, quotes) {
+                      if (quotes != null)
+                        quotes.savedQuotes = saved.savedQuotes;
+
+                      return quotes;
+                    },
+                  ),
+                ],
+                child: LocalizeLang(
+                    builder: (lang) => TabsScreen(
+                          lang: lang,
+                        )),
+              );
+            }
+
+            return Container(
+              color: Colors.grey.shade300,
+            );
+          }),
     );
   }
 }
