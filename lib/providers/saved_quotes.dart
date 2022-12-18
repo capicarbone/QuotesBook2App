@@ -35,7 +35,7 @@ class SavedQuotes extends ChangeNotifier {
   Future<void> saveQuote(Quote quote) async {
     quote.isFavorite = true;
 
-    _quotesProvider.insertQuote(quote);
+    _quotesProvider.markAsFavorite(quote.id);
     _savedQuotes.add(quote);
 
     notifyListeners();
@@ -44,7 +44,7 @@ class SavedQuotes extends ChangeNotifier {
   Future<void> removeQuote(Quote quote) async {
     quote.isFavorite = false;
 
-    _quotesProvider.deleteQuote(quote);
+    _quotesProvider.removeFromFavorites(quote.id);
 
     _savedQuotes.remove(quote);
 

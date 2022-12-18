@@ -6,7 +6,6 @@ class QuotesListController extends PageController {
 
   @override
   Future<void> animateToNextPage() {
-    // TODO: implement nextPage
     return this.nextPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 }
