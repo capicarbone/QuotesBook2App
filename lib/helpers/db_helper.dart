@@ -4,7 +4,6 @@ import 'package:sqflite/sqflite.dart' as sql;
 import 'TableNames.dart';
 
 class DBHelper {
-
   static Future<void> _loadInitialData(sql.Database db) {
     db.insert(TableNames.quotes, {
       'id': '1',
@@ -41,19 +40,5 @@ class DBHelper {
 
       _loadInitialData(db);
     }, version: 1);
-  }
-
-  @Deprecated("About to be removed.")
-  static Future<void> insert(String table, Map<String, Object> data) async {
-    final db = await DBHelper.getDatabase();
-
-    await db.insert(table, data,
-        conflictAlgorithm: sql.ConflictAlgorithm.replace);
-  }
-
-  @Deprecated("About to be removed.")
-  static Future<List<Map<String, dynamic>>> getdata(String table) async {
-    final db = await getDatabase();
-    return await db.query(table);
   }
 }

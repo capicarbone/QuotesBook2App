@@ -12,10 +12,10 @@ import 'package:quotesbook/helpers/app_localizations.dart';
 import 'package:quotesbook/helpers/quote_image_generator.dart' as generator;
 import 'package:quotesbook/models/Quote.dart';
 import 'package:quotesbook/models/QuoteTheme.dart';
-import 'package:quotesbook/providers/saved_quotes.dart';
-import 'package:quotesbook/widgets/bookmark.dart';
 import 'package:quotesbook/widgets/quote_body.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+
+import '../providers/quotes.dart';
 
 class QuoteDetailsScreen extends StatefulWidget {
   static final routeName = "/quote";
@@ -145,7 +145,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     );
   }
 
-  Widget _buildSavedMarker(SavedQuotes quotesProvider) {
+  Widget _buildSavedMarker(Quotes quotesProvider) {
     return GestureDetector(
         child: Stack(
           children: <Widget>[
@@ -178,7 +178,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
         });
   }
 
-  Widget _buildBottomMenu(BuildContext ctx, SavedQuotes quotesProvider) {
+  Widget _buildBottomMenu(BuildContext ctx, Quotes quotesProvider) {
     return Container(
       height: 32,
       alignment: Alignment.centerRight,
@@ -238,7 +238,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var quotesProvider = Provider.of<SavedQuotes>(context);
+    var quotesProvider = Provider.of<Quotes>(context);
 
     if (_quote == null) {
       var args =

@@ -17,7 +17,7 @@ import 'package:quotesbook/widgets/bookmark.dart';
 import 'package:quotesbook/widgets/quote_body.dart';
 
 import '../models/Quote.dart';
-import '../providers/saved_quotes.dart';
+import '../providers/quotes.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 
 class QuoteListItem extends StatefulWidget {
@@ -194,8 +194,8 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
   }
 
   Widget _buildBottomMenu(BuildContext ctx) {
-    final quotesProvider = Provider.of<SavedQuotes>(ctx, listen: false);
-    final saved = quotesProvider.isSaved(widget.quote.id);
+    final quotesProvider = Provider.of<Quotes>(ctx, listen: false);
+    final saved = widget.quote.isFavorite;
 
     var buttonsStyle = TextButton.styleFrom(
         primary: Theme.of(ctx).primaryColor,

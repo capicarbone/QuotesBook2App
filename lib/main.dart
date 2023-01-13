@@ -8,8 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/helpers/quotes_provider.dart';
 import 'package:quotesbook/providers/quotes.dart';
-import 'package:quotesbook/providers/saved_quotes.dart';
-import 'package:quotesbook/screens/quote_details_screen.dart';
 import 'package:sqflite/sqflite.dart';
 
 import './screens/tabs_screen.dart';
@@ -77,18 +75,7 @@ class MyApp extends StatelessWidget {
               return MultiProvider(
                 providers: [
                   ChangeNotifierProvider(
-                      create: (_) => SavedQuotes(quotesProvider)),
-                  ListenableProxyProvider<SavedQuotes, Quotes>(
-                    create: (_) {
-                      return Quotes(quotesProvider);
-                    },
-                    update: (_, saved, quotes) {
-                      if (quotes != null)
-                        quotes.savedQuotes = saved.savedQuotes;
-
-                      return quotes;
-                    },
-                  ),
+                      create: (_) => Quotes(quotesProvider)),
                 ],
                 child: LocalizeLang(
                     builder: (lang) => TabsScreen(

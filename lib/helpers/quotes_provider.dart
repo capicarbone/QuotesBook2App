@@ -20,7 +20,7 @@ class QuotesProvider {
           author: author,
           body: map['body'],
           id: map['id'],
-          isFavorite: true,
+          isFavorite: map['is_favorite'] != 0,
           themeId: map['theme_id']);
       return quote;
     }).toList();

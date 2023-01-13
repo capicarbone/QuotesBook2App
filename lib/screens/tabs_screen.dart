@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/helpers/app_localizations.dart';
-import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/screens/favorites_list.dart';
 import 'package:quotesbook/screens/quotes_list.dart';
 import 'package:quotesbook/widgets/bookmark.dart';
 import 'package:quotesbook/widgets/topbar.dart';
+
+import '../providers/quotes.dart';
 
 class TabsScreen extends StatefulWidget {
   var lang = 'en';
@@ -66,7 +67,7 @@ class _TabsScreenState extends State<TabsScreen>
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<SavedQuotes>(context, listen: false).loadSavedQuotes();
+    Provider.of<Quotes>(context, listen: false).loadSavedQuotes();
     final screenSize = MediaQuery.of(context).size;
     final screenInsets = MediaQuery.of(context).viewPadding;
     final listHeight = screenSize.height - Topbar.HEIGHT + (Topbar.SPIKE_HEIGHT / 2);

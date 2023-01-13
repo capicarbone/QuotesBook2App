@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quotesbook/helpers/app_localizations.dart';
-import 'package:quotesbook/providers/saved_quotes.dart';
 import 'package:quotesbook/quotes_list_controller.dart';
-import 'package:quotesbook/screens/quote_details_screen.dart';
 import 'package:quotesbook/widgets/quote_listitem.dart';
+
+import '../providers/quotes.dart';
 
 class FavoritesScreen extends StatelessWidget {
   FavoritesScreen({Key key}) : super(key: key);
@@ -13,7 +13,7 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Consumer<SavedQuotes>(
+    return Consumer<Quotes>(
       builder: (ctx, provider, _) => provider.savedQuotes == null ||
               provider.savedQuotes.length == 0
           ? Center(

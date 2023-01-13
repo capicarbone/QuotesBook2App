@@ -15,24 +15,9 @@ class Quotes with ChangeNotifier {
     return _quoteList;
   }
 
-  set savedQuotes(List<Quote> savedQuotes) {
-    _savedQuotes = savedQuotes;
-
-    if (savedQuotes != null) {
-      _quoteList.forEach((quote) {
-        quote.isFavorite = _savedQuotes.firstWhere(
-                (savedQuote) => savedQuote.id == quote.id,
-                orElse: () => null) !=
-            null;
-      });
-    }
-
-    notifyListeners();
+  get savedQuotes {
+    return _savedQuotes;
   }
-
-  final _authenticatedHeader = {
-    'Authorization': 'Token ${dotenv.env['AUTH_TOKEN']}'
-  };
 
   Future<List<Quote>> fetchQuotes({String lang = 'en'}) async {
 
@@ -43,5 +28,32 @@ class Quotes with ChangeNotifier {
     notifyListeners();
 
     return newQuotes;
+  }
+
+  Future<void> saveQuote(Quote quote) async {
+    quote.isFavorite = true;
+
+    _quotesProvider.markAsFavorite(quote.id);
+    _savedQuotes.add(quote);
+
+    notifyListeners();
+  }
+
+  Future<void> removeQuote(Quote quote) async {
+    quote.isFavorite = false;
+
+    _quotesProvider.removeFromFavorites(quote.id);
+
+    _savedQuotes.remove(quote);
+
+    notifyListeners();
+  }
+
+  Future<void> loadSavedQuotes() async {
+    if (_savedQuotes == null) {
+      _savedQuotes = await _quotesProvider.getQuotes(isFavorite: true);
+
+      notifyListeners();
+    }
   }
 }
