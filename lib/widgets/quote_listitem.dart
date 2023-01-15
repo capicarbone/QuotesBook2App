@@ -11,9 +11,7 @@ import 'dart:ui' as ui;
 import 'package:image/image.dart' as image;
 import 'package:quotesbook/helpers/quote_image_generator.dart' as generator;
 
-import 'package:quotesbook/models/QuoteTheme.dart';
 import 'package:quotesbook/helpers/app_localizations.dart';
-import 'package:quotesbook/widgets/bookmark.dart';
 import 'package:quotesbook/widgets/quote_body.dart';
 
 import '../models/Quote.dart';
