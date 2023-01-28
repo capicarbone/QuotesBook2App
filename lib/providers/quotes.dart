@@ -21,7 +21,7 @@ class Quotes with ChangeNotifier {
 
   Future<List<Quote>> fetchQuotes({String lang = 'en'}) async {
 
-    var newQuotes = await _quotesProvider.getQuotes(isFavorite: false);
+    var newQuotes = await _quotesProvider.getQuotesSample(lang);
 
     _quoteList.addAll(newQuotes);
 

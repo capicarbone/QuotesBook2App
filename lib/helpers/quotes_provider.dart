@@ -35,12 +35,35 @@ class QuotesProvider {
     return quotes;
   }
 
-  Future<void> markAsFavorite(String quoteId) async {
+  Future<List<Quote>> getQuotesSample(String lang, {count = 20}) async {
+    var ids = await _db.query(TableNames.quotes,
+        where: 'lang = ? AND is_favorite = ?',
+        whereArgs: [lang, 0],
+        columns: ['id']);
+
+    ids = ids.toList(growable: true)..shuffle();
+
+    List<String> selectedIds =
+        ids.sublist(0, count).map((e) => e['id'].toString()).toList();
+
+    String idsStr =
+        selectedIds.reduce((value, element) => value += "$element,");
+    idsStr = idsStr.substring(0, idsStr.length - 1);
+
+    var rawData = await _db
+        .rawQuery("SELECT * FROM ${TableNames.quotes} WHERE id IN ($idsStr)");
+
+    List<Quote> quotes = _toEntities(rawData);
+
+    return quotes;
+  }
+
+  Future<void> markAsFavorite(int quoteId) async {
     await _db.update(TableNames.quotes, {'is_favorite': true},
         where: 'id = ? ', whereArgs: [quoteId]);
   }
 
-  Future<void> removeFromFavorites(String quoteId) async {
+  Future<void> removeFromFavorites(int quoteId) async {
     await _db.update(TableNames.quotes, {'is_favorite': false},
         where: 'id = ? ', whereArgs: [quoteId]);
   }

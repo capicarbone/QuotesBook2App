@@ -25,7 +25,7 @@ class DBHelper {
         onCreate: (sql.Database db, version) {
       db.execute(
           '''CREATE TABLE ${TableNames.quotes}(
-          id TEXT PRIMARY KEY, 
+          id INTEGER PRIMARY KEY, 
           body TEXT, author_first_name TEXT, 
           author_last_name TEXT,
           lang TEXT 
