@@ -31,7 +31,6 @@ class _TabsScreenState extends State<TabsScreen>
       _pages.addAll([
         {
           'page': QuotesListScreen(
-            lang: widget.lang,
             key: PageStorageKey('Quotes'),
           ),
         },
