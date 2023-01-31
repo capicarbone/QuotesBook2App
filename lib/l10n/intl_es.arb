@@ -48,7 +48,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "quotesLoadErrorMessage": "Algún error ha ocurrido. Intentando de nuevo.",
+  "quotesLoadErrorMessage": "Algún error ha ocurrido.",
   "@quotesLoadErrorMessage": {
     "description": "Mesasge for errors on quotes loading",
     "type": "text",

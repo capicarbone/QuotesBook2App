@@ -4,7 +4,7 @@
 // function name.
 
 // Ignore issues from commonly used lints in this file.
-// ignore_for_file:unnecessary_brace_in_string_interps, unnecessary_new
+// ignore_for_file:unnecessary_brace_in_string_interps
 // ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
 // ignore_for_file:annotate_overrides,prefer_generic_function_type_aliases
 // ignore_for_file:unused_import, file_names
@@ -12,27 +12,31 @@
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
 
-final messages = new MessageLookup();
+final messages = MessageLookup();
 
-typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
+typedef String? MessageIfAbsent(
+    String? messageStr, List<Object>? args);
 
 class MessageLookup extends MessageLookupByLibrary {
+  @override
   String get localeName => 'es';
 
-  final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function> {
-    "cancelAction" : MessageLookupByLibrary.simpleMessage("Cancelar"),
-    "favoritesEmptyMessage" : MessageLookupByLibrary.simpleMessage("Marca algunas citas como tus favoritas."),
-    "favoritesTab" : MessageLookupByLibrary.simpleMessage("Favoritos"),
-    "quotesLoadErrorMessage" : MessageLookupByLibrary.simpleMessage("Algún error ha ocurrido. Intentando de nuevo."),
-    "quotesTab" : MessageLookupByLibrary.simpleMessage("Citas"),
-    "removeAction" : MessageLookupByLibrary.simpleMessage("Eliminar"),
-    "saveAction" : MessageLookupByLibrary.simpleMessage("Guardar"),
-    "savedQuotesTitle" : MessageLookupByLibrary.simpleMessage("Tus favoritos"),
-    "shareAction" : MessageLookupByLibrary.simpleMessage("Compartir"),
-    "shareQuoteAs" : MessageLookupByLibrary.simpleMessage("Compartir frase como"),
-    "shareQuoteImageOption" : MessageLookupByLibrary.simpleMessage("Imagen"),
-    "shareQuoteTextOption" : MessageLookupByLibrary.simpleMessage("Texto"),
-    "someQuotesTitle" : MessageLookupByLibrary.simpleMessage("Algunas citas")
+  @override
+  final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
+
+  static Map<String, dynamic> _notInlinedMessages(_) => {
+      'cancelAction': MessageLookupByLibrary.simpleMessage('Cancelar'),
+    'favoritesEmptyMessage': MessageLookupByLibrary.simpleMessage('Marca algunas citas como tus favoritas.'),
+    'favoritesTab': MessageLookupByLibrary.simpleMessage('Favoritos'),
+    'quotesLoadErrorMessage': MessageLookupByLibrary.simpleMessage('Algún error ha ocurrido.'),
+    'quotesTab': MessageLookupByLibrary.simpleMessage('Citas'),
+    'removeAction': MessageLookupByLibrary.simpleMessage('Eliminar'),
+    'saveAction': MessageLookupByLibrary.simpleMessage('Guardar'),
+    'savedQuotesTitle': MessageLookupByLibrary.simpleMessage('Tus favoritos'),
+    'shareAction': MessageLookupByLibrary.simpleMessage('Compartir'),
+    'shareQuoteAs': MessageLookupByLibrary.simpleMessage('Compartir frase como'),
+    'shareQuoteImageOption': MessageLookupByLibrary.simpleMessage('Imagen'),
+    'shareQuoteTextOption': MessageLookupByLibrary.simpleMessage('Texto'),
+    'someQuotesTitle': MessageLookupByLibrary.simpleMessage('Algunas citas')
   };
 }
