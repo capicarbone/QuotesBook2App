@@ -9,9 +9,8 @@ import 'package:quotesbook/widgets/topbar.dart';
 import '../providers/quotes.dart';
 
 class TabsScreen extends StatefulWidget {
-  var lang = 'en';
 
-  TabsScreen({this.lang});
+  TabsScreen();
 
   @override
   _TabsScreenState createState() => _TabsScreenState();

@@ -9,8 +9,8 @@ class QuoteText extends StatelessWidget {
   BoxConstraints constraints;
 
   QuoteText(
-      {this.text,
-      this.constraints,
+      {required this.text,
+      required this.constraints,
       this.minFontSize = 12,
       this.align = TextAlign.center});
 
@@ -26,7 +26,7 @@ class QuoteText extends StatelessWidget {
         minWidth: constraints.minWidth, maxWidth: constraints.maxWidth);
 
     var adjusted = false;
-    final desirableFontSize = text.style.fontSize;
+    // final desirableFontSize = text.style.fontSize;
 
     // If the default font size surpasses the constraints limit then it test to
     // reduces the font size in loop until we get a valid value or a minimum
@@ -36,25 +36,25 @@ class QuoteText extends StatelessWidget {
           painter.size.height <= constraints.maxHeight;
 
       if (!adjusted) {
-        var currentFontSize = painter.text.style.fontSize;
+        var currentFontSize = painter.text?.style?.fontSize ?? 12;
         var nextFontSize =
             ((currentFontSize - minFontSize) * 0.70 + minFontSize)
                 .floor()
                 .toDouble();
         var newText = TextSpan(
             text: text.text,
-            style: text.style.copyWith(fontSize: nextFontSize));
+            style: text.style?.copyWith(fontSize: nextFontSize));
         painter.text = newText;
         painter.layout(
             minWidth: constraints.minWidth, maxWidth: constraints.maxWidth);
       }
-    } while (!adjusted && painter.text.style.fontSize > minFontSize);
+    } while (!adjusted && painter.text!.style!.fontSize! > minFontSize);
 
-    final sortedWords = text.text.split(" ")
+    final sortedWords = text.text!.split(" ")
       ..sort((a, b) => b.length.compareTo(a.length));
     final largestWordLength = sortedWords[0].length;
 
-    final measuredFontSize = painter.text.style.fontSize;
+    final measuredFontSize = painter.text!.style!.fontSize!;
 
     // It can't apply an adjustment if the font size is lower than
     // 28px since a lower number will lead to a negative adjustment value
@@ -66,13 +66,13 @@ class QuoteText extends StatelessWidget {
       // as points for determine the constants.
       // This is not a definitive solution for clipped large words yet, but has
       // decreased considerably the number of occurrences.
-      // In a better solution I think should consider the largest word length.
+      // For a better solution I think it should consider the largest word length.
       final fontSizeAdjustment = (0.583 * measuredFontSize - 17.17);
       painter.text = TextSpan(
           text: text.text,
-          style: painter.text.style.copyWith(
+          style: painter.text!.style!.copyWith(
               // the constant for
-              fontSize: painter.text.style.fontSize - fontSizeAdjustment));
+              fontSize: painter.text!.style!.fontSize! - fontSizeAdjustment));
       painter.layout(
           minWidth: constraints.minWidth, maxWidth: constraints.maxWidth);
     }
@@ -81,8 +81,8 @@ class QuoteText extends StatelessWidget {
       width: painter.size.width,
       height: painter.size.height,
       child: Text(
-        text.text,
-        style: painter.text.style,
+        text.text!,
+        style: painter.text!.style,
         textAlign: TextAlign.center,
       ),
     );
@@ -93,7 +93,7 @@ class QuoteBody extends StatelessWidget {
   Quote quote;
   var quoteFontSize;
 
-  QuoteBody({this.quote, this.quoteFontSize: 50.0});
+  QuoteBody({required this.quote, this.quoteFontSize: 50.0});
 
   @override
   Widget build(BuildContext context) {

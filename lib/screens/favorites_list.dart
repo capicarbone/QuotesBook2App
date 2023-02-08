@@ -7,7 +7,7 @@ import 'package:quotesbook/widgets/quote_listitem.dart';
 import '../providers/quotes.dart';
 
 class FavoritesScreen extends StatelessWidget {
-  FavoritesScreen({Key key}) : super(key: key);
+  FavoritesScreen({required Key key}) : super(key: key);
   var _pageController = QuotesListController();
 
   @override

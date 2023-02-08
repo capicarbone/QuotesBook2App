@@ -3,13 +3,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+@Deprecated("Themes for quotes are not used anymore.")
 class QuoteTheme {
   String id;
   Color textColor;
   Color backgroundColor;
   Color secondaryColor;
 
-  QuoteTheme({@required this.id, @required this.textColor, @required this.backgroundColor, @required this.secondaryColor});
+  QuoteTheme({required this.id, required this.textColor, required this.backgroundColor, required this.secondaryColor});
 
   static int _lastIndex = 0;
 

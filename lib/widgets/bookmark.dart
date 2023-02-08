@@ -6,7 +6,7 @@ class Bookmark extends StatelessWidget {
   Color color;
   int apexHeight;
 
-  Bookmark({@required this.color, this.apexHeight});
+  Bookmark({required this.color, required this.apexHeight});
 
   @override
   Widget build(BuildContext context) {

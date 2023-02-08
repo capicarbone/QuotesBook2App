@@ -5,7 +5,7 @@ import 'package:quotesbook/data/quotes_data.dart' as fixedData;
 import 'TableNames.dart';
 
 class DBHelper {
-  static Future<void> _loadInitialData(sql.Database db) {
+  static Future<void> _loadInitialData(sql.Database db) async {
 
     fixedData.quotes.forEach((q) {
       db.insert(TableNames.quotes, {

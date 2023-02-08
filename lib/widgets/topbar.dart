@@ -39,7 +39,7 @@ class _TopBarTitle extends StatefulWidget {
   bool isExpanded;
   bool moveToRight;
 
-  _TopBarTitle({this.title, this.isExpanded, this.moveToRight});
+  _TopBarTitle({required this.title,required this.isExpanded,required this.moveToRight});
 
   @override
   __TopBarTitleState createState() => __TopBarTitleState();
@@ -47,8 +47,8 @@ class _TopBarTitle extends StatefulWidget {
 
 class __TopBarTitleState extends State<_TopBarTitle>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _fadeAnimation;
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
 
   static var fontLoadWaited = false;
 
@@ -114,7 +114,7 @@ class __TopBarTitleState extends State<_TopBarTitle>
       style: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 18),
     );
 
-    final titleSize = _textSize(title.data, title.style, MediaQuery.of(context).textScaleFactor);
+    final titleSize = _textSize(title.data!, title.style!, MediaQuery.of(context).textScaleFactor);
 
     final containerSize =
         Size(titleSize.width + titleSize.width * 2, titleSize.height);
@@ -183,7 +183,7 @@ class Topbar extends StatefulWidget {
   static const double HEIGHT = 70;
   static const double SPIKE_HEIGHT = 7;
 
-  Topbar({this.titles, this.selectedIndex, this.color, this.margin = 25});
+  Topbar({required this.titles,required this.selectedIndex,required this.color, this.margin = 25});
 
   @override
   _TopbarState createState() => _TopbarState();

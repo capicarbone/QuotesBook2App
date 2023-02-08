@@ -9,7 +9,7 @@ class SavedQuotes extends ChangeNotifier {
 
   final QuotesProvider _quotesProvider;
 
-  List<Quote> _savedQuotes;
+  List<Quote> _savedQuotes = [];
 
   SavedQuotes(QuotesProvider quotesProvider) : _quotesProvider = quotesProvider;
 

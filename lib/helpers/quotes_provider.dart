@@ -7,7 +7,7 @@ import '../models/Quote.dart';
 class QuotesProvider {
   final Database _db;
 
-  QuotesProvider({Database db}) : _db = db;
+  QuotesProvider({required Database db}) : _db = db;
 
   List<Quote> _toEntities(List<Map> data) {
     return data.map<Quote>((map) {
@@ -26,7 +26,7 @@ class QuotesProvider {
     }).toList();
   }
 
-  Future<List<Quote>> getQuotes({bool isFavorite}) async {
+  Future<List<Quote>> getQuotes({bool isFavorite = false}) async {
     var rawData = await _db.query(TableNames.quotes,
         where: 'is_favorite = ?', whereArgs: [isFavorite]);
 

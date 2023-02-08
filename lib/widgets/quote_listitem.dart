@@ -20,25 +20,25 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 
 class QuoteListItem extends StatefulWidget {
   Quote quote;
-  Function onTap;
+  Function() onTap;
 
-  QuoteListItem({this.quote, this.onTap});
+  QuoteListItem({required this.quote, required this.onTap});
 
   @override
   _QuoteListItemState createState() => _QuoteListItemState();
 }
 
 class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _fadeInAnimation;
-  Animation<double> _fadeOutAnimation;
+  late AnimationController _animationController;
+  late Animation<double> _fadeInAnimation;
+  late Animation<double> _fadeOutAnimation;
   GlobalKey _repaintBoundaryKey = GlobalKey();
 
   static var fontLoadWaited = false;
 
   final _shareDebugMode = false;
 
-  Uint8List _memoryImage;
+  Uint8List? _memoryImage;
 
   var loading = false;
   var transitioning = false;
@@ -88,13 +88,13 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
     });
   }
 
-  Future<image.Image> _captureQuoteImage({pixelRatio: 1.0}) async {
+  Future<image.Image> _captureQuoteImage({pixelRatio = 1.0}) async {
     RenderRepaintBoundary boundary =
-        _repaintBoundaryKey.currentContext.findRenderObject();
+        _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     ui.Image quoteShot = await boundary.toImage(pixelRatio: pixelRatio);
-    final bytes = await quoteShot.toByteData(format: ui.ImageByteFormat.png);
+    ByteData bytes = (await quoteShot.toByteData(format: ui.ImageByteFormat.png))!;
 
-    return image.decodePng(bytes.buffer.asUint8List());
+    return image.decodePng(bytes.buffer.asUint8List())!;
   }
 
   void _onImageSharePressed(BuildContext context) {
@@ -113,7 +113,7 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
 
         if (_shareDebugMode) {
           setState(() {
-            _memoryImage = generatedImage;
+            _memoryImage = Uint8List.fromList(generatedImage);
           });
         } else {
           Share.file("A Quote from Quotesbook", 'quote.jpg', generatedImage,
@@ -126,7 +126,7 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
     });
   }
 
-  Widget _onSharePressed(BuildContext ctx) {
+  _onSharePressed(BuildContext ctx) {
     final platform = Theme.of(context).platform;
 
     if (platform == TargetPlatform.android){
@@ -355,7 +355,7 @@ class _QuoteListItemState extends State<QuoteListItem> with SingleTickerProvider
               width: 300,
               height: 300,
               child: _memoryImage != null
-                  ? Image.memory(_memoryImage)
+                  ? Image.memory(_memoryImage!)
                   : Placeholder()),
         ],
       );

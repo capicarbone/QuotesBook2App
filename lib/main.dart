@@ -74,13 +74,9 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               return MultiProvider(
                 providers: [
-                  ChangeNotifierProvider(
-                      create: (_) => Quotes(quotesProvider)),
+                  ChangeNotifierProvider(create: (_) => Quotes(quotesProvider)),
                 ],
-                child: LocalizeLang(
-                    builder: (lang) => TabsScreen(
-                          lang: lang,
-                        )),
+                child: TabsScreen(),
               );
             }
 

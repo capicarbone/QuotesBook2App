@@ -8,7 +8,7 @@ import '../providers/quotes.dart';
 import '../widgets/quote_listitem.dart';
 
 class QuotesListScreen extends StatefulWidget {
-  QuotesListScreen({Key key}) : super(key: key);
+  QuotesListScreen({required Key key}) : super(key: key);
 
   @override
   _QuotesListScreenState createState() => _QuotesListScreenState();
@@ -32,7 +32,7 @@ class _QuotesListScreenState extends State<QuotesListScreen> {
 
     if (!_pageController.hasListeners) {
       _pageController.addListener(() {
-        if (_pageController.page > _totalQuotes - 5 && !_loadingQuotes) {
+        if ((_pageController.page ?? 0) > _totalQuotes - 5 && !_loadingQuotes) {
           _fetchQuotes(lang);
         }
       });

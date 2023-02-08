@@ -5,7 +5,6 @@ import 'package:image/image.dart';
 import 'package:flutter/painting.dart' as painting;
 
 class QuoteImageGenerator {
-
   final _imageSize = 2400;
 
   Image quoteImage;
@@ -13,11 +12,15 @@ class QuoteImageGenerator {
   painting.Color backgroundColor;
   painting.Color frameColor;
 
-  QuoteImageGenerator({this.quoteImage, this.backgroundColor, this.frameColor, this.footerLogo});
+  QuoteImageGenerator(
+      {required this.quoteImage,
+      required this.backgroundColor,
+      required this.frameColor,
+      required this.footerLogo});
 
-  get _imagePadding => (_imageSize * 0.04).toInt();
-  get _insetPadding => (_imagePadding*2).toInt();
-  get _borderThickness => _imagePadding * 0.19;
+  int get _imagePadding => (_imageSize * 0.04).toInt();
+  int get _insetPadding => (_imagePadding * 2).toInt();
+  double get _borderThickness => _imagePadding * 0.19;
 
   Image _resizeImageByWidth(Image imageToResize, int width) {
     return copyResize(imageToResize,
@@ -32,71 +35,88 @@ class QuoteImageGenerator {
   }
 
   Future<Image> _drawFrame(Image quoteImage) async {
-
-    var color = painting.Color.fromARGB(frameColor.alpha, frameColor.blue, frameColor.green, frameColor.red).value;
+    var color = painting.Color.fromARGB(
+            frameColor.alpha, frameColor.blue, frameColor.green, frameColor.red)
+        .value;
     var positionAdjustmet = _borderThickness ~/ 2;
 
-    var borders = {
-      'top-left' : [_imagePadding, _imagePadding],
-      'top-right' : [quoteImage.width - _imagePadding, _imagePadding],
-      'bottom-left': [_imagePadding, quoteImage.height - _imagePadding ],
-      'bottom-right': [quoteImage.width - _imagePadding, quoteImage.height - _imagePadding]
+    Map<String, List<dynamic>> borders = {
+      'top-left': [_imagePadding, _imagePadding],
+      'top-right': [quoteImage.width - _imagePadding, _imagePadding],
+      'bottom-left': [_imagePadding, quoteImage.height - _imagePadding],
+      'bottom-right': [
+        quoteImage.width - _imagePadding,
+        quoteImage.height - _imagePadding
+      ]
     };
 
-    var framedImage = drawLine(quoteImage,
-        borders['top-left'][0],
-        borders['top-left'][1] - positionAdjustmet,
-        borders['bottom-left'][0],
-        borders['bottom-left'][1] + positionAdjustmet,
-        color, thickness: _borderThickness);
+    var framedImage = drawLine(
+        quoteImage,
+        borders['top-left']![0],
+        borders['top-left']![1] - positionAdjustmet,
+        borders['bottom-left']![0],
+        borders['bottom-left']![1] + positionAdjustmet,
+        color,
+        thickness: _borderThickness);
 
-    framedImage = drawLine(quoteImage,
-        borders['top-left'][0],
-        borders['top-left'][1],
-        borders['top-right'][0],
-        borders['top-right'][1],
-        color, thickness: _borderThickness);
+    framedImage = drawLine(
+        quoteImage,
+        borders['top-left']![0],
+        borders['top-left']![1],
+        borders['top-right']![0],
+        borders['top-right']![1],
+        color,
+        thickness: _borderThickness);
 
+    framedImage = drawLine(
+        quoteImage,
+        borders['top-right']![0],
+        borders['top-right']![1] - positionAdjustmet,
+        borders['bottom-right']![0],
+        borders['bottom-right']![1] + positionAdjustmet,
+        color,
+        thickness: _borderThickness);
 
-    framedImage = drawLine(quoteImage,
-        borders['top-right'][0],
-        borders['top-right'][1] - positionAdjustmet,
-        borders['bottom-right'][0],
-        borders['bottom-right'][1] + positionAdjustmet,
-        color, thickness: _borderThickness);
-
-    framedImage = drawLine(quoteImage,
-        borders['bottom-left'][0],
-        borders['bottom-left'][1],
-        borders['bottom-right'][0],
-        borders['bottom-right'][1],
-        color, thickness: _borderThickness);
+    framedImage = drawLine(
+        quoteImage,
+        borders['bottom-left']![0],
+        borders['bottom-left']![1],
+        borders['bottom-right']![0],
+        borders['bottom-right']![1],
+        color,
+        thickness: _borderThickness);
 
     return framedImage;
-
   }
 
   Future<Image> _drawFooter(Image quoteImage) async {
     final logoProportion = _imagePadding / quoteImage.height;
-    var qbLogo = _resizeImageByHeight(footerLogo, (quoteImage.height * logoProportion ).toInt());
+    var qbLogo = _resizeImageByHeight(
+        footerLogo, (quoteImage.height * logoProportion).toInt());
 
-    final logoHeightCenterPosition = quoteImage.height - _imagePadding - (_borderThickness ~/ 2);
+    int logoHeightCenterPosition =
+        quoteImage.height - _imagePadding - (_borderThickness ~/ 2);
     final imageWidthCenter = quoteImage.width ~/ 2;
 
-    var logoPosition = {'x': imageWidthCenter - qbLogo.width ~/ 2, 'y': logoHeightCenterPosition - qbLogo.height ~/ 2};
+    Map<String, int> logoPosition = {
+      'x': imageWidthCenter - qbLogo.width ~/ 2,
+      'y': logoHeightCenterPosition - qbLogo.height ~/ 2
+    };
 
     final backgroundMargin = (qbLogo.width * 0.25).toInt();
-    final logoBackground = Image(qbLogo.width + backgroundMargin*2, qbLogo.height, channels: Channels.rgba);
+    final logoBackground = Image(
+        qbLogo.width + backgroundMargin * 2, qbLogo.height,
+        channels: Channels.rgba);
     logoBackground.fill(0xFFFFFFFF);
 
-    var result = copyInto(quoteImage, logoBackground, dstX: logoPosition['x'] - backgroundMargin, dstY: logoPosition['y']);
+    var result = copyInto(quoteImage, logoBackground,
+        dstX: logoPosition['x']! - backgroundMargin, dstY: logoPosition['y']);
 
-    return copyInto(result, qbLogo, dstX: logoPosition['x'] , dstY: logoPosition['y']);
-
+    return copyInto(result, qbLogo,
+        dstX: logoPosition['x'], dstY: logoPosition['y']);
   }
 
   Future<List<int>> generateImage() async {
-
     var bgColor = backgroundColor;
 
     var finalQuoteImage = Image(_imageSize, _imageSize);
@@ -133,11 +153,8 @@ class QuoteImageGenerator {
     }
 
     finalQuoteImage = copyInto(finalQuoteImage, quoteImage,
-        dstX: (finalQuoteImage.width ~/ 2) -
-            (quoteImage.width ~/ 2),
-        dstY:
-            (finalQuoteImage.height ~/ 2) -
-            (quoteImage.height ~/ 2));
+        dstX: (finalQuoteImage.width ~/ 2) - (quoteImage.width ~/ 2),
+        dstY: (finalQuoteImage.height ~/ 2) - (quoteImage.height ~/ 2));
 
     return encodeJpg(finalQuoteImage);
   }
