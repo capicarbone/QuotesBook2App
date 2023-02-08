@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 import 'dart:typed_data';
+import 'package:esys_flutter_share_plus/esys_flutter_share_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ import 'package:quotesbook/widgets/quote_body.dart';
 
 import '../models/Quote.dart';
 import '../providers/quotes.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+
 
 class QuoteListItem extends StatefulWidget {
   Quote quote;

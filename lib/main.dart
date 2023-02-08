@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -11,11 +13,10 @@ import 'package:quotesbook/providers/quotes.dart';
 import 'package:sqflite/sqflite.dart';
 
 import './screens/tabs_screen.dart';
-import './widgets/localize_lang_widget.dart';
 import './helpers/app_localizations.dart';
 import 'helpers/db_helper.dart';
 
-FirebaseAnalytics analytics = FirebaseAnalytics();
+FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 class DemoLocalizationsDelegate
     extends LocalizationsDelegate<AppLocalizations> {
@@ -33,6 +34,7 @@ class DemoLocalizationsDelegate
 
 Future main() async {
   await dotenv.load();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -69,9 +71,9 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder<Database>(
           future: DBHelper.getDatabase(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            var db = snapshot.data;
-            var quotesProvider = QuotesProvider(db: db);
             if (snapshot.connectionState == ConnectionState.done) {
+              var db = snapshot.data;
+              var quotesProvider = QuotesProvider(db: db);
               return MultiProvider(
                 providers: [
                   ChangeNotifierProvider(create: (_) => Quotes(quotesProvider)),
