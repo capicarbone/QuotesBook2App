@@ -33,7 +33,7 @@ class DemoLocalizationsDelegate
 }
 
 Future main() async {
-  await dotenv.load();
+  // await dotenv.load();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
