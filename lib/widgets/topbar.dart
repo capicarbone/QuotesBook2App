@@ -56,7 +56,7 @@ class __TopBarTitleState extends State<_TopBarTitle>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 100), vsync: this);
+        duration: const Duration(milliseconds: 300), vsync: this);
 
     _fadeAnimation =
         CurvedAnimation(parent: _controller, curve: Curves.easeInCubic);
