@@ -42,3 +42,4 @@ android/app/google-services.json
 pubspec.lock
 
 .env
+lib/firebase_options.dart
