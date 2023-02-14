@@ -9,7 +9,6 @@ import 'package:quotesbook/widgets/topbar.dart';
 import '../providers/quotes.dart';
 
 class TabsScreen extends StatefulWidget {
-
   TabsScreen();
 
   @override
@@ -68,7 +67,8 @@ class _TabsScreenState extends State<TabsScreen>
     Provider.of<Quotes>(context, listen: false).loadSavedQuotes();
     final screenSize = MediaQuery.of(context).size;
     final screenInsets = MediaQuery.of(context).viewPadding;
-    final listHeight = screenSize.height - Topbar.HEIGHT + (Topbar.SPIKE_HEIGHT / 2);
+    final listHeight =
+        screenSize.height - Topbar.HEIGHT + (Topbar.SPIKE_HEIGHT / 2);
 
     final bookmarkHeight = Topbar.HEIGHT + screenInsets.top - 10;
 
@@ -80,7 +80,9 @@ class _TabsScreenState extends State<TabsScreen>
             children: [
               // I don't use a Positioned widget because throws some
               // "RenderBox was not laid out" error
-              SizedBox(height: screenSize.height - listHeight + screenInsets.top,),
+              SizedBox(
+                height: screenSize.height - listHeight + screenInsets.top,
+              ),
               Expanded(
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
@@ -90,10 +92,12 @@ class _TabsScreenState extends State<TabsScreen>
               ),
             ],
           ),
-
           SafeArea(
             child: Topbar(
-              titles: [AppLocalizations.of(context).quotesTab, AppLocalizations.of(context).favoritesTab],
+              titles: [
+                AppLocalizations.of(context).quotesTab,
+                AppLocalizations.of(context).favoritesTab
+              ],
               selectedIndex: _selectedPageIndex,
               color: Colors.grey.shade300,
               margin: 25,
@@ -106,11 +110,15 @@ class _TabsScreenState extends State<TabsScreen>
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 300),
                   curve: Curves.bounceOut,
-                  height: _selectedPageIndex == 1 ? bookmarkHeight : bookmarkHeight - 20,
-                  child: Bookmark(color: _selectedPageIndex == 1
-                      ? Theme.of(context).accentColor
-                      : Colors.black12,
-                  apexHeight: ((bookmarkHeight - screenInsets.top)*0.19).toInt()),
+                  height: _selectedPageIndex == 1
+                      ? bookmarkHeight
+                      : bookmarkHeight - 20,
+                  child: Bookmark(
+                      color: _selectedPageIndex == 1
+                          ? Theme.of(context).accentColor
+                          : Colors.black12,
+                      apexHeight:
+                          ((bookmarkHeight - screenInsets.top) * 0.19).toInt()),
                 ),
                 onTap: _onTabSelected),
           ),

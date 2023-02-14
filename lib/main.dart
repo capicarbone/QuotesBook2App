@@ -34,6 +34,7 @@ class DemoLocalizationsDelegate
 
 Future main() async {
   // await dotenv.load();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
@@ -74,14 +75,11 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               var db = snapshot.data;
               var quotesProvider = QuotesProvider(db: db);
-              return MultiProvider(
-                providers: [
-                  ChangeNotifierProvider(create: (_) => Quotes(quotesProvider)),
-                ],
+              return ChangeNotifierProvider(
+                create: (_) => Quotes(quotesProvider),
                 child: TabsScreen(),
               );
             }
-
             return Container(
               color: Colors.grey.shade300,
             );
