@@ -20,7 +20,7 @@ class _TabsScreenState extends State<TabsScreen>
   var _selectedPageIndex = 0;
   var _pageController = PageController();
   late final AnimationController _bookmarkIntroController =
-      AnimationController(vsync: this, duration: Duration(milliseconds: 510));
+      AnimationController(vsync: this, duration: Duration(milliseconds: 1500));
   late final _bookmarkIntroAnimation;
 
   var _bookmarkEnabled = false;
@@ -50,9 +50,8 @@ class _TabsScreenState extends State<TabsScreen>
   void initState() {
     _initPages();
 
-    _bookmarkIntroAnimation =
-        new CurvedAnimation(
-            parent: _bookmarkIntroController, curve: Curves.easeOut);
+    _bookmarkIntroAnimation = new CurvedAnimation(
+        parent: _bookmarkIntroController, curve: Curves.easeOut);
 
     Future.delayed(Duration(milliseconds: 500), () {
       _bookmarkIntroController.forward().whenComplete(() {
@@ -77,7 +76,6 @@ class _TabsScreenState extends State<TabsScreen>
     setState(() {
       _selectedPageIndex = (_selectedPageIndex == 1) ? 0 : 1;
     });
-
 
     _pageController.animateToPage(_selectedPageIndex,
         duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
@@ -106,11 +104,44 @@ class _TabsScreenState extends State<TabsScreen>
                 height: screenSize.height - listHeight + screenInsets.top,
               ),
               Expanded(
-                child: PageView(
-                  physics: NeverScrollableScrollPhysics(),
-                  children: _pages.map<Widget>((i) => i['page']).toList(),
-                  controller: _pageController,
-                ),
+                child: LayoutBuilder(
+                    builder: (_, constraints) => Stack(
+                          children: [
+                            PositionedTransition(
+                              rect: RelativeRectTween(
+                                begin: RelativeRect.fromSize(
+                                    Rect.fromLTWH(
+                                        0,
+                                        constraints.maxHeight / 4,
+                                        constraints.maxWidth,
+                                        constraints.maxHeight),
+                                    constraints.biggest),
+                                end: RelativeRect.fromSize(
+                                    Rect.fromLTWH(0, 0, constraints.maxWidth,
+                                        constraints.maxHeight),
+                                    constraints.biggest),
+                              ).animate(CurvedAnimation(
+                                  parent: _bookmarkIntroController,
+                                  curve: Curves.easeOutCirc)),
+                              child: AnimatedBuilder(
+                                  animation: CurvedAnimation(
+                                      parent: _bookmarkIntroController,
+                                      curve: Curves.easeInCirc),
+                                  builder: (context, child) {
+                                    return Opacity(
+                                      opacity: _bookmarkIntroController.value,
+                                      child: PageView(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        children: _pages
+                                            .map<Widget>((i) => i['page'])
+                                            .toList(),
+                                        controller: _pageController,
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ],
+                        )),
               ),
             ],
           ),
